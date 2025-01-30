@@ -1,3 +1,3 @@
 <?php
-//User Registration
+//student Registration
 ?>

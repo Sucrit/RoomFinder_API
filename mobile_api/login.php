@@ -1,3 +1,3 @@
 <?php
-//user login
+//student login
 ?>
