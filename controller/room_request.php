@@ -8,6 +8,17 @@ class RoomRequestController {
     public function __construct() {
         $this->roomRequestModel = new RoomRequestModel();
     }
+    // get all room requests of a specific student
+    public function getRoomRequestsByStudent($studentId) {
+        $roomRequests = $this->roomRequestModel->getRoomRequestsByStudent($studentId);
+
+        // If room requests found, return them, else return a not found message
+        if ($roomRequests) {
+            echo json_encode($roomRequests);
+        } else {
+            echo json_encode(['message' => 'No room requests found for this student']);
+        }
+    }
 
     // get all pending room requests
     public function getRoomRequests() {

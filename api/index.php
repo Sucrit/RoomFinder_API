@@ -138,14 +138,29 @@ function RoomMethod($requestMethod, $uri, $input, $roomController) {
 function RoomRequestMethod($requestMethod, $uri, $input, $roomRequestController) {
     switch ($requestMethod) {
         case 'GET':
-            if (preg_match('/\/room_request\/(\d+)/', $uri, $matches)) {
-                $roomRequestController->getRoomRequest($matches[1]);
+            // Check if the URI contains a student ID
+            if (preg_match('/\/room_request\/student\/(\d+)/', $uri, $matches)) {
+                // If student ID is passed, fetch room requests for that specific student
+                $roomRequestController->getRoomRequestsByStudent($matches[1]);
             } 
+            // Check if the URI is simply for room requests without a student ID
             else if (preg_match('/\/room_request/', $uri)) {
+                // Fetch all room requests
                 $roomRequestController->getRoomRequests();
-            }
-             else {
+            } 
+            else {
                 echo json_encode(['message' => 'Invalid room request']);
+            }
+            break;
+
+
+        case 'POST':
+            if (isset($input['room_id'], $input['student_id'], $input['purpose'], $input['starting_time'], $input['ending_time'], $input['receiver'])) {
+                $roomRequestController->createRoomRequest(
+                    $input['room_id'], $input['student_id'], $input['purpose'], $input['starting_time'], $input['ending_time'], $input['receiver']
+                );
+            } else {
+                echo json_encode(['message' => 'Missing required fields to create room request']);
             }
             break;
 
@@ -222,16 +237,19 @@ function AdminMethod($requestMethod, $uri, $input, $adminController) {
 }
 
 // Main request routing
-if (preg_match('/\/student/', $uri)) {
-    StudentMethod($requestMethod, $uri, $input, $studentController);
-} elseif (preg_match('/\/room_request/', $uri)) {
+if (preg_match('/\/room_request\/student\/\d+/', $uri)) {  // Match room requests for specific student first
     RoomRequestMethod($requestMethod, $uri, $input, $roomRequestController);
-} elseif (preg_match('/\/room/', $uri)) {
+} elseif (preg_match('/\/student/', $uri)) {  // Match student requests
+    StudentMethod($requestMethod, $uri, $input, $studentController);
+} elseif (preg_match('/\/room_request/', $uri)) {  // Match all room requests
+    RoomRequestMethod($requestMethod, $uri, $input, $roomRequestController);
+} elseif (preg_match('/\/room/', $uri)) {  // Match room requests
     RoomMethod($requestMethod, $uri, $input, $roomController);
-} elseif (preg_match('/\/admin/', $uri)) { // Admin route
+} elseif (preg_match('/\/admin/', $uri)) {  // Admin route
     AdminMethod($requestMethod, $uri, $input, $adminController);
 } else {
     echo json_encode(['message' => 'Invalid request']);
 }
+
 
 ?>

@@ -11,7 +11,30 @@ class RoomRequestModel {
             die('Database connection failed: ' . mysqli_connect_error());
         }
     }
+
+    public function getRoomRequestsByStudent($studentId) {
+        // SQL query to get room requests for the specific student
+        $sql = "SELECT * FROM room_request WHERE student_id = ?";
     
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param('i', $studentId);  // Bind student ID
+            $stmt->execute();
+            $result = $stmt->get_result();
+    
+            // If room requests exist for this student, return them
+            if ($result->num_rows > 0) {
+                return $result->fetch_all(MYSQLI_ASSOC);
+            } else {
+                return null;  // No room requests found for this student
+            }
+        } else {
+            echo json_encode(['message' => 'Error executing query: ' . $this->conn->error]);
+            return null;
+        }
+    }
+    
+
+
     // get all pending room requests
     public function getAllRoomRequests() {
         $sql = "SELECT * FROM room_request";
