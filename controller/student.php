@@ -39,21 +39,20 @@ class StudentController {
     }
 
     public function updateStudent($id, $input) {
-        $currentStudent = $this->studentModel->getStudentById($id);
-        if ($currentStudent) {
-            $username = isset($input['username']) ? $input['username'] : $currentStudent['username'];
-            $email = isset($input['email']) ? $input['email'] : $currentStudent['email'];
-            $password = isset($input['password']) ? password_hash($input['password'], PASSWORD_DEFAULT) : $currentStudent['password'];
-            $student_number = isset($input['student_number']) ? $input['student_number'] : $currentStudent['student_number'];  // Handle student_number
-    
-            $message = $this->studentModel->updateStudent($id, $username, $email, $password, $student_number);  // Pass student_number
-            echo json_encode(['message' => $message]);
-        } else {
+        $student = $this->studentModel->getStudentById($id);
+        if (!$student) {
             echo json_encode(['message' => 'Student not found']);
+            return;
         }
-    }
+        $username = isset($input['username']) ? $input['username'] : $student['username'];
+        $email = isset($input['email']) ? $input['email'] : $student['email'];
+        $password = isset($input['password']) && !empty($input['password']) ? password_hash($input['password'], PASSWORD_DEFAULT) : $student['password'];
+        $student_number = isset($input['student_number']) ? $input['student_number'] : $student['student_number'];
+        // only get the changed value of a variable
+        $updateResult = $this->studentModel->updateStudent($id, $username, $email, $password, $student_number);
+        echo json_encode(['message' => $updateResult]);
+    }    
     
-
     public function deleteStudent($id) {
         $message = $this->studentModel->deleteStudent($id);
         echo json_encode(['message' => $message]);

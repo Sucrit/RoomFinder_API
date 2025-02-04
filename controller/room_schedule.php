@@ -1,0 +1,3 @@
+<?php
+// room schedule controller
+?>

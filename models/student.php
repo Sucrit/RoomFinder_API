@@ -31,12 +31,12 @@ class StudentModel {
     
     
 
- // get all students
-public function getStudents() {
-    $sql = "SELECT * FROM student";
-    $result = $this->conn->query($sql);
+    // get all students
+    public function getStudents() {
+        $sql = "SELECT * FROM student";
+        $result = $this->conn->query($sql);
 
-    return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
+        return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
 }
 
     // get student by ID
@@ -68,8 +68,6 @@ public function getStudents() {
         }
     }
     
-
-    // delete student by ID
     public function deleteStudent($id) {
         $sql = "DELETE FROM student WHERE id = ?";
 

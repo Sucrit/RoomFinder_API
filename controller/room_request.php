@@ -9,13 +9,13 @@ class RoomRequestController {
         $this->roomRequestModel = new RoomRequestModel();
     }
 
-    // Get all room requests
+    // get all pending room requests
     public function getRoomRequests() {
         $roomRequests = $this->roomRequestModel->getAllRoomRequests();
         echo json_encode($roomRequests);
     }
 
-    // Get a room request by ID
+    // get a pending room request by id
     public function getRoomRequest($id) {
         $roomRequest = $this->roomRequestModel->getRoomRequestById($id);
         if ($roomRequest) {
@@ -25,18 +25,12 @@ class RoomRequestController {
         }
     }
 
-    // Create a room request
     public function createRoomRequest($id, $student_id, $purpose, $starting_time, $ending_time, $receiver) 
     {
         $this->roomRequestModel->createRoomRequest($id, $student_id, $purpose, $starting_time, $ending_time, $receiver);
+
     }
 
-    // Update a room request
-    public function updateRoomRequest($id, $room_id, $student_id, $purpose, $starting_time, $ending_time, $receiver) {
-        $this->roomRequestModel->updateRoomRequest($id, $room_id, $student_id, $purpose, $starting_time, $ending_time, $receiver);
-    }
-
-    // Delete a room request
     public function deleteRoomRequest($id) {
         $this->roomRequestModel->deleteRoomRequest($id);
     }

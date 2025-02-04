@@ -9,13 +9,15 @@ class AdminModel {
         $this->conn = $conn;
     }
 
+    // get all admin
     public function getAdmins() {
         $sql = "SELECT * FROM admin";
         $result = $this->conn->query($sql);
 
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
-
+    
+    // get admin by id
     public function getAdminById($id) {
         $sql = "SELECT * FROM admin WHERE id = ?";
         if ($stmt = $this->conn->prepare($sql)) {

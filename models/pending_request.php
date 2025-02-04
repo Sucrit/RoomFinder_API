@@ -1,3 +1,0 @@
-<?php
-// pending request model
-?>

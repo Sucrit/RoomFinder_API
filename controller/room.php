@@ -9,9 +9,9 @@ require_once '../models/room.php';
         $this->roomModel = new RoomModel();
     }
 
-     // Get a specific room by its ID
+     // Get room by ID
      public function getRoom($id) {
-        $room = $this->roomModel->getRoomById($id); // Make sure to query by ID
+        $room = $this->roomModel->getRoomById($id);
         
         if (empty($room)) {
             echo json_encode(['message' => 'Room not found']);
@@ -22,25 +22,38 @@ require_once '../models/room.php';
 
     // Get all rooms
     public function getRooms() {
-        $rooms = $this->roomModel->getAllRoom(); // Query for all rooms
-        
+        $rooms = $this->roomModel->getAllRoom();
         if (empty($rooms)) {
             echo json_encode(['message' => 'No rooms found']);
         } else {
             echo json_encode($rooms);
         }
     }
-    // Create a room
-    public function createRoom($roomName, $roomType, $capacity) {
-        echo $this->roomModel->createRoom($roomName, $roomType, $capacity);
+public function createRoom($name, $status, $availability, $equipment, $capacity, $roomType) {
+    if (isset($name, $status, $availability, $equipment, $capacity, $roomType)) {
+        echo $this->roomModel->createRoom($name, $status, $availability, $equipment, $capacity, $roomType);
+    } else {
+        echo json_encode(['message' => 'Missing required fields', 'status' => '400']);
+    }
+} 
+public function updateRoom($id, $input) {
+    $room = $this->roomModel->getRoomById($id);
+    if (!$room) {
+        echo json_encode(['message' => 'Room not found']);
+        return;
     }
 
-    // Update room details
-    public function updateRoom($id, $roomName, $roomType, $capacity) {
-        echo $this->roomModel->updateRoom($id, $roomName, $roomType, $capacity);
-    }
+    $name = isset($input['name']) ? $input['name'] : $room['name'];
+    $roomType = isset($input['room_type']) ? $input['room_type'] : $room['room_type'];
+    $capacity = isset($input['capacity']) ? $input['capacity'] : $room['capacity'];
+    $status = isset($input['status']) ? $input['status'] : $room['status'];
+    $availability = isset($input['availability']) ? $input['availability'] : $room['availability'];
+    $equipment = isset($input['equipment']) ? $input['equipment'] : $room['equipment'];
 
-    // Delete a room
+    $updateResult = $this->roomModel->updateRoom($id, $name, $roomType, $capacity, $status, $availability, $equipment);
+
+    echo $updateResult;
+}
     public function deleteRoom($id) {
         echo $this->roomModel->deleteRoom($id);
     }
