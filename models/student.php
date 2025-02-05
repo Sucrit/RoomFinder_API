@@ -28,8 +28,6 @@ class StudentModel {
             return "Error: " . $this->conn->error;
         }
     }
-    
-    
 
     // get all students
     public function getStudents() {
@@ -37,7 +35,7 @@ class StudentModel {
         $result = $this->conn->query($sql);
 
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
-}
+    }
 
     // get student by ID
     public function getStudentById($id) {
@@ -67,7 +65,7 @@ class StudentModel {
             return "Error: " . $this->conn->error;
         }
     }
-    
+
     public function deleteStudent($id) {
         $sql = "DELETE FROM student WHERE id = ?";
 
@@ -80,5 +78,22 @@ class StudentModel {
             return "Error: " . $this->conn->error;
         }
     }
+// login student based on email
+public function getStudentByEmail($email) {
+    $sql = "SELECT * FROM student WHERE email = ?";
+
+    if ($stmt = $this->conn->prepare($sql)) {
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $student = $result->fetch_assoc();
+        $stmt->close();
+        return $student === null ? null : $student;
+    } else {
+        return "Error: " . $this->conn->error;
+    }
+}
+
+
 }
 ?>
