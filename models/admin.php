@@ -13,7 +13,7 @@ class AdminModel {
         }
     }
 
-    // Create new admin (sign up)
+    // sign up admin
     public function createAdmin($username, $email, $password) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $sql = "INSERT INTO admin (username, email, password) VALUES (?, ?, ?)";
@@ -30,7 +30,6 @@ class AdminModel {
         }
     }
 
-    // Get all admins
     public function getAdmins() {
         $sql = "SELECT * FROM admin";
         $result = $this->conn->query($sql);
@@ -38,7 +37,6 @@ class AdminModel {
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
-    // Get admin by ID
     public function getAdminById($id) {
         $sql = "SELECT * FROM admin WHERE id = ?";
         if ($stmt = $this->conn->prepare($sql)) {
@@ -54,7 +52,6 @@ class AdminModel {
         }
     }
 
-    // Update admin information
     public function updateAdmin($id, $username, $email, $password) {
         $sql = "UPDATE admin SET username = ?, email = ?, password = ? WHERE id = ?";
 
@@ -68,7 +65,6 @@ class AdminModel {
         }
     }
 
-    // Delete an admin
     public function deleteAdmin($id) {
         $sql = "DELETE FROM admin WHERE id = ?";
 
@@ -82,7 +78,7 @@ class AdminModel {
         }
     }
 
-    // Login admin based on email
+    // login admin
     public function getAdminByEmail($email) {
         $sql = "SELECT * FROM admin WHERE email = ?";
 

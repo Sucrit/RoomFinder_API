@@ -9,7 +9,7 @@ require_once '../models/room.php';
         $this->roomModel = new RoomModel();
     }
 
-     // Get room by ID
+     // get room by ID
      public function getRoom($id) {
         $room = $this->roomModel->getRoomById($id);
         
@@ -20,7 +20,7 @@ require_once '../models/room.php';
         }
     }
 
-    // Get all rooms
+    // get all rooms
     public function getRooms() {
         $rooms = $this->roomModel->getAllRoom();
         if (empty($rooms)) {

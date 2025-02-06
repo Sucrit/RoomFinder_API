@@ -9,23 +9,15 @@ class AdminLoginController {
     public function __construct() {
         $this->adminModel = new AdminModel();
     }
-
-    // Login admin based on email and password
     public function loginAdmin($email, $password) {
         $admin = $this->adminModel->getAdminByEmail($email);
-
-        // Check if the admin exists
         if (!$admin) {
             echo json_encode(['message' => 'No admin found with this email']);
             return;
         }
-
-        // Verify password
         if (password_verify($password, $admin['password'])) {
-            // Login successful
             echo json_encode(['message' => 'Login successful!', 'admin' => $admin]);
         } else {
-            // Password mismatch
             echo json_encode(['message' => 'Invalid email or password']);
         }
     }

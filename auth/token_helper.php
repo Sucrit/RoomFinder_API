@@ -9,14 +9,14 @@ class JwtHelper {
     // encode data to convert to jwt token
     public static function encode($data) {
         $issuedAt = time();
-        $expirationTime = $issuedAt + 3600;  // jwt valid time = 1 hour
+        $expirationTime = $issuedAt + 3600;  // jwt validity
         $payload = array(
             "iat" => $issuedAt,
             "exp" => $expirationTime,
             "data" => $data
         );
 
-        // return the encoded JWT token
+        // return the encoded jwt token
         return JWT::encode($payload, self::$secretKey, 'HS256');
     }
 

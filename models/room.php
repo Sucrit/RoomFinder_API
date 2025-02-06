@@ -12,7 +12,7 @@ class RoomModel {
         }
     }
 
-    // Get all rooms
+    // get all rooms
     public function getAllRoom() {
         $sql = "SELECT * FROM room";
         $result = $this->conn->query($sql);
@@ -20,7 +20,7 @@ class RoomModel {
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
-    // Get room by ID
+    // get room by ID
     public function getRoomById($id) {
         $sql = "SELECT * FROM room WHERE id = ?";
 
