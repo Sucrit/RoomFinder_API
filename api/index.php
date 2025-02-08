@@ -1,3 +1,4 @@
+
 <?php
 // vendor for loading firebase/php-jwt dependencies
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -8,6 +9,7 @@ require_once '../controller/student_signup.php';
 require_once '../controller/student_login.php';
 require_once '../controller/room.php';
 require_once '../controller/room_request.php';
+require_once '../controller/room_schedule.php';
 
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
@@ -20,13 +22,14 @@ if (strpos($contentType, 'application/json') === false) {
 
 $input = json_decode(file_get_contents('php://input'), true);
 
-// Instantiate controllers
+// instantiate controllers
 $adminLoginController = new AdminLoginController();
 $adminSignupController = new AdminSignupController();
 $studentSignupController = new StudentSignupController();
 $studentLoginController = new StudentLoginController();
 $roomController = new RoomController();
 $roomRequestController = new RoomRequestController();
+$roomScheduleController = new RoomScheduleController();
 
 // student method handler
 function handleStudent($requestMethod, $uri, $input, $studentSignupController, $studentLoginController) {
@@ -170,6 +173,49 @@ function handleRoomRequest($requestMethod, $uri, $input, $roomRequestController)
     }
 }
 
+// Room schedule method handler
+function handleRoomSchedule($requestMethod, $uri, $input, $roomScheduleController) {
+    switch ($requestMethod) {
+        case 'GET':
+            if (preg_match('/\/room_schedule\/(\d+)/', $uri, $matches)) {
+                $roomScheduleController->getRoomSchedule($matches[1]);
+            } elseif (preg_match('/\/room_schedule/', $uri)) {
+                $roomScheduleController->getRoomSchedules();
+            } else {
+                echo json_encode(['message' => 'Invalid room schedule request']);
+            }
+            break;
+
+        case 'POST':
+            if (isset($input['room_id'], $input['starting_time'], $input['ending_time'])) {
+                $roomScheduleController->createRoomSchedule($input['room_id'], $input['starting_time'], $input['ending_time']);
+            } else {
+                echo json_encode(['message' => 'Missing required fields to create room schedule']);
+            }
+            break;
+
+        case 'PUT':
+            if (preg_match('/\/room_schedule\/(\d+)/', $uri, $matches)) {
+                $roomScheduleController->updateRoomSchedule($matches[1], $input['room_id'], $input['starting_time'], $input['ending_time']);
+            } else {
+                echo json_encode(['message' => 'Invalid room schedule ID for update']);
+            }
+            break;
+
+        case 'DELETE':
+            if (preg_match('/\/room_schedule\/(\d+)/', $uri, $matches)) {
+                $roomScheduleController->deleteRoomSchedule($matches[1]);
+            } else {
+                echo json_encode(['message' => 'Invalid room schedule ID for deletion']);
+            }
+            break;
+
+        default:
+            echo json_encode(['message' => 'Room schedule method not supported']);
+            break;
+    }
+}
+
 // admin method handler
 function handleAdmin($requestMethod, $uri, $input, $adminLoginController, $adminSignupController) {
     switch ($requestMethod) {
@@ -235,6 +281,8 @@ if (preg_match('/\/student/', $uri)) {
     handleStudent($requestMethod, $uri, $input, $studentSignupController, $studentLoginController);
 } elseif (preg_match('/\/room_request/', $uri)) {
     handleRoomRequest($requestMethod, $uri, $input, $roomRequestController);
+}elseif (preg_match('/\/room_schedule/', $uri)) {
+    handleRoomSchedule($requestMethod, $uri, $input, $roomScheduleController);
 } elseif (preg_match('/\/room/', $uri)) {
     handleRoom($requestMethod, $uri, $input, $roomController);
 } elseif (preg_match('/\/admin/', $uri)) {
@@ -242,5 +290,4 @@ if (preg_match('/\/student/', $uri)) {
 } else {
     echo json_encode(['message' => 'Invalid request']);
 }
-
 ?>

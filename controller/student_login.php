@@ -24,7 +24,10 @@ class StudentLoginController {
                 'username' => $student['username'],
                 'role' => 'student'
             ));
-            echo json_encode(['message' => 'Login successful!', 'token' => $token]);
+            echo json_encode([
+                'student' => $student,
+                'message' => 'Login successful!',
+                'token' => $token]);
         } else {
             echo json_encode(['message' => 'Invalid email or password']);
         }

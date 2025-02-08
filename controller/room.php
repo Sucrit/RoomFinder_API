@@ -29,13 +29,28 @@ require_once '../models/room.php';
             echo json_encode($rooms);
         }
     }
-public function createRoom($name, $status, $availability, $equipment, $capacity, $roomType) {
-    if (isset($name, $status, $availability, $equipment, $capacity, $roomType)) {
-        echo $this->roomModel->createRoom($name, $status, $availability, $equipment, $capacity, $roomType);
-    } else {
-        echo json_encode(['message' => 'Missing required fields', 'status' => '400']);
+    public function createRoom($name, $status, $availability, $equipment, $capacity, $roomType) {
+        if (isset($name, $status, $availability, $equipment, $capacity, $roomType)) {
+            $result = $this->roomModel->createRoom($name, $status, $availability, $equipment, $capacity, $roomType);
+            if (is_array($result)) {
+                echo json_encode([
+                    'message' => 'Room created successfully',
+                    'room_details' => $result
+                ]);
+            } else {
+                echo json_encode([
+                    'message' => $result,
+                    'status' => '500'
+                ]);
+            }
+        } else {
+            echo json_encode([
+                'message' => 'Missing required fields',
+                'status' => '400'
+            ]);
+        }
     }
-} 
+    
 public function updateRoom($id, $input) {
     $room = $this->roomModel->getRoomById($id);
     if (!$room) {

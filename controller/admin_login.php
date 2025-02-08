@@ -19,13 +19,9 @@ class AdminLoginController {
             echo json_encode(['message' => 'No admin found with this email']);
             return;
         }
-
-        // Verify password
         if (password_verify($password, $admin['password'])) {
-            // Login successful
             echo json_encode(['message' => 'Login successful!', 'admin' => $admin]);
         } else {
-            // Password mismatch
             echo json_encode(['message' => 'Invalid email or password']);
         }
     }

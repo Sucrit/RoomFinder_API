@@ -38,8 +38,10 @@ class RoomRequestController {
 
     public function createRoomRequest($id, $student_id, $purpose, $starting_time, $ending_time, $receiver) 
     {
-        $this->roomRequestModel->createRoomRequest($id, $student_id, $purpose, $starting_time, $ending_time, $receiver);
-
+        $roomrequest = $this->roomRequestModel->createRoomRequest($id, $student_id, $purpose, $starting_time, $ending_time, $receiver);
+        if ($roomrequest){
+            echo json_encode(['Room Request' => $roomrequest]);
+        }
     }
 
     public function deleteRoomRequest($id) {

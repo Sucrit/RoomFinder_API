@@ -36,22 +36,30 @@ class RoomModel {
         }
     }
 
+// create a room in the database
 public function createRoom($name, $status, $availability, $equipment, $capacity, $roomType) {
     $sql = "INSERT INTO room (name, status, availability, equipment, capacity, room_type) 
             VALUES (?, ?, ?, ?, ?, ?)";
 
     if ($stmt = $this->conn->prepare($sql)) {
-        $stmt->bind_param('ssssis', $name, $status, $availability, $equipment, $capacity, $roomType); // 'ssssis' means: string, string, string, string, integer, string
-        
+        $stmt->bind_param('ssssis', $name, $status, $availability, $equipment, $capacity, $roomType); 
         if ($stmt->execute()) {
-            return json_encode(['message' => 'Room created successfully']);
+            $roomId = $stmt->insert_id;
+            return [
+                'id' => $roomId,
+                'name' => $name,
+                'status' => $status,
+                'availability' => $availability,
+                'equipment' => $equipment,
+                'capacity' => $capacity,
+                'room_type' => $roomType
+            ];
         } else {
-            return json_encode(['message' => 'Error creating room: ' . $this->conn->error]);
+            return 'Error creating room: ' . $this->conn->error;
         }
-    } else {
-        return json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
     }
 }
+
 
     public function updateRoom($id, $name, $roomType, $capacity, $status, $availability, $equipment) {
         $sql = "UPDATE room 
@@ -60,14 +68,9 @@ public function createRoom($name, $status, $availability, $equipment, $capacity,
 
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('ssisssi', $name, $roomType, $capacity, $status, $availability, $equipment, $id); 
-
-            if ($stmt->execute()) {
-                return json_encode(['message' => 'Room updated successfully']);
-            } else {
+            if (!$stmt->execute()) {
                 return json_encode(['message' => 'Error updating room: ' . $this->conn->error]);
             }
-        } else {
-            return json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
         }
     }
 
@@ -76,9 +79,7 @@ public function createRoom($name, $status, $availability, $equipment, $capacity,
 
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('i', $id); 
-            if ($stmt->execute()) {
-                return json_encode(['message' => 'Room deleted successfully']);
-            } else {
+            if (!$stmt->execute()) {
                 return json_encode(['message' => 'Error deleting room: ' . $this->conn->error]);
             }
         } 
