@@ -21,7 +21,7 @@ class AdminModel {
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param("sss", $username, $email, $hashedPassword);
             $stmt->execute();
-            $insertedId = $stmt->insert_id;  // Get the inserted admin's ID
+            $insertedId = $stmt->insert_id;  
             $stmt->close();
             $admin = $this->getAdminById($insertedId);
             return $admin;
@@ -30,7 +30,7 @@ class AdminModel {
         }
     }
 
-    // Get all admins
+    // get all admins
     public function getAdmins() {
         $sql = "SELECT * FROM admin";
         $result = $this->conn->query($sql);
@@ -38,7 +38,7 @@ class AdminModel {
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
-    // Get admin by ID
+    // get admin by ID
     public function getAdminById($id) {
         $sql = "SELECT * FROM admin WHERE id = ?";
         if ($stmt = $this->conn->prepare($sql)) {
@@ -54,12 +54,28 @@ class AdminModel {
         }
     }
 
-    // Update admin information
+    // get admin by email
+    public function getAdminByEmail($email) {
+        $sql = "SELECT * FROM admin WHERE email = ?";
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $admin = $result->fetch_assoc();
+            $stmt->close();
+            return $admin === null ? null : $admin;
+        } else {
+            return "Error: " . $this->conn->error;
+        }
+    }
+
+    // update admin information
     public function updateAdmin($id, $username, $email, $password) {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT); 
         $sql = "UPDATE admin SET username = ?, email = ?, password = ? WHERE id = ?";
 
         if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param("sssi", $username, $email, $password, $id);
+            $stmt->bind_param("sssi", $username, $email, $hashedPassword, $id);
             $stmt->execute();
             $stmt->close();
             return "Admin updated successfully!";
@@ -68,7 +84,7 @@ class AdminModel {
         }
     }
 
-    // Delete an admin
+    // delete an admin
     public function deleteAdmin($id) {
         $sql = "DELETE FROM admin WHERE id = ?";
 
@@ -77,22 +93,6 @@ class AdminModel {
             $stmt->execute();
             $stmt->close();
             return "Admin deleted successfully!";
-        } else {
-            return "Error: " . $this->conn->error;
-        }
-    }
-
-    // Login admin based on email
-    public function getAdminByEmail($email) {
-        $sql = "SELECT * FROM admin WHERE email = ?";
-
-        if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param("s", $email);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $admin = $result->fetch_assoc();
-            $stmt->close();
-            return $admin === null ? null : $admin;
         } else {
             return "Error: " . $this->conn->error;
         }

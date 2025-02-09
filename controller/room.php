@@ -35,7 +35,7 @@ require_once '../models/room.php';
             if (is_array($result)) {
                 echo json_encode([
                     'message' => 'Room created successfully',
-                    'room_details' => $result
+                    'Room Details' => $result
                 ]);
             } else {
                 echo json_encode([

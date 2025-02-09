@@ -12,7 +12,7 @@ class RoomModel {
         }
     }
 
-    // Get all rooms
+    // get all rooms
     public function getAllRoom() {
         $sql = "SELECT * FROM room";
         $result = $this->conn->query($sql);
