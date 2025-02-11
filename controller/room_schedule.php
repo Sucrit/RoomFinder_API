@@ -19,23 +19,27 @@ class RoomScheduleController {
         }
     }
 
-    // Get all room schedules
-    public function getRoomSchedules() {
-        $roomSchedules = $this->roomScheduleModel->getAllRoomSchedules();
-        echo json_encode($roomSchedules);
+    public function getRoomSchedulesOfRoom($roomId) {
+        if ($roomId) {
+            $roomSchedules = $this->roomScheduleModel->getSchedulesByRoomId($roomId);
+            if (empty($roomSchedules)) {
+                echo json_encode(['message' => 'Empty room schedules']);
+            } else {
+                echo json_encode(['Room Schedules' => $roomSchedules]);
+            }
+        } else {
+            echo json_encode(['message' => 'Room ID is required']);
+        }
+    }
+    
+    public function createRoomSchedule($room_id, $block, $starting_time, $ending_time) {
+        $this->roomScheduleModel->createRoomSchedule($room_id, $block, $starting_time, $ending_time);
     }
 
-    // Create a room schedule
-    public function createRoomSchedule($room_id, $starting_time, $ending_time) {
-        $this->roomScheduleModel->createRoomSchedule($room_id, $starting_time, $ending_time);
+    public function updateRoomSchedule($id, $room_id, $block, $starting_time, $ending_time) {
+        $this->roomScheduleModel->updateRoomSchedule($id, $room_id, $block, $starting_time, $ending_time);
     }
 
-    // Update a room schedule
-    public function updateRoomSchedule($id, $room_id, $starting_time, $ending_time) {
-        $this->roomScheduleModel->updateRoomSchedule($id, $room_id, $starting_time, $ending_time);
-    }
-
-    // Delete a room schedule
     public function deleteRoomSchedule($id) {
         $this->roomScheduleModel->deleteRoomSchedule($id);
     }
