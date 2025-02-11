@@ -122,7 +122,7 @@ function handleRoom($requestMethod, $uri, $input, $roomController) {
 
         case 'DELETE':
             if (preg_match('/\/room\/(\d+)/', $uri, $matches)) {
-                $roomController->deleteRoom($matches[1]);
+                $roomController->deleteRoomById($matches[1]);
             } else {
                 echo json_encode(['message' => 'Invalid room ID for deletion', 'status' => '400']);
             }

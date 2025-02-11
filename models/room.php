@@ -36,7 +36,20 @@ class RoomModel {
         }
     }
 
-// create a room in the database
+    // get all schedule of a room
+public function getRoomSchedules($roomId) {
+    $sql = "SELECT * FROM room_schedule WHERE room_id = ?";
+    
+    if ($stmt = $this->conn->prepare($sql)) {
+        $stmt->bind_param('i', $roomId);  
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
+    }
+    return [];
+}
+
+// create room
 public function createRoom($name, $status, $availability, $equipment, $capacity, $roomType) {
     $sql = "INSERT INTO room (name, status, availability, equipment, capacity, room_type) 
             VALUES (?, ?, ?, ?, ?, ?)";
@@ -76,11 +89,10 @@ public function createRoom($name, $status, $availability, $equipment, $capacity,
 
     public function deleteRoom($id) {
         $sql = "DELETE FROM room WHERE id = ?";
-
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('i', $id); 
             if (!$stmt->execute()) {
-                return json_encode(['message' => 'Error deleting room: ' . $this->conn->error]);
+                return json_encode(['message' => 'Error request: ' . $this->conn->error]);
             }
         } 
     }

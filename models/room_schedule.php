@@ -12,7 +12,23 @@ class RoomScheduleModel {
         }
     }
 
-    // Get a specific room schedule by ID
+        // get schedules for a room by room ID
+        public function getSchedulesByRoomId($roomId) {
+            $sql = "SELECT * FROM room_schedule WHERE room_id = ?";
+
+            if ($stmt = $this->conn->prepare($sql)) {
+                $stmt->bind_param('i', $roomId);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                
+                return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
+            } else {
+                echo json_encode(['message' => 'Error: ' . $this->conn->error]);
+                return [];
+            }
+        }
+
+    // get a specific room schedule by ID
     public function getRoomScheduleById($id) {
         $sql = "SELECT * FROM room_schedule WHERE id = ?";
         if ($stmt = $this->conn->prepare($sql)) {

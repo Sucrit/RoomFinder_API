@@ -31,7 +31,8 @@ public function createStudent($username, $email, $password, $student_number) {
             'message' => 'Student signed up successfully',
             'token' => $token
         ]);
-    } else {
+    }
+    else {
         echo json_encode(['message' => 'Error signing up student']);
     }
 }
