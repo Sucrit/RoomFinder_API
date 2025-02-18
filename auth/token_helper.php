@@ -15,7 +15,6 @@ class JwtHelper {
             "exp" => $expirationTime,
             "data" => $data
         );
-
         // return the encoded JWT token
         return JWT::encode($payload, self::$secretKey, 'HS256');
     }

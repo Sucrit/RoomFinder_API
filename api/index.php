@@ -274,14 +274,14 @@ function handleAdmin($requestMethod, $uri, $input, $AdminController) {
 }
 
 // main request routing
-if (preg_match('/\/student/', $uri)) {
-    handleStudent($requestMethod, $uri, $input, $studentController);
-} elseif (preg_match('/\/admin/', $uri)) {
+if (preg_match('/\/admin/', $uri)) {
     handleAdmin($requestMethod, $uri, $input, $adminController);
 } elseif (preg_match('/\/room_request/', $uri)) {
     handleRoomRequest($requestMethod, $uri, $input, $roomRequestController);
-}elseif (preg_match('/\/room_schedule/', $uri)) {
+} elseif (preg_match('/\/room_schedule/', $uri)) {
     handleRoomSchedule($requestMethod, $uri, $input, $roomScheduleController);
+}elseif (preg_match('/\/student/', $uri)) {
+    handleStudent($requestMethod, $uri, $input, $studentController);
 } elseif (preg_match('/\/room/', $uri)) {
     handleRoom($requestMethod, $uri, $input, $roomController);
 } else {

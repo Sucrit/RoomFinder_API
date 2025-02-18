@@ -17,29 +17,54 @@ class RoomController {
         
         if (empty($room)) {
             echo json_encode(['message' => 'Room not found']);
-        }
-        else {
+        } else {
             $schedules = $this->roomScheduleModel->getSchedulesByRoomId($id);
             $room['schedule'] = $schedules; 
 
             echo json_encode($room);
         }
     }
-
-    // get all rooms with schedules
     public function getRooms() {
+        // Get the current time for comparison (only hour:minute:second)
+        $currentTime = date('H:i:s'); // Current time in HH:mm:ss format
+    
+        // Fetch all rooms
         $rooms = $this->roomModel->getAllRoom();
         
         if (empty($rooms)) {
             echo json_encode(['message' => 'No rooms found']);
-        } else {
-            foreach ($rooms as &$room) {
-                $schedules = $this->roomScheduleModel->getSchedulesByRoomId($room['id']);
-                $room['schedule'] = $schedules;
-            }
-            echo json_encode($rooms); 
+            return;
         }
+    
+        foreach ($rooms as &$room) {
+            // Fetch the room schedules
+            $schedules = $this->roomScheduleModel->getSchedulesByRoomId($room['id']);
+            
+            // Initially assume the room is available
+            $room['status'] = 'available'; // Default status
+            
+            if (!empty($schedules)) {
+                foreach ($schedules as $schedule) {
+                    // Get the schedule start and end times
+                    $startingTime = $schedule['starting_time'];
+                    $endingTime = $schedule['ending_time'];
+    
+                    // If current time is greater than or equal to starting time and less than ending time, set status to 'occupied'
+                    if ($currentTime >= $startingTime && $currentTime < $endingTime) {
+                        $room['status'] = 'occupied'; // Update the room status to "occupied"
+                        break; // No need to check other schedules if room is occupied
+                    }
+                }
+            }
+        
+            // Add the schedule data to the room
+            $room['schedule'] = $schedules;
+        }
+    
+        // Return rooms with updated status and schedule
+        echo json_encode($rooms);
     }
+    
 
     // create a new room
     public function createRoom($name, $status, $availability, $equipment, $capacity, $roomType) {

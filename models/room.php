@@ -87,6 +87,18 @@ public function createRoom($name, $status, $availability, $equipment, $capacity,
         }
     }
 
+    // update room status if occupied or not
+    public function updateRoomStatus($roomId, $status) {
+        $query = "UPDATE room SET status = ? WHERE id = ?";
+        if ($stmt = $this->conn->prepare($query)) {
+            $stmt->bind_param('si', $status, $roomId); // 's' for string, 'i' for integer
+            return $stmt->execute();
+        } else {
+            return false; // Return false if the statement preparation fails
+        }
+    }
+    
+
     public function deleteRoom($id) {
         $sql = "DELETE FROM room WHERE id = ?";
         if ($stmt = $this->conn->prepare($sql)) {
@@ -97,6 +109,5 @@ public function createRoom($name, $status, $availability, $equipment, $capacity,
         } 
     }
 }
-   
 
 ?>

@@ -13,14 +13,21 @@ class RoomRequestModel {
     }
 
     public function getRoomRequestsByStudent($studentId) {
-        // SQL query to get room requests for the specific student
-        $sql = "SELECT * FROM room_request WHERE student_id = ?";
-    
+        // SQL query to get room requests for the specific student, including the room name
+        $sql = "
+            SELECT 
+                room_request.id, room_request.room_id, room.name AS room_name, room_request.student_id, room_request.block, room_request.purpose, room_request.starting_time, 
+                room_request.ending_time, room_request.receiver, room_request.status
+            FROM room_request
+            JOIN room ON room_request.room_id = room.id
+            WHERE room_request.student_id = ?
+        ";
+        
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('i', $studentId);  // Bind student ID
             $stmt->execute();
             $result = $stmt->get_result();
-    
+        
             // If room requests exist for this student, return them
             if ($result->num_rows > 0) {
                 return $result->fetch_all(MYSQLI_ASSOC);
@@ -32,8 +39,7 @@ class RoomRequestModel {
             return null;
         }
     }
-    
-
+       
 
     // get all pending room requests
     public function getAllRoomRequests() {
