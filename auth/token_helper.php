@@ -28,9 +28,7 @@ class JwtHelper {
             echo json_encode(['message' => 'JWT Decode Failed', 'error' => $e->getMessage()]);
             return null;
         }
-    }
-    
-    
+    }  
 }
 
 ?>

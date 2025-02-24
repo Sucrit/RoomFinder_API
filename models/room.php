@@ -20,7 +20,7 @@ class RoomModel {
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
-    // Get room by ID
+    // get room by id
     public function getRoomById($id) {
         $sql = "SELECT * FROM room WHERE id = ?";
 
@@ -37,42 +37,41 @@ class RoomModel {
     }
 
     // get all schedule of a room
-public function getRoomSchedules($roomId) {
-    $sql = "SELECT * FROM room_schedule WHERE room_id = ?";
-    
-    if ($stmt = $this->conn->prepare($sql)) {
-        $stmt->bind_param('i', $roomId);  
-        $stmt->execute();
-        $result = $stmt->get_result();
-        return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
+    public function getRoomSchedules($roomId) {
+        $sql = "SELECT * FROM room_schedule WHERE room_id = ?";
+        
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param('i', $roomId);  
+            $stmt->execute();
+            $result = $stmt->get_result();
+            return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
+        }
+        return [];
     }
-    return [];
-}
 
-// create room
-public function createRoom($name, $status, $availability, $equipment, $capacity, $roomType) {
-    $sql = "INSERT INTO room (name, status, availability, equipment, capacity, room_type) 
-            VALUES (?, ?, ?, ?, ?, ?)";
+    // create room
+    public function createRoom($name, $status, $availability, $equipment, $capacity, $roomType) {
+        $sql = "INSERT INTO room (name, status, availability, equipment, capacity, room_type) 
+                VALUES (?, ?, ?, ?, ?, ?)";
 
-    if ($stmt = $this->conn->prepare($sql)) {
-        $stmt->bind_param('ssssis', $name, $status, $availability, $equipment, $capacity, $roomType); 
-        if ($stmt->execute()) {
-            $roomId = $stmt->insert_id;
-            return [
-                'id' => $roomId,
-                'name' => $name,
-                'status' => $status,
-                'availability' => $availability,
-                'equipment' => $equipment,
-                'capacity' => $capacity,
-                'room_type' => $roomType
-            ];
-        } else {
-            return 'Error creating room: ' . $this->conn->error;
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param('ssssis', $name, $status, $availability, $equipment, $capacity, $roomType); 
+            if ($stmt->execute()) {
+                $roomId = $stmt->insert_id;
+                return [
+                    'id' => $roomId,
+                    'name' => $name,
+                    'status' => $status,
+                    'availability' => $availability,
+                    'equipment' => $equipment,
+                    'capacity' => $capacity,
+                    'room_type' => $roomType
+                ];
+            } else {
+                return 'Error creating room: ' . $this->conn->error;
+            }
         }
     }
-}
-
 
     public function updateRoom($id, $name, $roomType, $capacity, $status, $availability, $equipment) {
         $sql = "UPDATE room 
@@ -87,18 +86,21 @@ public function createRoom($name, $status, $availability, $equipment, $capacity,
         }
     }
 
-    // update room status if occupied or not
+    // update room status (available or occupied)
     public function updateRoomStatus($roomId, $status) {
         $query = "UPDATE room SET status = ? WHERE id = ?";
         if ($stmt = $this->conn->prepare($query)) {
-            $stmt->bind_param('si', $status, $roomId); // 's' for string, 'i' for integer
-            return $stmt->execute();
+            $stmt->bind_param('si', $status, $roomId);
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false; // Return false if the statement preparation fails
+            return false;
         }
-    }
+    }    
     
-
     public function deleteRoom($id) {
         $sql = "DELETE FROM room WHERE id = ?";
         if ($stmt = $this->conn->prepare($sql)) {

@@ -25,47 +25,43 @@ class RoomController {
         }
     }
     public function getRooms() {
-        // Get the current time for comparison (only hour:minute:second)
-        $currentTime = date('H:i:s'); // Current time in HH:mm:ss format
-    
-        // Fetch all rooms
+        $currentTime = date('H:i:s'); 
         $rooms = $this->roomModel->getAllRoom();
-        
+    
         if (empty($rooms)) {
             echo json_encode(['message' => 'No rooms found']);
             return;
         }
     
         foreach ($rooms as &$room) {
-            // Fetch the room schedules
             $schedules = $this->roomScheduleModel->getSchedulesByRoomId($room['id']);
-            
-            // Initially assume the room is available
-            $room['status'] = 'available'; // Default status
+            $room['status'] = 'Available'; 
             
             if (!empty($schedules)) {
                 foreach ($schedules as $schedule) {
-                    // Get the schedule start and end times
                     $startingTime = $schedule['starting_time'];
                     $endingTime = $schedule['ending_time'];
-    
-                    // If current time is greater than or equal to starting time and less than ending time, set status to 'occupied'
+
+                    // time calculation
                     if ($currentTime >= $startingTime && $currentTime < $endingTime) {
-                        $room['status'] = 'occupied'; // Update the room status to "occupied"
-                        break; // No need to check other schedules if room is occupied
+                        $room['status'] = 'Occupied'; 
+                        break;
                     }
                 }
             }
-        
-            // Add the schedule data to the room
             $room['schedule'] = $schedules;
+    
+            // Update room status
+            if ($room['status'] == 'Occupied') {
+                $updated = $this->roomModel->updateRoomStatus($room['id'], 'Occupied');
+            } else {
+                $updated = $this->roomModel->updateRoomStatus($room['id'], 'Available');
+            }        
         }
     
-        // Return rooms with updated status and schedule
         echo json_encode($rooms);
     }
     
-
     // create a new room
     public function createRoom($name, $status, $availability, $equipment, $capacity, $roomType) {
         if (isset($name, $status, $availability, $equipment, $capacity, $roomType)) {
@@ -104,9 +100,8 @@ class RoomController {
         $availability = isset($input['availability']) ? $input['availability'] : $room['availability'];
         $equipment = isset($input['equipment']) ? $input['equipment'] : $room['equipment'];
 
-        $updateResult = $this->roomModel->updateRoom($id, $name, $roomType, $capacity, $status, $availability, $equipment);
-
-        echo $updateResult;
+        $this->roomModel->updateRoom($id, $name, $roomType, $capacity, $status, $availability, $equipment);
+        echo json_encode(['message' => 'Room updated suucessfully']);
     }
 
     // delete room and room request

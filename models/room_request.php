@@ -12,27 +12,92 @@ class RoomRequestModel {
         }
     }
 
+    public function getRoomRequestsCountByStatus() {
+        // count room requests grouped by request status
+        $sql = "
+            SELECT status, COUNT(*) AS count
+            FROM room_request
+            GROUP BY status
+        ";
+        $result = $this->conn->query($sql);
+
+        $statusCounts = [
+            'pending' => 0,
+            'approved' => 0,
+            'rejected' => 0,
+        ];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                if (array_key_exists($row['status'], $statusCounts)) {
+                    $statusCounts[$row['status']] = (int)$row['count']; 
+                }
+            }
+        }
+    
+        return $statusCounts;
+    }
+    
+    public function getRecentPendingRequests() {
+        $last24Hours = date('Y-m-d H:i:s', strtotime('-24 hours')); // 24hours limit
+
+        $sql = "
+            SELECT * FROM room_request
+            WHERE status = 'pending' AND created_at >= ?
+            ORDER BY created_at DESC
+        ";
+    
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param('s', $last24Hours);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $recentRequests = [];
+
+            while ($row = $result->fetch_assoc()) {
+                $recentRequests[] = $row;
+            }
+    
+            return $recentRequests;
+        } else {
+            return [];
+        }
+    }
+
+    // get all pending room request ordered list by latest to oldest
+    public function getAllPendingRoomRequests() {
+        $sql = "SELECT * FROM room_request WHERE status = 'pending' ORDER BY created_at DESC";
+    
+        $result = $this->conn->query($sql);
+        $pendingRequests = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $pendingRequests[] = $row;
+            }
+        }
+        return $pendingRequests;
+    }
+
+    // get all pending room request of a student
     public function getRoomRequestsByStudent($studentId) {
-        // SQL query to get room requests for the specific student, including the room name
         $sql = "
             SELECT 
-                room_request.id, room_request.room_id, room.name AS room_name, room_request.student_id, room_request.block, room_request.purpose, room_request.starting_time, 
-                room_request.ending_time, room_request.receiver, room_request.status
+            room_request.id, room_request.room_id, room.name AS room_name, room_request.student_id, room_request.block, room_request.purpose, room_request.starting_time, 
+            room_request.ending_time, room_request.receiver, room_request.status
             FROM room_request
             JOIN room ON room_request.room_id = room.id
             WHERE room_request.student_id = ?
         ";
         
         if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param('i', $studentId);  // Bind student ID
+            $stmt->bind_param('i', $studentId);
             $stmt->execute();
             $result = $stmt->get_result();
-        
-            // If room requests exist for this student, return them
+
             if ($result->num_rows > 0) {
                 return $result->fetch_all(MYSQLI_ASSOC);
             } else {
-                return null;  // No room requests found for this student
+                return null; 
             }
         } else {
             echo json_encode(['message' => 'Error executing query: ' . $this->conn->error]);
@@ -40,14 +105,6 @@ class RoomRequestModel {
         }
     }
        
-
-    // get all pending room requests
-    public function getAllRoomRequests() {
-        $sql = "SELECT * FROM room_request";
-        $result = $this->conn->query($sql);
-        return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
-    }
-
     // get a pending room request by id
     public function getRoomRequestById($id) {
         $sql = "SELECT * FROM room_request WHERE id = ?";
@@ -64,22 +121,25 @@ class RoomRequestModel {
         }
     }
 
-    public function createRoomRequest($room_id, $student_id, $purpose, $starting_time, $ending_time, $receiver) {
-        $sql = "INSERT INTO room_request (room_id, student_id, purpose, starting_time, ending_time, receiver) 
-                VALUES (?, ?, ?, ?, ?, ?)";
+    public function createRoomRequest($room_id, $student_id, $purpose, $starting_time, $ending_time) {
+        $sql = "INSERT INTO room_request (room_id, student_id, purpose, starting_time, ending_time, status) 
+                VALUES (?, ?, ?, ?, ?, 'pending')";
 
         if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param('iissss', $room_id, $student_id, $purpose, $starting_time, $ending_time, $receiver);
+            $stmt->bind_param('iisss', $room_id, $student_id, $purpose, $starting_time, $ending_time);
+            
             if ($stmt->execute()) {
-                echo json_encode(['message' => 'Room request created successfully']);
+                return $this->getRoomRequestById($this->conn->insert_id);
             } else {
                 echo json_encode(['message' => 'Error: ' . $this->conn->error]);
+                return null;
             }
         } else {
             echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
+            return null;
         }
     }
-
+    
     public function deleteRoomRequest($id) {
         $sql = "DELETE FROM room_request WHERE id = ?";
 
