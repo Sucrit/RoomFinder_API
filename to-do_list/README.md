@@ -12,3 +12,5 @@ TO-DO LIST!!!
 -fix backward time bug in room schedule for datetime format
 -fix time overlap bug in room schedulee for datetime format
 -if room request is approved, add the room request schedule to room schedules(add room status logic to add via room status "accepted")
+-if room schedule is finished, delete the room schedule
+-users (block, year, course)

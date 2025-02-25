@@ -20,19 +20,16 @@ class RoomRequestController {
     }
 
     public function getRoomRequests() {
-        // Get the counts of room requests by status
+        // count via status value
         $statusCounts = $this->roomRequestModel->getRoomRequestsCountByStatus();
-    
-        // Get the recent pending requests created within the last 24 hours
+        // get recent request
         $recentRequests = $this->roomRequestModel->getRecentPendingRequests();
-    
-        // Get all pending room requests
+        // get all request
         $allPendingRequests = $this->roomRequestModel->getAllPendingRoomRequests();
-    
-        // Return the status counts and the requests as a JSON response
+        
         echo json_encode([
             'pending' => [
-                'count' => (string)$statusCounts['pending'], // Ensure the count is a string
+                'count' => (string)$statusCounts['pending'],
             ],
             'approved' => [
                 'count' => (string)$statusCounts['approved'],
@@ -44,7 +41,7 @@ class RoomRequestController {
             'Room Request' => $allPendingRequests,
         ]);
     }
-    
+
     // get a pending room request by id
     public function getRoomRequest($id) {
         $roomRequest = $this->roomRequestModel->getRoomRequestById($id);
