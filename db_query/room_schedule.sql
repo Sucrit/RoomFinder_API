@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2025 at 11:16 PM
+-- Generation Time: Mar 05, 2025 at 12:31 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,10 +30,20 @@ SET time_zone = "+00:00";
 CREATE TABLE `room_schedule` (
   `id` int(11) NOT NULL,
   `room_id` int(11) NOT NULL,
-  `block` varchar(40) NOT NULL,
-  `starting_time` datetime NOT NULL,
-  `ending_time` datetime NOT NULL
+  `block` varchar(40) DEFAULT NULL,
+  `date` date NOT NULL,
+  `starting_time` time NOT NULL,
+  `ending_time` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `room_schedule`
+--
+
+INSERT INTO `room_schedule` (`id`, `room_id`, `block`, `date`, `starting_time`, `ending_time`) VALUES
+(1, 2, 'Block 8', '2025-03-10', '08:00:00', '10:00:00'),
+(2, 2, 'Block 8', '2025-03-10', '08:00:00', '10:00:00'),
+(3, 2, 'Block 8', '2025-03-10', '08:00:00', '10:00:00');
 
 --
 -- Indexes for dumped tables
@@ -54,17 +64,7 @@ ALTER TABLE `room_schedule`
 -- AUTO_INCREMENT for table `room_schedule`
 --
 ALTER TABLE `room_schedule`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `room_schedule`
---
-ALTER TABLE `room_schedule`
-  ADD CONSTRAINT `room_schedule_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`) ON DELETE CASCADE;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

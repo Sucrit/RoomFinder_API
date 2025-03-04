@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2025 at 11:14 PM
+-- Generation Time: Mar 05, 2025 at 12:31 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,15 +29,23 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `room_request` (
   `id` int(11) NOT NULL,
-  `room_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
+  `room_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `block` varchar(100) DEFAULT NULL,
   `purpose` varchar(255) DEFAULT NULL,
-  `starting_time` datetime DEFAULT NULL,
-  `ending_time` datetime DEFAULT NULL,
-  `status` text DEFAULT 'Pending',
+  `date` date NOT NULL,
+  `starting_time` time NOT NULL,
+  `ending_time` time NOT NULL,
+  `status` text DEFAULT 'pending',
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `room_request`
+--
+
+INSERT INTO `room_request` (`id`, `room_id`, `user_id`, `block`, `purpose`, `date`, `starting_time`, `ending_time`, `status`, `created_at`) VALUES
+(1, 1, 1, 'Block 10', 'Tambay', '2025-03-10', '08:00:00', '09:00:00', 'pending', '2025-03-04 22:40:40');
 
 --
 -- Indexes for dumped tables
@@ -59,7 +67,7 @@ ALTER TABLE `room_request`
 -- AUTO_INCREMENT for table `room_request`
 --
 ALTER TABLE `room_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
@@ -70,7 +78,7 @@ ALTER TABLE `room_request`
 --
 ALTER TABLE `room_request`
   ADD CONSTRAINT `room_request_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `room_request_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `room_request_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

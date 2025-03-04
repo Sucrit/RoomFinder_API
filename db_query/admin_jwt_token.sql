@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2025 at 11:15 PM
+-- Generation Time: Mar 05, 2025 at 12:31 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,10 +30,10 @@ SET time_zone = "+00:00";
 CREATE TABLE `admin_jwt_token` (
   `id` int(11) NOT NULL,
   `admin_id` int(11) NOT NULL,
-  `token` text NOT NULL,
+  `token` varchar(255) NOT NULL,
   `issued_at` datetime NOT NULL,
   `expires_at` datetime NOT NULL,
-  `created_at` datetime NOT NULL
+  `status` enum('valid','revoked') NOT NULL DEFAULT 'valid'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2025 at 11:16 PM
+-- Generation Time: Mar 05, 2025 at 12:30 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,19 +29,20 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
+  `teacher_id` varchar(20) NOT NULL,
   `username` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role` varchar(50) DEFAULT NULL,
-  `student_number` varchar(50) DEFAULT NULL
+  `role` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `email`, `password`, `role`, `student_number`) VALUES
-(31, 'walala', 'email@email.com', '$2y$10$zgMr4d0oJF4Y5Fdp/sq16OVAcBasBiyJeR/nvl0KAAuhkDQbyloi6', 'student', '0222-222');
+INSERT INTO `user` (`id`, `teacher_id`, `username`, `email`, `password`, `role`) VALUES
+(1, '1122', 'Sir. Apache2', 'titi@gmail.com', '$2y$10$bdx4qfAWOmDN2b7hCDASLexOHgl2nzfifK3NpAcO0dgRDBU9WFiU.', 'teacher'),
+(2, '445556', 'Sir. Mysql', 'pota@gmail.com', '$2y$10$R7JAHS9uwno/j7AmkpVMquHTxkFPmPm/U22Q3zeuIvJppJtWFHBdG', 'teacher');
 
 --
 -- Indexes for dumped tables
@@ -61,7 +62,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
