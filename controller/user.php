@@ -11,43 +11,27 @@ class UserController {
         $this->userModel = new UserModel();
     }
 
-    // create user
-public function createUser($username, $email, $password, $role) {
-    // Check if user with the same email already exists
-    $existingUser = $this->userModel->getUserByEmail($email);
-    if ($existingUser) {
-        echo json_encode(['message' => 'User already exists with this email']);
-        return;
+    // signup
+    public function createUser($username, $email, $password, $role) {
+        $existingUser = $this->userModel->getUserByEmail($email);
+        if ($existingUser) {
+            echo json_encode(['message' => 'User already exists with this email']);
+            return;
+        }
+        if (!in_array($role, ['student', 'teacher'])) {
+            echo json_encode(['message' => 'Invalid role']);
+            return;
+        }
+        $user = $this->userModel->createUser($username, $email, $password, $role);
+        if ($user) {
+            echo json_encode([
+                'User' => $user
+            ]);
+        } else {
+            echo json_encode(['message' => 'Error signing up user']);
+        }
     }
-
-    // Ensure role is either 'student' or 'prof' (or other roles as needed)
-    if (!in_array($role, ['student', 'prof'])) {
-        echo json_encode(['message' => 'Invalid role specified']);
-        return;
-    }
-
-    // Create the user
-    $user = $this->userModel->createUser($username, $email, $password, $role);  
-    if ($user) {
-        // Encode JWT token with user details including role
-        $token = JwtHelper::encode(array(
-            'id' => $user['id'],
-            'username' => $user['username'],
-            'role' => $user['role'],
-            'exp' => time() + 3600 // 1 hour expiry
-        ));
-
-        // Return success response with user and token
-        echo json_encode([
-            'user' => $user,
-            'message' => 'User signed up successfully',
-            'token' => $token
-        ]);
-    } else {
-        echo json_encode(['message' => 'Error signing up user']);
-    }
-}
- 
+    
     // login user
     public function loginUser($email, $password) {
         $user = $this->userModel->getUserByEmail($email);
@@ -56,20 +40,28 @@ public function createUser($username, $email, $password, $role) {
             echo json_encode(['message' => 'No user found with this email']);
             return;
         }
+
         if (password_verify($password, $user['password'])) {
             $token = JwtHelper::encode(array(
                 'id' => $user['id'],
                 'username' => $user['username'],
-                'role' => $user['role']
+                'role' => $user['role'],
+                'exp' => time() + 3600 // 1 hour expiry
             ));
+            $this->userModel->storeUserToken($user['id'], $token);
             echo json_encode([
-                'user' => $user,
-                'message' => 'Login successful!',
-                'token' => $token]);
+                'User' => [
+                    'id' => $user['id'],
+                    'message' => 'Login successful!',
+                    'username' => $user['username'],
+                    'email' => $user['email'],
+                    'token' => $token
+                ]
+            ]);
         } else {
-            echo json_encode(['message' => 'Invalid email or password']);
+            echo json_encode(['message' => 'Password is incorrect']);
         }
-    }  
+    }
 
     // get user by ID
     public function getUser($id) {
@@ -95,24 +87,40 @@ public function createUser($username, $email, $password, $role) {
 
     // update user details
     public function updateUser($id, $input) {
-        // Get current user details from the database
         $user = $this->userModel->getUserById($id);
     
         if (!$user) {
             echo json_encode(['message' => 'User not found']);
             return;
         }
-    
-        // Check if new input values exist, otherwise use the current values
+        $teacher_id = isset($input['teacher_id']) ? $input['teacher_id'] : $user['teacher_id'];
         $username = isset($input['username']) ? $input['username'] : $user['username'];
         $email = isset($input['email']) ? $input['email'] : $user['email'];
-        $password = isset($input['password']) ? password_hash($input['password'], PASSWORD_DEFAULT) : $user['password'];
-        $role = isset($input['role']) ? $input['role'] : $user['role'];
-        $student_number = isset($input['student_number']) ? $input['student_number'] : $user['student_number']; // added student_number handling
+
+        $this->userModel->updateUser($id, $teacher_id, $username, $email);
+        echo json_encode(['message' => "Updated Successfully"]);
+    }
     
-        // Update user details in the database
-        $this->userModel->updateUser($id, $username, $email, $password, $role, $student_number);
-        echo json_encode(['message' => 'User updated successfully']);
+    // change pass
+    public function changePassword($userId, $oldPassword, $newPassword, $confirmPassword) {
+        $user = $this->userModel->getUserById($userId);
+        
+        if (!$user) {
+            echo json_encode(['message' => 'User not found']);
+            return;
+        }
+        if (!password_verify($oldPassword, $user['password'])) {
+            echo json_encode(['message' => 'Old password is incorrect']);
+            return;
+        }
+        if ($newPassword !== $confirmPassword) {
+            echo json_encode(['message' => 'New password and confirm password do not match']);
+            return;
+        }
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $this->userModel->updateUserPassword($userId, $hashedPassword);
+    
+        echo json_encode(['message' => 'Password changed successfully']);
     }
     
     // delete user
@@ -125,5 +133,6 @@ public function createUser($username, $email, $password, $role) {
             echo json_encode(['message' => 'Error deleting user']);
         }
     }
+    
 }
 ?>

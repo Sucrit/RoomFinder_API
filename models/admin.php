@@ -6,14 +6,30 @@ class AdminModel {
 
     private $conn;
 
+
     public function __construct() {
-        $this->conn = (new Database())->connect();
-        if (!$this->conn) {
-            die('Database connection failed: ' . mysqli_connect_error());
+        $this->conn = Database::getInstance();
+    }
+
+    // store admin token
+    public function storeAdminToken($adminId, $token) { 
+
+    $issuedAt = date('Y-m-d H:i:s'); 
+    $expiresAt = date('Y-m-d H:i:s', strtotime('+1 hour')); 
+
+    $sql = "INSERT INTO admin_jwt_token (admin_id, token, issued_at, expires_at) VALUES (?, ?, ?, ?)";
+
+    if ($stmt = $this->conn->prepare($sql)) {
+        $stmt->bind_param("isss", $adminId, $token, $issuedAt, $expiresAt);
+        $stmt->execute();
+        $stmt->close();
+        return true;
+    } else {
+        return "Error: " . $this->conn->error;
         }
     }
 
-    // Create new admin (sign up)
+    // create admin 
     public function createAdmin($username, $email, $password) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $sql = "INSERT INTO admin (username, email, password) VALUES (?, ?, ?)";
@@ -38,7 +54,7 @@ class AdminModel {
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
-    // get admin by ID
+    // get admin by id
     public function getAdminById($id) {
         $sql = "SELECT * FROM admin WHERE id = ?";
         if ($stmt = $this->conn->prepare($sql)) {
@@ -69,19 +85,19 @@ class AdminModel {
         }
     }
 
-// update admin details
-public function updateAdmin($id, $username, $email, $password) {
-    $sql = "UPDATE admin SET username = ?, email = ?, password = ? WHERE id = ?";
+    // update admin details
+    public function updateAdmin($id, $username, $email, $password) {
+        $sql = "UPDATE admin SET username = ?, email = ?, password = ? WHERE id = ?";
 
-    if ($stmt = $this->conn->prepare($sql)) {
-        $stmt->bind_param("sssi", $username, $email, $password, $id);
-        $stmt->execute();
-        $stmt->close();
-        return "Admin updated successfully!";
-    } else {
-        return "Error: " . $this->conn->error;
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("sssi", $username, $email, $password, $id);
+            $stmt->execute();
+            $stmt->close();
+            return "Admin updated successfully!";
+        } else {
+            return "Error: " . $this->conn->error;
+        }
     }
-}
 
     // delete an admin
     public function deleteAdmin($id) {
@@ -91,7 +107,20 @@ public function updateAdmin($id, $username, $email, $password) {
             $stmt->bind_param("i", $id);
             $stmt->execute();
             $stmt->close();
-            return "Admin deleted successfully!";
+        } else {
+            return "Error: " . $this->conn->error;
+        }
+    }
+
+    // logout admin
+    public function deleteAdminToken($adminId, $token) {
+        $sql = "DELETE FROM admin_jwt_token WHERE admin_id = ? AND token = ?";
+        
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("is", $adminId, $token);
+            $stmt->execute();
+            $stmt->close();
+            return true;
         } else {
             return "Error: " . $this->conn->error;
         }

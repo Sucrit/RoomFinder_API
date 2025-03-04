@@ -24,6 +24,7 @@ class RoomController {
             echo json_encode($room);
         }
     }
+
     public function getRooms() {
         $currentTime = date('H:i:s'); 
         $rooms = $this->roomModel->getAllRoom();
@@ -49,9 +50,9 @@ class RoomController {
                     }
                 }
             }
-            $room['schedule'] = $schedules;
+            $room['Schedules'] = $schedules;
     
-            // Update room status
+            // Update room status based on ongoing schedule
             if ($room['status'] == 'Occupied') {
                 $updated = $this->roomModel->updateRoomStatus($room['id'], 'Occupied');
             } else {
@@ -63,9 +64,9 @@ class RoomController {
     }
     
     // create a new room
-    public function createRoom($name, $status, $availability, $equipment, $capacity, $roomType) {
-        if (isset($name, $status, $availability, $equipment, $capacity, $roomType)) {
-            $result = $this->roomModel->createRoom($name, $status, $availability, $equipment, $capacity, $roomType);
+    public function createRoom($room_building, $room_number, $status, $equipment, $capacity, $roomType) {
+        if (isset($room_building, $room_number, $status, $equipment, $capacity, $roomType)) {
+            $result = $this->roomModel->createRoom($room_building, $room_number, $status, $equipment, $capacity, $roomType);
             if (is_array($result)) {
                 echo json_encode([
                     'message' => 'Room created successfully',
@@ -73,14 +74,12 @@ class RoomController {
                 ]);
             } else {
                 echo json_encode([
-                    'message' => $result,
-                    'status' => '500'
+                    'message' => $result
                 ]);
             }
         } else {
             echo json_encode([
-                'message' => 'Missing required fields',
-                'status' => '400'
+                'message' => 'Missing required fields'
             ]);
         }
     }
@@ -97,13 +96,28 @@ class RoomController {
         $roomType = isset($input['room_type']) ? $input['room_type'] : $room['room_type'];
         $capacity = isset($input['capacity']) ? $input['capacity'] : $room['capacity'];
         $status = isset($input['status']) ? $input['status'] : $room['status'];
-        $availability = isset($input['availability']) ? $input['availability'] : $room['availability'];
         $equipment = isset($input['equipment']) ? $input['equipment'] : $room['equipment'];
 
-        $this->roomModel->updateRoom($id, $name, $roomType, $capacity, $status, $availability, $equipment);
+        $this->roomModel->updateRoom($id, $name, $roomType, $capacity, $status, $equipment);
         echo json_encode(['message' => 'Room updated suucessfully']);
     }
 
+    // search room
+    public function searchRooms($input) {
+        if (isset($_GET['keyword'])) {
+            $keyword = $_GET['keyword'];
+            $rooms = $this->roomModel->searchRooms($keyword);
+    
+            if (empty($rooms)) {
+                echo json_encode(['message' => 'No rooms found for the keyword']);
+            } else {
+                echo json_encode($rooms);
+            }
+        } else {
+            echo json_encode(['message' => 'Keyword is required']);
+        }
+    }
+    
     // delete room and room request
     public function deleteRoomById($id) {
         $this->roomModel->deleteRoom($id);

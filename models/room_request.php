@@ -5,13 +5,11 @@ require_once "../config/database.php";
 class RoomRequestModel {
     private $conn;
 
-    public function __construct() {
-        $this->conn = (new Database())->connect();
-        if (!$this->conn) {
-            die('Database connection failed: ' . mysqli_connect_error());
-        }
-    }
 
+    public function __construct() {
+        $this->conn = Database::getInstance();
+    }
+    
     public function getRoomRequestsCountByStatus() {
         // count room requests grouped by request status
         $sql = "
@@ -78,33 +76,36 @@ class RoomRequestModel {
         return $pendingRequests;
     }
 
-    // get all pending room request of a student
-    public function getRoomRequestsByStudent($studentId) {
+    // get all pending room request of a teacher
+    public function getRoomRequestsByStudent($userId) {
         $sql = "
             SELECT 
-            room_request.id, room_request.room_id, room.name AS room_name, room_request.student_id, room_request.block, room_request.purpose, room_request.starting_time, 
-            room_request.ending_time, room_request.receiver, room_request.status
+                room_request.id, 
+                room_request.room_id, 
+                room.room_building,
+                room.room_number, 
+                room_request.user_id,  
+                room_request.block, 
+                room_request.purpose, 
+                room_request.starting_time, 
+                room_request.ending_time, 
+                room_request.status
             FROM room_request
             JOIN room ON room_request.room_id = room.id
-            WHERE room_request.student_id = ?
+            WHERE room_request.user_id = ? 
         ";
-        
         if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param('i', $studentId);
+            $stmt->bind_param('i', $userId); 
             $stmt->execute();
             $result = $stmt->get_result();
-
-            if ($result->num_rows > 0) {
-                return $result->fetch_all(MYSQLI_ASSOC);
-            } else {
-                return null; 
-            }
+    
+            return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
         } else {
             echo json_encode(['message' => 'Error executing query: ' . $this->conn->error]);
-            return null;
+            return [];
         }
     }
-       
+    
     // get a pending room request by id
     public function getRoomRequestById($id) {
         $sql = "SELECT * FROM room_request WHERE id = ?";
@@ -121,12 +122,12 @@ class RoomRequestModel {
         }
     }
 
-    public function createRoomRequest($room_id, $student_id, $purpose, $starting_time, $ending_time) {
-        $sql = "INSERT INTO room_request (room_id, student_id, purpose, starting_time, ending_time, status) 
-                VALUES (?, ?, ?, ?, ?, 'pending')";
+    public function createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time) {
+        $sql = "INSERT INTO room_request (room_id, user_id, block, purpose, date, starting_time, ending_time) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param('iisss', $room_id, $student_id, $purpose, $starting_time, $ending_time);
+            $stmt->bind_param('iisssss', $room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time);
             
             if ($stmt->execute()) {
                 return $this->getRoomRequestById($this->conn->insert_id);
@@ -155,5 +156,4 @@ class RoomRequestModel {
         }
     }
 }
-
 ?>

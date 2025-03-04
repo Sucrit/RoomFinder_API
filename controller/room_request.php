@@ -8,10 +8,10 @@ class RoomRequestController {
     public function __construct() {
         $this->roomRequestModel = new RoomRequestModel();
     }
+    
     // get all room requests of a specific student
-    public function getRoomRequestsByStudent($studentId) {
-        $roomRequests = $this->roomRequestModel->getRoomRequestsByStudent($studentId);
-        
+    public function getRoomRequestsByStudent($userId) {
+        $roomRequests = $this->roomRequestModel->getRoomRequestsByStudent($userId);
         if ($roomRequests) {
             echo json_encode($roomRequests);
         } else {
@@ -52,8 +52,8 @@ class RoomRequestController {
         }
     }
 
-    public function createRoomRequest($room_id, $student_id, $purpose, $starting_time, $ending_time) {
-        $roomrequest = $this->roomRequestModel->createRoomRequest($room_id, $student_id, $purpose, $starting_time, $ending_time);
+    public function createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time) {
+        $roomrequest = $this->roomRequestModel->createRoomRequest($room_id, $user_id, $block, $purpose, $date,$starting_time, $ending_time);
         if ($roomrequest) {
             echo json_encode(['Room Request' => $roomrequest]);
         } else {

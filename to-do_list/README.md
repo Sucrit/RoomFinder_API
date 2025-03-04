@@ -7,10 +7,14 @@ TO-DO LIST!!!
 -add student token table in the database with column id, student_id(), token, created_at, expires_at
 -add admin token table in the database with column id, admin_id(), token, created_at, expires_at
 
+
+(TODO)
 -apply middleware which uses student token for mobile app routes
 -apply middleware which uses admin token for web app routes
+
 -fix backward time bug in room schedule for datetime format
 -fix time overlap bug in room schedulee for datetime format
+
 -if room request is approved, add the room request schedule to room schedules(add room status logic to add via room status "accepted")
 -if room schedule is finished, delete the room schedule
 -users (block, year, course)
