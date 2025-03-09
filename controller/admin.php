@@ -18,12 +18,8 @@ class AdminController {
             return;
         }
         $admin = $this->adminModel->createAdmin($username, $email, $password);
-    
         if ($admin) {
-            echo json_encode([
-                'admin' => $admin,
-                'message' => 'Admin signed up successfully',
-            ]);
+            echo json_encode( $admin);
         } else {
             echo json_encode(['message' => 'Error signing up admin']);
         }
@@ -47,16 +43,13 @@ class AdminController {
                 'exp' => time() + 3600 // 1 hour expiry
             ));
             $this->adminModel->storeAdminToken($admin['id'], $token);
-
             echo json_encode([
-                'admin' => [
-                    'id' => $admin['id'],
-                    'message' => 'Login successful!',
-                    'username' => $admin['username'],
-                    'email' => $admin['email'],
-                    'token' => $token
-                ]
-            ]);
+                'id' => $admin['id'],
+                'message' => 'Login successful!',
+                'username' => $admin['username'],
+                'email' => $admin['email'],
+                'token' => $token
+            ]); 
         } else {
             echo json_encode(['message' => 'Invalid email or password']);
         }
@@ -92,9 +85,7 @@ class AdminController {
         }
         $username = isset($input['username']) ? $input['username'] : $admin['username'];
         $email = isset($input['email']) ? $input['email'] : $admin['email'];
-        $password = isset($input['password']) ? password_hash($input['password'], PASSWORD_DEFAULT) : $admin['password'];
-        $this->adminModel->updateAdmin($id, $username, $email, $password);
-        
+        $this->adminModel->updateAdmin($id, $username, $email);
         echo json_encode(['message' => 'Admin updated successfully']);
     }
 
@@ -107,16 +98,17 @@ class AdminController {
             echo json_encode(['message' => 'Error deleting admin']);
         }
     }
-    // public function logoutAdmin($token) {
-    //     $decodedToken = JwtHelper::decode($token);
 
-    //     if (isset($decodedToken['id'])) {
-    //         $adminId = $decodedToken['id']; 
-    //         $this->adminModel->deleteAdminToken($adminId, $token); 
-    //         echo json_encode(['message' => 'Admin logged out successfully']);
-    //     } else {
-    //         echo json_encode(['message' => 'Invalid token or missing ID']);
-    //     }
-    // }
+    public function logoutAdmin($token) {
+        $decodedToken = JwtHelper::decode($token);
+
+        if (isset($decodedToken['id'])) {
+            $adminId = $decodedToken['id']; 
+            $this->adminModel->deleteAdminToken($adminId, $token); 
+            echo json_encode(['message' => 'Admin logged out successfully']);
+        } else {
+            echo json_encode(['message' => 'Invalid token or missing ID']);
+        }
+    }
 }
 ?>

@@ -139,7 +139,7 @@ function handleRoom($requestMethod, $uri, $input, $roomController) {
             }
             break;
 
-        case 'PUT':
+        case 'PATCH':
             if (preg_match('/\/room\/(\d+)/', $uri, $matches)) {
                 $roomController->updateRoom($matches[1], $input);
             } else {
@@ -279,7 +279,7 @@ function handleAdmin($requestMethod, $uri, $input, $AdminController) {
             }
             break;
 
-        case 'PUT':
+        case 'PATCH':
             if (preg_match('/\/admin\/(\d+)/', $uri, $matches)) {
                 $id = $matches[1];
                 if (!empty($input)) {

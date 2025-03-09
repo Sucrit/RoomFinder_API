@@ -86,14 +86,13 @@ class AdminModel {
     }
 
     // update admin details
-    public function updateAdmin($id, $username, $email, $password) {
-        $sql = "UPDATE admin SET username = ?, email = ?, password = ? WHERE id = ?";
+    public function updateAdmin($id, $username, $email) {
+        $sql = "UPDATE admin SET username = ?, email = ? WHERE id = ?";
 
         if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param("sssi", $username, $email, $password, $id);
+            $stmt->bind_param("ssi", $username, $email, $id);
             $stmt->execute();
             $stmt->close();
-            return "Admin updated successfully!";
         } else {
             return "Error: " . $this->conn->error;
         }

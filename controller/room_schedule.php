@@ -35,7 +35,6 @@ class RoomScheduleController {
     public function createRoomSchedule($room_id, $block, $date, $starting_time, $ending_time) {
         // check if the room exists
         if ($this->roomScheduleModel->roomExists($room_id)) {
-            
             $this->roomScheduleModel->createRoomSchedule($room_id, $block, $date, $starting_time, $ending_time);
         } else {
             echo json_encode(['message' => 'The room does not exist']);
@@ -50,5 +49,6 @@ class RoomScheduleController {
     public function deleteRoomSchedule($id) {
         $this->roomScheduleModel->deleteRoomSchedule($id);
     }
+
 }
 ?>

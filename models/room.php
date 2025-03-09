@@ -74,13 +74,13 @@ class RoomModel {
         }
     }
     
-    public function updateRoom($id, $name, $roomType, $capacity, $status, $equipment) {
+    public function updateRoom($id, $room_building, $room_number, $roomType, $capacity, $status, $equipment) {
         $sql = "UPDATE room 
-                SET name = ?, room_type = ?, capacity = ?, status = ?, equipment = ? 
+                SET room_building = ?, room_number = ?, room_type = ?, capacity = ?, status = ?, equipment = ? 
                 WHERE id = ?";
 
         if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param('ssissi', $name, $roomType, $capacity, $status, $equipment, $id); 
+            $stmt->bind_param('sisissi', $room_building, $room_number, $roomType, $capacity, $status, $equipment, $id); 
             if (!$stmt->execute()) {
                 return json_encode(['message' => 'Error updating room: ' . $this->conn->error]);
             }

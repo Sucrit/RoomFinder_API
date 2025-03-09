@@ -63,24 +63,13 @@ class RoomController {
         echo json_encode($rooms);
     }
     
-    // create a new room
+    // create room
     public function createRoom($room_building, $room_number, $status, $equipment, $capacity, $roomType) {
-        if (isset($room_building, $room_number, $status, $equipment, $capacity, $roomType)) {
-            $result = $this->roomModel->createRoom($room_building, $room_number, $status, $equipment, $capacity, $roomType);
-            if (is_array($result)) {
-                echo json_encode([
-                    'message' => 'Room created successfully',
-                    'Room Details' => $result
-                ]);
-            } else {
-                echo json_encode([
-                    'message' => $result
-                ]);
-            }
+        $room = $this->roomModel->createRoom($room_building, $room_number, $status, $equipment, $capacity, $roomType);
+        if ($room) {
+            echo json_encode($room);
         } else {
-            echo json_encode([
-                'message' => 'Missing required fields'
-            ]);
+            echo json_encode(['message' => 'Room creation failed']);
         }
     }
 
@@ -92,14 +81,15 @@ class RoomController {
             return;
         }
 
-        $name = isset($input['name']) ? $input['name'] : $room['name'];
+        $room_building = isset($input['room_building']) ? $input['room_building'] : $room['room_building'];
+        $room_number = isset($input['room_number']) ? $input['room_number'] : $room['room_number'];
         $roomType = isset($input['room_type']) ? $input['room_type'] : $room['room_type'];
         $capacity = isset($input['capacity']) ? $input['capacity'] : $room['capacity'];
         $status = isset($input['status']) ? $input['status'] : $room['status'];
         $equipment = isset($input['equipment']) ? $input['equipment'] : $room['equipment'];
 
-        $this->roomModel->updateRoom($id, $name, $roomType, $capacity, $status, $equipment);
-        echo json_encode(['message' => 'Room updated suucessfully']);
+        $this->roomModel->updateRoom($id, $room_building, $room_number, $roomType, $capacity, $status, $equipment);
+        echo json_encode(['message' => 'Room updated sucessfully']);
     }
 
     // search room

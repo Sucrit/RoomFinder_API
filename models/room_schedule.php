@@ -40,7 +40,6 @@ class RoomScheduleModel {
     }
 
     public function createRoomSchedule($room_id, $block, $date, $starting_time, $ending_time) {
-
         $sql = "INSERT INTO room_schedule (room_id, block, date, starting_time, ending_time) VALUES (?, ?, ?, ?, ?)";
 
         if ($stmt = $this->conn->prepare($sql)) {
@@ -59,7 +58,8 @@ class RoomScheduleModel {
 
     // update room schedule
     public function updateRoomSchedule($id, $room_id, $block, $date, $starting_time, $ending_time) {
-        $sql = "UPDATE room_schedule SET room_id = ?, block = ?, date = ?, starting_time = ?, ending_time = ? WHERE id = ?";
+        $sql = "UPDATE room_schedule SET room_id = ?, block = ?, date = ?, starting_time = ?, ending_time = ? WHERE id = ?";  
+
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('isssi', $room_id, $block, $date, $starting_time, $ending_time, $id);
             if ($stmt->execute()) {
@@ -77,7 +77,7 @@ class RoomScheduleModel {
         $sql = "DELETE FROM room_schedule WHERE id = ?";
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('i', $id);
-            if ($stmt->execute()) {
+            if (!$stmt->execute()) {
                 echo json_encode(['message' => 'Room schedule deleted successfully']);
             } else {
                 echo json_encode(['message' => 'Error: ' . $this->conn->error]);
@@ -91,8 +91,8 @@ class RoomScheduleModel {
             $stmt->bind_param('i', $room_id);
             $stmt->execute();
             $stmt->store_result();
-            
-            return $stmt->num_rows > 0; // If a row is returned, the room exists
+            // if a row returned, room exist
+            return $stmt->num_rows > 0;
         } else {
             echo json_encode(['message' => 'Error executing query: ' . $this->conn->error]);
             return false;

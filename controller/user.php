@@ -18,15 +18,9 @@ class UserController {
             echo json_encode(['message' => 'User already exists with this email']);
             return;
         }
-        if (!in_array($role, ['student', 'teacher'])) {
-            echo json_encode(['message' => 'Invalid role']);
-            return;
-        }
         $user = $this->userModel->createUser($username, $email, $password, $role);
         if ($user) {
-            echo json_encode([
-                'User' => $user
-            ]);
+            echo json_encode($user);
         } else {
             echo json_encode(['message' => 'Error signing up user']);
         }
@@ -50,13 +44,11 @@ class UserController {
             ));
             $this->userModel->storeUserToken($user['id'], $token);
             echo json_encode([
-                'User' => [
                     'id' => $user['id'],
                     'message' => 'Login successful!',
                     'username' => $user['username'],
                     'email' => $user['email'],
                     'token' => $token
-                ]
             ]);
         } else {
             echo json_encode(['message' => 'Password is incorrect']);
@@ -132,7 +124,6 @@ class UserController {
         } else {
             echo json_encode(['message' => 'Error deleting user']);
         }
-    }
-    
+    }  
 }
 ?>

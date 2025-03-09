@@ -69,7 +69,7 @@ class UserModel {
         }
     }
 
-    // update user
+    // update user profile
     public function updateUser($id, $teacher_id, $username, $email) {
         $sql = "UPDATE user SET teacher_id = ?, username = ?, email = ? WHERE id = ?";
 
