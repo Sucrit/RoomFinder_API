@@ -5,11 +5,19 @@ require_once "../config/database.php";
 class RoomRequestModel {
     private $conn;
 
-
     public function __construct() {
         $this->conn = Database::getInstance();
     }
-    
+
+    // get room request history (approved or rejected only) (order from latest to oldest, descending based on created_at)
+    public function getRoomRequestHistory() {
+        $sql = "SELECT * FROM room_request WHERE status = 'approved' OR status = 'rejected' ORDER BY created_at DESC";
+        $result = $this->conn->query($sql);
+
+        return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
+    }
+
+    // get all room request
     public function getAllRoomRequests() {
         $sql = "SELECT * FROM room_request";
         $result = $this->conn->query($sql);
@@ -17,6 +25,7 @@ class RoomRequestModel {
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
+    // get room requests counts based on status (approved, rejected, pending)
     public function getRoomRequestsCountByStatus() {
         // count room requests grouped by request status
         $sql = "
@@ -43,7 +52,7 @@ class RoomRequestModel {
         return $statusCounts;
     }
     
-    // get all pending room request ordered list by latest to oldest
+    // get all pending room request ordered by latest to oldest (descending)
     public function getAllPendingRoomRequests() {
         $sql = "SELECT * FROM room_request WHERE status = 'pending' ORDER BY created_at DESC";
     
@@ -58,12 +67,13 @@ class RoomRequestModel {
         return $pendingRequests;
     }
 
-    // get all pending room request of a teacher
+    // get all room request by teacher id
     public function getRoomRequestsByUser($userId) {
+        // get room request by user id with corresponding room details
         $sql = "
             SELECT 
             room_request.id, room_request.room_id, room.room_building, room.room_number, room_request.user_id, 
-            room_request.block, room_request.purpose, room_request.starting_time, room_request.ending_time, room_request.status
+            room_request.block, room_request.purpose, room_request.date, room_request.starting_time, room_request.ending_time, room_request.status
             FROM room_request
             JOIN room ON room_request.room_id = room.id
             WHERE room_request.user_id = ? 
@@ -115,35 +125,83 @@ class RoomRequestModel {
             return null;
         }
     }
+
+    // update room request status (approve or reject a pending room request only)
+    public function updateRoomRequestStatus($id, $status) {
+        $roomRequest = $this->getRoomRequestById($id);
+    
+        if ($roomRequest) {
+            // check if the room request status is 'pending'
+            if ($roomRequest['status'] !== 'pending') {
+                echo json_encode(['message' => 'Only pending room requests can be updated']);
+                return;
+            }
+
+            $sql = "UPDATE room_request SET status = ? WHERE id = ?";
+            if ($stmt = $this->conn->prepare($sql)) {
+                $stmt->bind_param('si', $status, $id);
+                if ($stmt->execute()) {
+                    // if the status is approved, add to the room schedule
+                    if ($status === 'approved') {
+                        $this->addToRoomSchedule($roomRequest);
+                    }
+                    echo json_encode(['message' => 'Room request status updated successfully']);
+                } else {
+                    echo json_encode(['message' => 'Error updating room request status: ' . $this->conn->error]);
+                }
+            } else {
+                echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
+            }
+        } else {
+            echo json_encode(['message' => 'Room request not found']);
+        }
+    }
+
+    // helper method to add room request to room schedule
+    private function addToRoomSchedule($roomRequest) {
+        $sql = "INSERT INTO room_schedule (room_id, block, date, starting_time, ending_time) 
+                VALUES (?, ?, ?, ?, ?)";
+        
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param('issss', 
+                $roomRequest['room_id'], 
+                $roomRequest['block'], 
+                $roomRequest['date'], 
+                $roomRequest['starting_time'], 
+                $roomRequest['ending_time']
+            );
+    
+            if (!$stmt->execute()) {
+                echo json_encode(['message' => 'Error inserting into room schedule: ' . $this->conn->error]);
+            } else {
+                echo json_encode(['message' => 'Room schedule created successfully']);
+            }
+        } else {
+            echo json_encode(['message' => 'Error preparing SQL for room schedule: ' . $this->conn->error]);
+        }
+    }
     
     // delete room request
     public function deleteRoomRequest($id) {
+        $roomRequest = $this->getRoomRequestById($id);
+
+        if (!$roomRequest) {
+            echo json_encode(['message' => 'Room request does not exist']);
+            return;
+        }
+
         $sql = "DELETE FROM room_request WHERE id = ?";
 
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('i', $id);
+            if ($stmt->execute()) {
+                echo json_encode(['message' => 'Deleted successfully']);
+            } else {
+                echo json_encode('Error deleting room request');
+            }
         } else {
             echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
         }
     }
-
-    // check if room schedule exist in a room
-    public function roomScheduleExist($room_id, $date, $starting_time, $ending_time) {
-        // select all from room schedule base on room, date, starting time and ending time
-        $sql = "
-            SELECT * FROM room_schedule WHERE room_id = ? AND date = ? 
-            AND ((starting_time <= ? AND ending_time > ?) OR (starting_time < ? AND ending_time >= ?))";
-    
-        if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param('isssss', $room_id, $date, $starting_time, $ending_time, $starting_time, $ending_time);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            return $result->num_rows > 0;
-        } else {
-            echo json_encode(['message' => 'Error checking schedule: ' . $this->conn->error]);
-            return false;
-        }
-    }    
-    
 }
 ?>

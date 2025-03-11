@@ -12,13 +12,13 @@ class UserController {
     }
 
     // signup
-    public function createUser($username, $email, $password, $role) {
+    public function createUser($teacher_id, $username, $email, $password, $role) {
         $existingUser = $this->userModel->getUserByEmail($email);
         if ($existingUser) {
             echo json_encode(['message' => 'User already exists with this email']);
             return;
         }
-        $user = $this->userModel->createUser($username, $email, $password, $role);
+        $user = $this->userModel->createUser($teacher_id,$username, $email, $password, $role);
         if ($user) {
             echo json_encode($user);
         } else {
@@ -116,7 +116,7 @@ class UserController {
     }
     
     // delete user
-    public function deleteUser($id) {
+    public function deleteUserBydId($id) {
         $result = $this->userModel->deleteUser($id);
 
         if ($result) {
@@ -124,6 +124,20 @@ class UserController {
         } else {
             echo json_encode(['message' => 'Error deleting user']);
         }
-    }  
+    }
+    
+    // logout user
+    public function logoutUser($token) {
+        $decodedToken = JwtHelper::decode($token);
+
+        if (isset($decodedToken['id'])) {
+            $userId = $decodedToken['id']; 
+            $this->userModel->deleteUserToken($userId, $token); 
+            echo json_encode(['message' => 'Admin logged out successfully']);
+        } else {
+            echo json_encode(['message' => 'Invalid token or missing ID']);
+        }
+    }
+    
 }
 ?>

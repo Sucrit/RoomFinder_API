@@ -5,11 +5,44 @@ require_once "../config/database.php";
 class RoomScheduleModel {
     private $conn;
 
-
     public function __construct() {
         $this->conn = Database::getInstance();
     }
+
+    // get all room schedule
+
+    public function getAllRoomSchedule() {
+        $sql = "SELECT * FROM room_schedule";
+        
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
+        } else {
+            echo json_encode(['message' => 'Error: ' . $this->conn->error]);
+            return [];
+        }
+    }
+
+    // get all ongoing schedules
+    public function getAllOngoingSchedules() {
+    date('Y-m-d H:i:s');
+
+    $sql = "SELECT * FROM room_schedule WHERE date = CURDATE() AND starting_time <= CURTIME() AND ending_time > CURTIME()";
     
+    if ($stmt = $this->conn->prepare($sql)) {
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
+    } else {
+        echo json_encode(['message' => 'Error: ' . $this->conn->error]);
+        return [];
+        }
+    }
+
+    // get room schedule by room id
     public function getSchedulesByRoomId($roomId) {
         $sql = "SELECT * FROM room_schedule WHERE room_id = ?";
     
@@ -39,19 +72,18 @@ class RoomScheduleModel {
         }
     }
 
+    // create room schedule of a room
     public function createRoomSchedule($room_id, $block, $date, $starting_time, $ending_time) {
-        $sql = "INSERT INTO room_schedule (room_id, block, date, starting_time, ending_time) VALUES (?, ?, ?, ?, ?)";
-
-        if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param('issss', $room_id, $block, $date, $starting_time, $ending_time);
-
-            if ($stmt->execute()) {
-                echo json_encode(['message' => 'Room schedule created successfully']);
-            } else {
-                echo json_encode(['message' => 'Error: ' . $this->conn->error]);
-            }
+        $sql = "INSERT INTO room_schedule (room_id, block, date, starting_time, ending_time) 
+                VALUES (?, ?, ?, ?, ?)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('issss', $room_id, $block, $date, $starting_time, $ending_time);
+        
+        $stmt->execute();
+        if ($stmt->affected_rows > 0) {
+            return true;
         } else {
-            echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
+            return false;
         }
     }
 
@@ -61,10 +93,8 @@ class RoomScheduleModel {
         $sql = "UPDATE room_schedule SET room_id = ?, block = ?, date = ?, starting_time = ?, ending_time = ? WHERE id = ?";  
 
         if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param('isssi', $room_id, $block, $date, $starting_time, $ending_time, $id);
-            if ($stmt->execute()) {
-                echo json_encode(['message' => 'Room schedule updated successfully']);
-            } else {
+            $stmt->bind_param('issssi', $room_id, $block, $date, $starting_time, $ending_time, $id);
+            if (!$stmt->execute()) {
                 echo json_encode(['message' => 'Error: ' . $this->conn->error]);
             }
         } else {
@@ -84,17 +114,26 @@ class RoomScheduleModel {
             }
         }
     }
-    public function roomExists($room_id) {
-        $sql = "SELECT id FROM room WHERE id = ?";
-    
+
+    // check if room schedule exists (avoid time conflict)
+    public function roomScheduleExist($room_id, $date, $starting_time, $ending_time) {
+        // check if starting time is greater than ending time (time conflict)
+        if ($starting_time >= $ending_time) {
+            echo json_encode(['message' => 'Starting time must be before ending time']);
+            return false;
+        }
+
+        $sql = "SELECT * FROM room_schedule WHERE room_id = ? AND date = ? AND ((starting_time < ? AND ending_time > ?) OR 
+                (starting_time < ? AND ending_time > ?) OR (? BETWEEN starting_time AND ending_time) OR (? BETWEEN starting_time AND ending_time))";
+
         if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param('i', $room_id);
+            $stmt->bind_param('isssssss', $room_id, $date, $starting_time, $ending_time, $starting_time, $ending_time, $starting_time, $ending_time);
             $stmt->execute();
-            $stmt->store_result();
-            // if a row returned, room exist
-            return $stmt->num_rows > 0;
+            $result = $stmt->get_result();
+            
+            return $result->num_rows > 0;
         } else {
-            echo json_encode(['message' => 'Error executing query: ' . $this->conn->error]);
+            echo json_encode(['message' => 'Error checking schedule: ' . $this->conn->error]);
             return false;
         }
     }

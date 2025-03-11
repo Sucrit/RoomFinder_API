@@ -11,7 +11,7 @@ class Database {
     // singleton pattern — to ensure a single, shared instance
 
 
-    // constructor that prevents direct object creation every model
+    // prevents direct object creation every model
     private function __construct() {
         $this->conn = new mysqli($this->host, $this->username, $this->password, $this->db_name);
         if ($this->conn->connect_error) {

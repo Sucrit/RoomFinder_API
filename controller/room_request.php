@@ -1,12 +1,18 @@
 <?php
 
 require_once '../models/room_request.php';
+require_once '../models/room.php';
+require_once '../models/room_schedule.php';
 
 class RoomRequestController {
     private $roomRequestModel;
+    private $roomModel;
+    private $roomScheduleModel;
 
     public function __construct() {
         $this->roomRequestModel = new RoomRequestModel();
+        $this->roomModel = new RoomModel();
+        $this->roomScheduleModel = new RoomScheduleModel();
     }
     
     // get all room requests of a specific student
@@ -17,6 +23,18 @@ class RoomRequestController {
         } else {
             echo json_encode(['message' => 'No room requests found for this student']);
         }
+    }
+
+    // get room request history (approved or rejected only)
+    public function getRoomRequestHistory () {
+        $requestHistory = $this->roomRequestModel->getRoomRequestHistory();
+        echo json_encode(['Room Request History' => $requestHistory]);
+    }
+
+    // get all pending room request only
+    public function getAllPendingRoomRequest () {
+        $allPendingRequests = $this->roomRequestModel->getAllPendingRoomRequests();
+        echo json_encode(['Pending Requests' => $allPendingRequests]);
     }
 
     public function getRoomRequests() {
@@ -36,7 +54,7 @@ class RoomRequestController {
         ]);
     }
 
-    // get a pending room request by id
+    // get room request by id
     public function getRoomRequest($id) {
         $roomRequest = $this->roomRequestModel->getRoomRequestById($id);
         if ($roomRequest) {
@@ -47,13 +65,14 @@ class RoomRequestController {
     }
 
     public function createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time) {
-        // execute room schedule exist in room request model first
-        $scheduleConflict = $this->roomRequestModel->roomScheduleExist($room_id, $date, $starting_time, $ending_time);
-    
+        // check if room exist
+        if ($this->roomModel->roomExists($room_id)) {
+        // check if room schedule exist in a room
+        $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($room_id, $date, $starting_time, $ending_time);
+
         if ($scheduleConflict) {
             echo json_encode(['message' => 'The room is already occupied for your requested time slot']);
         } else {
-            // create room request
             $roomrequest = $this->roomRequestModel->createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time);
             if ($roomrequest) {
                 echo json_encode($roomrequest);
@@ -62,10 +81,19 @@ class RoomRequestController {
             }
         }
     }
+    else {
+        echo json_encode(['message' => 'Room not found']);
+        }
+    }
     
+    // update room request status only
+    public function updateRoomRequestStatus($id, $status) {
+        $this->roomRequestModel->updateRoomRequestStatus($id, $status);
+    }
+
+    // delete room request
     public function deleteRoomRequest($id) {
         $this->roomRequestModel->deleteRoomRequest($id);
-        echo json_encode(['message' => 'Room request deleted successfully']);
     }
 }
 ?>

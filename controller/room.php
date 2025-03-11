@@ -12,6 +12,7 @@ class RoomController {
         $this->roomScheduleModel = new RoomScheduleModel(); 
     }
 
+    //  get room by id
     public function getRoom($id) {
         $room = $this->roomModel->getRoomById($id);
         
@@ -25,8 +26,10 @@ class RoomController {
         }
     }
 
+    // get all rooms
     public function getRooms() {
-        $currentTime = date('H:i:s'); 
+        $currentTime = date('H:i:s');  
+        $currentDate = date('Y-m-d');   
         $rooms = $this->roomModel->getAllRoom();
     
         if (empty($rooms)) {
@@ -40,26 +43,28 @@ class RoomController {
             
             if (!empty($schedules)) {
                 foreach ($schedules as $schedule) {
+                    $scheduleDate = $schedule['date'];
                     $startingTime = $schedule['starting_time'];
                     $endingTime = $schedule['ending_time'];
-
-                    // time calculation
-                    if ($currentTime >= $startingTime && $currentTime < $endingTime) {
+    
+                    // Check if the current date and time is within the scheduled time range
+                    if ($currentDate === $scheduleDate && $currentTime >= $startingTime && $currentTime < $endingTime) {
+                        // Set status to 'Occupied' if the room is within the time range
                         $room['status'] = 'Occupied'; 
                         break;
                     }
                 }
             }
+    
             $room['Schedules'] = $schedules;
     
-            // Update room status based on ongoing schedule
+            // Update room status based on whether it's occupied
             if ($room['status'] == 'Occupied') {
-                $updated = $this->roomModel->updateRoomStatus($room['id'], 'Occupied');
+                $this->roomModel->updateRoomStatus($room['id'], 'Occupied');
             } else {
-                $updated = $this->roomModel->updateRoomStatus($room['id'], 'Available');
-            }        
+                $this->roomModel->updateRoomStatus($room['id'], 'Available');
+            }
         }
-    
         echo json_encode($rooms);
     }
     
@@ -108,11 +113,10 @@ class RoomController {
         }
     }
     
-    // delete room and room request
+    // delete room
     public function deleteRoomById($id) {
         $this->roomModel->deleteRoom($id);
         echo json_encode(['message' => 'Room has been deleted']);
     }    
 }
-
 ?>

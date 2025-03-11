@@ -6,36 +6,17 @@ class AdminModel {
 
     private $conn;
 
-
     public function __construct() {
         $this->conn = Database::getInstance();
     }
 
-    // store admin token
-    public function storeAdminToken($adminId, $token) { 
-
-    $issuedAt = date('Y-m-d H:i:s'); 
-    $expiresAt = date('Y-m-d H:i:s', strtotime('+1 hour')); 
-
-    $sql = "INSERT INTO admin_jwt_token (admin_id, token, issued_at, expires_at) VALUES (?, ?, ?, ?)";
-
-    if ($stmt = $this->conn->prepare($sql)) {
-        $stmt->bind_param("isss", $adminId, $token, $issuedAt, $expiresAt);
-        $stmt->execute();
-        $stmt->close();
-        return true;
-    } else {
-        return "Error: " . $this->conn->error;
-        }
-    }
-
     // create admin 
-    public function createAdmin($username, $email, $password) {
+    public function createAdmin($username, $email, $password, $role) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO admin (username, email, password) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO admin (username, email, password, role) VALUES (?, ?, ?, ?)";
 
         if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param("sss", $username, $email, $hashedPassword);
+            $stmt->bind_param("ssss", $username, $email, $hashedPassword, $role);
             $stmt->execute();
             $insertedId = $stmt->insert_id;  
             $stmt->close();
@@ -70,7 +51,7 @@ class AdminModel {
         }
     }
 
-    // get admin by email (login)
+    // check if email exist
     public function getAdminByEmail($email) {
         $sql = "SELECT * FROM admin WHERE email = ?";
         if ($stmt = $this->conn->prepare($sql)) {
@@ -98,6 +79,20 @@ class AdminModel {
         }
     }
 
+    // change pass
+    public function updateAdminPassword($adminId, $newPassword) {
+        $sql = "UPDATE admin SET password = ? WHERE id = ?";
+    
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("si", $newPassword, $adminId);
+            $stmt->execute();
+            $stmt->close();
+            return true;
+        } else {
+            return "Error: " . $this->conn->error;
+        }
+    }
+
     // delete an admin
     public function deleteAdmin($id) {
         $sql = "DELETE FROM admin WHERE id = ?";
@@ -106,12 +101,31 @@ class AdminModel {
             $stmt->bind_param("i", $id);
             $stmt->execute();
             $stmt->close();
+            return true;
         } else {
             return "Error: " . $this->conn->error;
         }
     }
 
-    // logout admin
+    // store admin token
+    public function storeAdminToken($adminId, $token) { 
+
+        $issuedAt = date('Y-m-d H:i:s'); 
+        $expiresAt = date('Y-m-d H:i:s', strtotime('+1 hour')); 
+    
+        $sql = "INSERT INTO admin_jwt_token (admin_id, token, issued_at, expires_at) VALUES (?, ?, ?, ?)";
+    
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("isss", $adminId, $token, $issuedAt, $expiresAt);
+            $stmt->execute();
+            $stmt->close();
+            return true;
+        } else {
+            return "Error: " . $this->conn->error;
+        }
+    }
+
+    // delete admin token (logout)
     public function deleteAdminToken($adminId, $token) {
         $sql = "DELETE FROM admin_jwt_token WHERE admin_id = ? AND token = ?";
         

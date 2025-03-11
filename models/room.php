@@ -5,7 +5,6 @@ require_once "../config/database.php";
 class RoomModel {
     private $conn;
 
-
     public function __construct() {
         $this->conn = Database::getInstance();
     }
@@ -163,6 +162,7 @@ class RoomModel {
             return [];
         }
     }
+
     // delete room by id
     public function deleteRoom($id) {
         $sql = "DELETE FROM room WHERE id = ?";
@@ -173,6 +173,21 @@ class RoomModel {
             }
         } 
     }
-}
 
+    // check if room exist 
+    public function roomExists($room_id) {
+        $sql = "SELECT id FROM room WHERE id = ?";
+    
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param('i', $room_id);
+            $stmt->execute();
+            $stmt->store_result();
+            // if a row returned, room exist
+            return $stmt->num_rows > 0;
+        } else {
+            echo json_encode(['message' => 'Error executing query: ' . $this->conn->error]);
+            return false;
+        }
+    }
+}
 ?>

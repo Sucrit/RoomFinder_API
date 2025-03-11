@@ -6,18 +6,17 @@ class UserModel {
 
     private $conn;
 
- 
     public function __construct() {
         $this->conn = Database::getInstance();
     }
 
     // create user with a role teacher only
-    public function createUser($username, $email, $password, $role) {
+    public function createUser($teacher_id, $username, $email, $password, $role) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO user (username, email, password, role) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO user (teacher_id, username, email, password, role) VALUES (?, ?, ?, ?, ?)";
     
         if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param("ssss", $username, $email, $hashedPassword, $role);
+            $stmt->bind_param("sssss",$teacher_id, $username, $email, $hashedPassword, $role);
             $stmt->execute();
             $insertedId = $stmt->insert_id; 
             $stmt->close();
@@ -121,6 +120,20 @@ class UserModel {
     
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param("isss", $userId, $token, $issuedAt, $expiresAt);
+            $stmt->execute();
+            $stmt->close();
+            return true;
+        } else {
+            return "Error: " . $this->conn->error;
+        }
+    }
+
+    // delete user token (logout)
+    public function deleteUserToken($userId, $token) {
+        $sql = "DELETE FROM user_jwt_token WHERE user_id = ? AND token = ?";
+        
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("is", $userId, $token);
             $stmt->execute();
             $stmt->close();
             return true;
