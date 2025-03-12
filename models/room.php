@@ -182,7 +182,6 @@ class RoomModel {
             $stmt->bind_param('i', $room_id);
             $stmt->execute();
             $stmt->store_result();
-            // if a row returned, room exist
             return $stmt->num_rows > 0;
         } else {
             echo json_encode(['message' => 'Error executing query: ' . $this->conn->error]);

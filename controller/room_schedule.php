@@ -96,8 +96,14 @@ class RoomScheduleController {
         $starting_time = isset($input['starting_time']) ? $input['starting_time'] : $schedule['starting_time'];
         $ending_time = isset($input['ending_time']) ? $input['ending_time'] : $schedule['ending_time'];
 
+        // check room schedule conflict before updating
+    $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($room_id, $date, $starting_time, $ending_time, $id);
+        if ($scheduleConflict) {
+            echo json_encode(['message' => 'The room is already occupied for the requested time slot']);
+            return;
+        }
         $this->roomScheduleModel->updateRoomSchedule($id, $room_id, $block, $date, $starting_time, $ending_time);
-        echo json_encode(['message' => "Updated Successfully"]);
+        echo json_encode(['message' => 'Room updated successfully']);
     }
 
     // delete room schedule

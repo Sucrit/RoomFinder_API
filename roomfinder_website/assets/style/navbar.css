@@ -1,0 +1,1218 @@
+
+body {
+    height: 100%;
+    background-color: rgba(225, 255, 226, 1);
+    margin: 0;
+    font-family: Arial, sans-serif;
+    overflow: scroll; 
+    display: flex;
+    overflow-x: hidden;
+}
+
+    /* Navigation Bar */
+.navbar {
+    background-color:rgba(66, 154, 104, 1);
+    width: 250px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    position: sticky;
+    top: 0;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    width: 80%;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.nav-item.active {
+    background-color:rgba(66, 154, 104, 1);
+    color: white;
+}
+
+.nav-item:hover {
+    background-color: rgba(217, 217, 217, 0.5); 
+    color: white;
+    cursor: pointer;
+}
+
+/* Icon (Image) on the Container (nav-item) */
+.nav-item img {
+    margin-right: 10px;
+    filter: brightness(0) invert(1);
+}
+
+.nav-item:hover img {
+    filter: brightness(0) invert(1);
+}
+
+/* Logo */
+.logo-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    box-sizing: border-box;
+}   
+
+.logo img {
+    width: 40px;
+    height: 40px;
+}
+
+.roomsearchTxt {
+    color: white;
+    width: 128px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+
+.mainpage {
+    display: flex;
+    align-items: center;
+    width: 80%;
+    background-color: rgb(56, 112, 56); 
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 5px 0;  
+}
+
+.mainpage img {
+    margin-right:10px;
+    filter: brightness(0) invert(1);
+}
+a.hover {
+    color: white;
+    background-color: rgba(0, 101, 3, 1);
+}
+
+.nav-item img {
+    margin-right: 10px;
+}
+/* Top Header */
+.topcontainer {
+    color: rgba(6, 52, 111, 1);
+    background-color: white;
+    font-size: 16px;
+    height: 100px;
+    width: 85vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap:10px;
+   
+}
+
+/* Profile Image */
+.profile-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 70px;
+}
+
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(6, 52, 111, 1);
+}
+
+.profile-texts {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.profile-texts h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.profile-texts p {
+    margin: 0;
+    font-size: 12px;
+}
+
+
+/* ACCOUNT */
+
+.acct_settingform{
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width:650px;
+    margin:auto;
+    margin-top:5%;
+    margin-left: 10%;
+}
+.hidden {
+    display: none;
+}
+.input_ad{
+    outline: none;
+    border:none;
+    height: 20px;
+}
+.password-container {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 10px;
+    margin-bottom: 15px;
+    margin-right: 25px;
+}
+
+.password-field {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+}
+
+.password-field label {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.password-field input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+/* Logout Button */
+.logoutBtn {
+    color: rgba(33, 165, 16, 1);
+    background-color: white;
+    height:35px;
+    width:50%;
+    margin-right: 50px;
+    font-size: 15px;
+    font-weight: bold;
+    align-items: center;
+    display: flex;
+    text-decoration: none;
+    margin-top: 200px;
+}
+
+.logoutBtn img {
+    margin: 10px;
+}
+
+.logoutBtn:hover {
+    background-color: rgb(56, 112, 56); 
+    color: white;
+    cursor: pointer;
+}
+
+.logoutBtn:hover img {
+    filter: brightness(0) invert(1);
+}
+
+/* Navigation Bar Dropdown */
+.dropdown {
+    width: 80%;
+    background-color:rgba(66, 154, 104, 1);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 5px 0;
+    cursor: pointer;
+    position: relative;
+}
+.dropdown:hover {
+    background-color: rgba(217, 217, 217, 0.5);
+    color: white;
+}
+
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-toggle img {
+    margin-right: 10px;
+    filter: brightness(0) invert(1); /* Turns icon (image) into color white */
+}
+
+.dropdown-menu {
+    display: none;
+    flex-direction: column;
+    background-color:rgba(66, 154, 104, 1);
+    color: white;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    z-index: 1;
+}
+
+.dropdown-menu a.active{
+    background-color:rgba(66, 154, 104, 1); 
+    color: white;
+}
+
+.dropdown.open .dropdown-menu {
+    display: flex;
+}
+
+.dropdown-menu a {
+    padding: 8px 10px;
+    text-decoration: none;
+    color: white;
+}
+
+.dropdown-menu a:hover {
+    background-color: rgba(217, 217, 217, 0.5);
+    color: white;
+}
+
+        /* AUTHENTICATION */
+
+/*Add User*/
+.roleform{
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width:700px;
+    margin-top: 3%;
+    margin-left: 10%;
+    text-align: center;
+    
+}
+
+.roleform input {
+    margin: 5px;
+    padding: 10px;
+    width: 400px;
+    border-radius: 5px;
+    border: 1px solid #28773f;
+}
+
+.roleform select {
+    margin: 5px;
+    padding: 10px;
+    border-radius: 5px; 
+    border: 1px solid #ccc;
+    background-color: aquamarine;
+    
+}
+.add{
+    padding: 10px;
+    margin: 5px;
+    width: 100px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: rgb(7, 82, 7);
+    color: white;
+}
+.addanother{
+    padding: 10px;
+    margin: 5px;
+    width: 100px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: rgb(28, 15, 73);
+    color: white;
+}
+
+/* Users List */
+.container {
+    border-radius: 8px;
+    padding: 20px;
+    width: 90%;
+    max-width: 1000px;
+    margin-top:3%;
+    margin-left: 50px;
+    height: 400px;
+}
+
+.userlisttable {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    max-width: 1000px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.filter {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.search-bar {
+    padding: 8px;
+    flex-grow: 1;
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.td_del{
+    text-align: center;
+}
+
+table th {
+    background: #f5f5f5;
+    font-weight: bold;
+    text-align: left;
+}
+
+.delete-btn {
+    background: #d9534f;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.delete-btn:hover {
+    background: #c9302c;
+}
+
+
+/* Dashboard */
+#grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 50px;
+    padding: 20px;
+    overflow: hidden;
+    justify-content: space-evenly;
+    grid-template-rows: auto auto;
+}
+
+/* Pending, Approved, Rejected Requests */
+.statContainer {
+    background-color: white;
+    height: 120px;
+    width: 230px;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.stats-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.stats-box h2 {
+    font-size: 48px;
+    margin: 0;
+    color: rgba(6, 52, 111, 1);
+}
+
+.stats-box p {
+    font-size: 16px;
+    margin: 0;
+    color: rgba(176, 181, 188, 1);
+    
+}
+
+.stats-box img {
+    width: 40px;
+    height: 40px;
+
+}
+
+.requestforms {
+    background-color: white;
+    height: 120px;
+    width: 230px;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-left: 20px;
+    
+}
+
+.request-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.request-box h2 {
+    font-size: 15px;
+    margin: 0;
+    color: rgb(0, 0, 0);
+    align-items: center;
+}
+
+.request-box p {
+    font-size: 24px;
+    margin: 0;
+    color: rgba(6, 52, 111, 1);
+}
+
+.request-box h3 {
+    font-size: 10px;
+    margin: 0;
+    margin-top: 20px;
+    color: rgba(96, 96, 96, 1);
+    align-items: center;
+}
+
+/* Ongoing Table */
+
+.roomStats-ongoingroom {
+    background-color: white;
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-left: 20px;
+}
+
+.roomStats-ongoing {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.roomStats-ongoingroom h1 {
+    font-size: 18px;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.ongoingbtn {
+    color: white;
+    background-color: rgba(66, 154, 104, 1);
+    width: 69px;
+    padding: 6px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: right;
+    display: inline-block;
+}
+
+.roomStats-ongoingroom table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.roomStats-ongoingroom th, .roomStats td {
+    padding: 10px;
+    border-bottom: 1px solid #ffffff;
+    text-align: left;
+}
+
+.roomStats-ongoingroom tr {
+    font-size: 16px;
+}
+
+
+/* Recent Request Table */
+
+.roomStats-recent {
+    background-color: white;
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-left: 20px;
+}
+
+.roomStats-requests {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.roomStats-recent h1 {
+    font-size: 18px;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.rec-reqbtn {
+    color: white;
+    background-color: rgba(66, 154, 104, 1);
+    width: 69px;
+    padding: 6px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: right;
+    display: inline-block;
+}
+
+.roomStats-recent table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.roomStats-recent th, .roomStats td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.roomStats-recent tr {
+    font-size: 16px;
+}
+
+
+/* ROOMS */
+
+
+.room-container {
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto;
+    margin-top: 4%;
+}
+
+/* Search Bar */
+.room-header {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-bar {
+    padding: 10px;
+    width: 100%;
+    max-width: 400px;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.room-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin:20px;
+}
+
+.room-table table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+table tr{
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+table th {
+    background: #f5f5f5;
+    font-weight: bold;
+}
+
+.status {
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
+}
+
+.status.available {
+    background-color: #28a745;
+    color: white;
+}
+
+.status.occupied {
+    background-color: #f0ad4e;
+    color: white;
+}
+
+.status.close {
+    background-color: #d9534f;
+    color: white;
+}
+
+.edit-btn {
+    background: #5cb85c;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+
+.delete-btn {
+    background: #d9534f;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.add-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.add-button button {
+    background: #007bff;
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Add and Edit Room */ 
+.floating-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #06346F;
+    color: white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.floating-btn:hover {
+    background-color: #052a58;
+}
+.roomdetails_form{
+    width: 90%;
+    margin: 0 auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    height: auto;
+
+}
+.roomdetails_form h2 , .roomdetails_form h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.form-group{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.form-group label {
+    width: 100px;
+    font-weight: bold;
+}
+.form-group select, .form-group span, .form-group input, .equipment {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #c6f6d5;
+}
+.equipment label {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 20px;
+    margin-right: 20px;
+}
+
+.roomform_container {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.time{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin-left: 25px;
+}
+
+.form-group-horizontal {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-evenly;
+    border: solid 1px #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.createbtn , .updatebtn{
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.addanotherbtn{
+    border-radius: 50%;
+    background-color: #180a58;
+    color: white;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 70%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.closemodal {
+    color: #f01111;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+        /* PENDING REQUESTS */
+
+/* Requests Container */
+.room-requests {
+    padding: 20px;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+h2 {
+    color: #003366;
+    margin-bottom: 15px;
+}
+
+/* User Requests Container */
+.reqcontainer {
+    background-color: #d8f3dc;
+    width: 1200px;
+    padding: 15px;
+    border-radius: 10px;
+    margin-left: 15px;
+    margin-bottom: 15px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Room Number, Sender, and Reason Texts */
+.reqcontainer strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.reqcontainer p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Approve and Reject Button */
+button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    align-items: right;
+    gap: 10px;   
+}
+
+.approvebutton {
+    background-color: rgba(84, 158, 77, 0.57);
+    color: black;
+    margin-right: 5px;
+    margin-left: 1000px;
+    border-radius: 5px;
+}
+
+.rejectbutton {
+    background-color: rgba(22, 58, 22, 1);
+    color: white;
+    border-radius: 5px;
+}
+
+
+/* REQUEST HISTORY */
+
+.req-history {
+    background-color: white;
+    width: 1100px;
+    max-height: 500px;
+    padding: 20px;
+    margin: auto;
+    margin-top: 50px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.req-history table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.req-history th, 
+.req-history td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.req-history th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.req-history td {
+    background-color: white;
+}
+
+
+/* Align the Status & Delete buttons */
+.req-history td:last-child,
+.req-history td:nth-last-child(2) {
+    text-align: center;
+}
+
+/* Date & Time */
+.date-time, .time, .date {
+    white-space: nowrap;
+    text-align: center;
+    padding: 8px 12px;    
+}
+
+.date-time span {
+    margin-right: 10px;
+    text-align: center;
+}
+
+/* Approved & Rejected Status */
+.his-approved {
+    color: rgba(78, 200, 53, 1);
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 12px;
+    border-radius: 5px;
+    text-align: center;
+    display: inline-block;
+}
+
+.his-rejected {
+    color: rgba(201, 23, 26, 1);
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 12px;
+    border-radius: 5px;
+    text-align: center;
+    display: inline-block;
+}
+
+/* Delete Button */
+.deletebtn {
+    background-color: rgba(207, 36, 36, 1);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.deletebtn:hover {
+    background-color: darkred;
+}
+
+
+/* ROOM SCHEDULE */ 
+
+.search-container {
+    position: absolute;
+    top: 100px;
+    left: 54%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .search-container input {
+    border: none;
+    outline: none;
+    padding: 8px;
+    font-size: 14px;
+    width: 250px;
+    border-radius: 20px;
+    text-align: left;
+  }
+  
+  /* Style nang tables */
+  .table-container {
+    background: transparent;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: none;
+  }
+  
+  .table-container table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table-container th, td {
+    padding: 12px;
+    border-bottom: none;
+    vertical-align: middle;
+  }
+  
+  .table-container th {
+    color: black;
+    text-align: center;
+    padding-right: 99px;
+  }
+  
+  /* Floating Table Rows */
+  .table-container tbody tr {
+    background: white;
+    box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: 10% 26% 44% 20%;
+    padding: 10px;
+  }
+  
+  .table-container tbody {
+    display: block;
+  }
+  
+  .table-container tr {
+    margin-bottom: 10px;
+    display: block;
+    width: auto;
+    padding: 10px;
+  }
+  
+  .table-container td {
+    border: none;
+    vertical-align: middle;
+  }
+  
+  .table-container thead tr:nth-child(2) th {
+    text-align: center;
+    padding-top: 10px;
+  }
+  
+  .table-container .status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    display: inline-block;
+    width: auto;
+    text-align: center;
+  }
+  
+  .table-container .status.available {
+    background: #4caf50;
+    color: white;
+  }
+  
+  .table-container .status.occupied {
+    background: #ff9800;
+    color: white;
+  }
+  
+  .table-container .status.close {
+    background: #d32f2f;
+    color: white;
+  }
+  
+  .table-container .edit-btn,
+  .delete-btn {
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+  }
+  
+  .table-container .edit-btn {
+    background: #4caf50;
+    color: white;
+  }
+  
+  .table-container .delete-btn {
+    background: #d32f2f;
+    color: white;
+  }
+  
+  .table-container .floating-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #06346f;
+    color: white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .table-container .floating-btn:hover {
+    background-color: #052a58;
+  }
+  
+  /* eto yung sa mga table data */
+  .table-container .room-name {
+    text-align: left;
+    padding-left: 10px;
+    font-weight: bold;
+  }
+  
+  .table-container .ongoing-schedule {
+    text-align: center;
+  }
+  
+  .table-container .status-cell {
+    text-align: left;
+    padding-left: 50px;
+  }
+  
+  .table-container .action-cell {
+    text-align: center;
+    padding-left: 120px;
+  }
+  
+  .table-container .room-name-header {
+    width: 20%;
+    text-align: center;
+    padding-left: 5px;
+  }
+  
+  .table-container .ongoing-schedule-header {
+    width: 30%;
+    text-align: center;
+  }
+  
+  .table-container .status-header {
+    width: 30%;
+    text-align: center;
+    padding-right: 180px;
+  }
+  
+  .table-container .action-header {
+    width: 20%;
+    text-align: center;
+    padding: 10px;
+  }
+  
+
+
+
+
+                

@@ -47,18 +47,18 @@ class RoomController {
                     $startingTime = $schedule['starting_time'];
                     $endingTime = $schedule['ending_time'];
     
-                    // Check if the current date and time is within the scheduled time range
+                    // check if the current date and time is within the scheduled time range
                     if ($currentDate === $scheduleDate && $currentTime >= $startingTime && $currentTime < $endingTime) {
-                        // Set status to 'Occupied' if the room is within the time range
+                        // set status to occupied if the room is within the time range
                         $room['status'] = 'Occupied'; 
                         break;
                     }
                 }
             }
     
-            $room['Schedules'] = $schedules;
+            $room['schedules'] = $schedules;
     
-            // Update room status based on whether it's occupied
+            // update room status whether its occupied
             if ($room['status'] == 'Occupied') {
                 $this->roomModel->updateRoomStatus($room['id'], 'Occupied');
             } else {
