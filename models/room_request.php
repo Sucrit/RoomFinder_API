@@ -131,7 +131,7 @@ class RoomRequestModel {
         $roomRequest = $this->getRoomRequestById($id);
     
         if ($roomRequest) {
-            // check if the room request status is 'pending'
+            // check if the room request status is pending
             if ($roomRequest['status'] !== 'pending') {
                 echo json_encode(['message' => 'Only pending room requests can be updated']);
                 return;

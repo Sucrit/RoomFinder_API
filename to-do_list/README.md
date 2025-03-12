@@ -17,5 +17,6 @@ TO-DO LIST!!!
 (TODO)
 
 -if room schedule is finished, delete the room schedule
--users (block, year, course)
 -room request already exist
+-change password bug
+-!!!CANNOT ADD STARTING TIME TO AN EXISTING SCHEDULE ENDING TIME (ex.add schedule starting time=10:00pm, existing schedule ending time 10:00 (overlap))

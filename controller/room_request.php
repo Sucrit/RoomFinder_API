@@ -72,10 +72,11 @@ class RoomRequestController {
 
         if ($scheduleConflict) {
             echo json_encode(['message' => 'The room is already occupied for your requested time slot']);
+            return false;
         } else {
             $roomrequest = $this->roomRequestModel->createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time);
             if ($roomrequest) {
-                echo json_encode($roomrequest);
+                echo json_encode(['message' => 'Request sent successfully']);
             } else {
                 echo json_encode(['message' => 'Error creating room request']);
             }

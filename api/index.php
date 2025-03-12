@@ -1,4 +1,9 @@
 <?php
+
+header("Access-Control-Allow-Origin: *");  // Allow all origins to access the resource
+header("Access-Control-Allow-Headers: Content-Type, Authorization");  // Allow the Content-Type and Authorization headers
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PATCH, DELETE");  // Allow the required HTTP methods
+
 // token handler
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../auth/middleware.php';

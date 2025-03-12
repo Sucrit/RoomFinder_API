@@ -120,7 +120,7 @@ class RoomScheduleModel {
         // check if starting time is greater than ending time (time conflict)
         if ($starting_time >= $ending_time) {
             echo json_encode(['message' => 'Starting time must be before ending time']);
-            return false;
+            return true;
         }
             
         $sql = "SELECT * FROM room_schedule WHERE room_id = ? AND date = ? AND ((starting_time < ? AND ending_time > ?) 

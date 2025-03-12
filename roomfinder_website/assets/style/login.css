@@ -14,7 +14,7 @@ html, body {
     justify-content: center;
     align-items: center;
     height: 100%;
-    background: url('pic/upangbg.png') no-repeat center center fixed;
+    background: url('../images/upangbg.png') no-repeat center center fixed;
     background-size: cover;
     position: relative;
 }
@@ -125,7 +125,7 @@ button:hover {
 .site-title {
     font-size: 30px;
     font-weight: bold;
-    color: black;
+    color: rgb(255, 255, 255);
 }
 
 /* Modal */

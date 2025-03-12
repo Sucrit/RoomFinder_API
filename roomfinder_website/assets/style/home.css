@@ -930,46 +930,42 @@ button {
 
 
 /* REQUEST HISTORY */
-
-.req-history {
-    background-color: white;
-    width: 1100px;
-    max-height: 500px;
+#request-history {
+    border-radius: 10px;
     padding: 20px;
-    margin: auto;
-    margin-top: 50px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    overflow-y: auto;
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto;
+    margin-top: 4%;
 }
 
-.req-history table {
+.request-history table {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
+    margin-top: 20px; /* Ensure space between top container and table */
 }
 
-.req-history th, 
-.req-history td {
+.request-history th,
+.request-history td {
     padding: 12px;
     text-align: center;
     border-bottom: 1px solid #ddd;
     font-size: 14px;
 }
 
-.req-history th {
+.request-history th {
     background-color: #f0f0f0;
     font-weight: bold;
 }
 
-.req-history td {
+.request-history td {
     background-color: white;
 }
 
-
 /* Align the Status & Delete buttons */
-.req-history td:last-child,
-.req-history td:nth-last-child(2) {
+.request-history td:last-child,
+.request-history td:nth-last-child(2) {
     text-align: center;
 }
 
@@ -977,7 +973,7 @@ button {
 .date-time, .time, .date {
     white-space: nowrap;
     text-align: center;
-    padding: 8px 12px;    
+    padding: 8px 12px;
 }
 
 .date-time span {
@@ -1015,12 +1011,12 @@ button {
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
+    transition: background-color 0.3s ease; /* Smooth transition */
 }
 
 .deletebtn:hover {
     background-color: darkred;
 }
-
 
 /* ROOM SCHEDULE */ 
 
