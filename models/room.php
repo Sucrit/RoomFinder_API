@@ -152,7 +152,7 @@ class RoomModel {
                     'equipment' => $row['equipment'],
                     'capacity' => (string) $row['capacity'], 
                     'room_type' => $row['room_type'],
-                    'Schedules' => $schedules  
+                    'schedules' => $schedules  
                 ];
                 $rooms[] = $room;
             }

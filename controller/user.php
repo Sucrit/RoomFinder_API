@@ -44,10 +44,8 @@ class UserController {
             ));
             $this->userModel->storeUserToken($user['id'], $token);
             echo json_encode([
-                    'id' => $user['id'],
                     'message' => 'Login successful!',
-                    'username' => $user['username'],
-                    'email' => $user['email'],
+                    'user' => $user,
                     'token' => $token
             ]);
         } else {
