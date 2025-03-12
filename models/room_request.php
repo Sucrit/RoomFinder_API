@@ -181,27 +181,27 @@ class RoomRequestModel {
         }
     }
     
-    // delete room request
-    public function deleteRoomRequest($id) {
-        $roomRequest = $this->getRoomRequestById($id);
+    // // delete room request
+    // public function deleteRoomRequest($id) {
+    //     $roomRequest = $this->getRoomRequestById($id);
 
-        if (!$roomRequest) {
-            echo json_encode(['message' => 'Room request does not exist']);
-            return;
-        }
+    //     if (!$roomRequest) {
+    //         echo json_encode(['message' => 'Room request does not exist']);
+    //         return;
+    //     }
 
-        $sql = "DELETE FROM room_request WHERE id = ?";
+    //     $sql = "DELETE FROM room_request WHERE id = ?";
 
-        if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param('i', $id);
-            if ($stmt->execute()) {
-                echo json_encode(['message' => 'Deleted successfully']);
-            } else {
-                echo json_encode('Error deleting room request');
-            }
-        } else {
-            echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
-        }
-    }
+    //     if ($stmt = $this->conn->prepare($sql)) {
+    //         $stmt->bind_param('i', $id);
+    //         if ($stmt->execute()) {
+    //             echo json_encode(['message' => 'Deleted successfully']);
+    //         } else {
+    //             echo json_encode('Error deleting room request');
+    //         }
+    //     } else {
+    //         echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
+    //     }
+    // }
 }
 ?>
