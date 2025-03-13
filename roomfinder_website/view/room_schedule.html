@@ -1,0 +1,39 @@
+<section id="room-schedules" class="hidden">
+    <div class="topcontainer">
+        <h2 style="margin-left: 15px;"> Room Schedules</h2>
+        <div class="profile-container">
+            <img src="pic/redN.jpg" alt="Profile" class="profile-img">
+            <div class="profile-texts">
+                <h3 class="profileName">John Doe</h3>
+                <p class="profileRole">Administrator</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="room-details">
+            <!-- Floating Search Bar -->
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search here..." onkeyup="searchTable()">
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="room-name-header">Room Name</th>
+                            <th class="ongoing-schedule-header">Ongoing Schedule</th>
+                            <th class="status-header">Status</th>
+                            <th class="action-header">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="room-schedules-tbody">
+                        <!-- Dynamic rows will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="floating-btn" onclick="openAddRoomForm()">+</div>
+</section>

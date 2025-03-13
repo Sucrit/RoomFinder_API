@@ -47,10 +47,8 @@ class AdminController {
             ));
             $this->adminModel->storeAdminToken($admin['id'], $token);
             echo json_encode([
-                'id' => $admin['id'],
                 'message' => 'Login successful!',
-                'username' => $admin['username'],
-                'email' => $admin['email'],
+                'admin' => $admin,
                 'token' => $token
             ]); 
         } else {

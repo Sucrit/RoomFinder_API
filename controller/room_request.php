@@ -38,19 +38,20 @@ class RoomRequestController {
     }
 
     public function getRoomRequests() {
-        // count via status value
-        $statusCounts = $this->roomRequestModel->getRoomRequestsCountByStatus();
-        // get all pending request
-        $allPendingRequests = $this->roomRequestModel->getAllPendingRoomRequests();
-        // get all room request
-        $allRoomRequests = $this->roomRequestModel->getAllRoomRequests();
-        
+        $requeststatusCounts = $this->roomRequestModel->getRoomRequestsCountByStatus();
+        $roomstatusCounts = $this->roomModel->getRoomCountByStatus();
+        $getAllRoomRequestsHistory = $this->roomRequestModel->getRoomRequestHistory();
+        $getOngoingSchedules = $this->roomScheduleModel->getAllOngoingSchedules();
+
         echo json_encode([
-            'pending count' => (string)$statusCounts['pending'],
-            'approved count' => (string)$statusCounts['approved'],
-            'rejected count' => (string)$statusCounts['rejected'],
-            'Room Requests' => $allRoomRequests,
-            'Pending Request' => $allPendingRequests
+            'pending count' => (string)$requeststatusCounts['pending'],
+            'approved count' => (string)$requeststatusCounts['approved'],
+            'rejected count' => (string)$requeststatusCounts['rejected'],
+            'available count' => (string)$roomstatusCounts['Available'],
+            'occupied count' => (string)$roomstatusCounts['Occupied'],
+            'closed count' => (string)$roomstatusCounts['Closed'],
+            'Ongoing schedule' => $getOngoingSchedules,
+            'Request history' => $getAllRoomRequestsHistory
         ]);
     }
 

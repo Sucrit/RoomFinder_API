@@ -5,8 +5,6 @@ class AdminModel {
             password: password
         };
 
-        console.log('Sending login data:', loginData);  // Debugging line to check what is being sent
-
         return fetch('http://localhost/RoomFinder_API/api/index.php/admin/login', {
             method: 'POST',
             headers: {
@@ -14,19 +12,14 @@ class AdminModel {
             },
             body: JSON.stringify(loginData)
         })
-        .then(response => {
-            console.log('Login response status:', response.status);  // Check HTTP status
-            return response.json();  // Parse the response
-        })
+        .then(response => response.json())
         .then(data => {
-            console.log('Login data:', data);  // Log the parsed data
-
-            // Return the parsed response data (no redirect here)
+            console.log('API Response:', data);  // Log the entire API response
             return data;
         })
         .catch(error => {
             console.error('Error during login:', error);
-            throw error;  // Propagate the error
+            throw error;
         });
     }
 }

@@ -11,28 +11,25 @@ class RoomRequestModel {
 
     // get room request history (approved or rejected only) (order from latest to oldest, descending based on created_at)
     public function getRoomRequestHistory() {
-        $sql = "SELECT * FROM room_request WHERE status = 'approved' OR status = 'rejected' ORDER BY created_at DESC";
-        $result = $this->conn->query($sql);
+        $sql = "SELECT rr.*, u.username FROM room_request rr JOIN user u ON rr.user_id = u.id
+        WHERE rr.status = 'approved' OR rr.status = 'rejected' ORDER BY rr.created_at DESC";
 
+        $result = $this->conn->query($sql);
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
     // get all room request
     public function getAllRoomRequests() {
         $sql = "SELECT * FROM room_request";
-        $result = $this->conn->query($sql);
 
+        $result = $this->conn->query($sql);
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
     // get room requests counts based on status (approved, rejected, pending)
     public function getRoomRequestsCountByStatus() {
         // count room requests grouped by request status
-        $sql = "
-            SELECT status, COUNT(*) AS count
-            FROM room_request
-            GROUP BY status
-        ";
+        $sql = "SELECT status, COUNT(*) AS count FROM room_request GROUP BY status";
         $result = $this->conn->query($sql);
 
         $statusCounts = [
@@ -48,14 +45,14 @@ class RoomRequestModel {
                 }
             }
         }
-    
         return $statusCounts;
     }
     
     // get all pending room request ordered by latest to oldest (descending)
     public function getAllPendingRoomRequests() {
-        $sql = "SELECT * FROM room_request WHERE status = 'pending' ORDER BY created_at DESC";
-    
+        $sql = "SELECT room_request.*, user.username FROM room_request JOIN user ON room_request.user_id = user.id 
+        WHERE room_request.status = 'pending' ORDER BY room_request.created_at DESC";
+
         $result = $this->conn->query($sql);
         $pendingRequests = [];
 
@@ -70,14 +67,11 @@ class RoomRequestModel {
     // get all room request by teacher id
     public function getRoomRequestsByUser($userId) {
         // get room request by user id with corresponding room details
-        $sql = "
-            SELECT 
-            room_request.id, room_request.room_id, room.room_building, room.room_number, room_request.user_id, 
-            room_request.block, room_request.purpose, room_request.date, room_request.starting_time, room_request.ending_time, room_request.status
-            FROM room_request
-            JOIN room ON room_request.room_id = room.id
-            WHERE room_request.user_id = ? 
-        ";
+        $sql = "SELECT room_request.id, room_request.room_id, room.room_building, room.room_number, room_request.user_id, 
+            room_request.block, room_request.purpose, room_request.date, room_request.starting_time,
+            room_request.ending_time, room_request.status FROM room_request
+            JOIN room ON room_request.room_id = room.id WHERE room_request.user_id = ? ORDER BY room_request.created_at DESC";
+
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('i', $userId); 
             $stmt->execute();
@@ -181,27 +175,27 @@ class RoomRequestModel {
         }
     }
     
-    // // delete room request
-    // public function deleteRoomRequest($id) {
-    //     $roomRequest = $this->getRoomRequestById($id);
+    // delete room request
+    public function deleteRoomRequest($id) {
+        $roomRequest = $this->getRoomRequestById($id);
 
-    //     if (!$roomRequest) {
-    //         echo json_encode(['message' => 'Room request does not exist']);
-    //         return;
-    //     }
+        if (!$roomRequest) {
+            echo json_encode(['message' => 'Room request does not exist']);
+            return;
+        }
 
-    //     $sql = "DELETE FROM room_request WHERE id = ?";
+        $sql = "DELETE FROM room_request WHERE id = ?";
 
-    //     if ($stmt = $this->conn->prepare($sql)) {
-    //         $stmt->bind_param('i', $id);
-    //         if ($stmt->execute()) {
-    //             echo json_encode(['message' => 'Deleted successfully']);
-    //         } else {
-    //             echo json_encode('Error deleting room request');
-    //         }
-    //     } else {
-    //         echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
-    //     }
-    // }
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param('i', $id);
+            if ($stmt->execute()) {
+                echo json_encode(['message' => 'Deleted successfully']);
+            } else {
+                echo json_encode('Error deleting room request');
+            }
+        } else {
+            echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
+        }
+    }
 }
 ?>

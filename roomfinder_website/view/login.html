@@ -50,51 +50,6 @@
 
     <script src="../model/admin.js"></script>
     <script src="../viewmodel/admin.js"></script>
-    <script>
-        // ViewModel instance
-        const viewModel = new AdminViewModel();
-
-        // Handle form submission
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            // Set data in the ViewModel
-            viewModel.setEmail(email);
-            viewModel.setPassword(password);
-
-            // Call ViewModel's loginUser method
-            viewModel.loginUser().then(result => {
-                if (result.status === 'success') {
-                    document.getElementById('successMessage').textContent = result.message;
-                    document.getElementById('successModal').style.display = 'block';
-                } else {
-                    document.getElementById('error-message').textContent = result.message;
-                }
-            });
-        });
-
-        // Toggle password visibility
-        function togglePassword() {
-            const passwordField = document.getElementById('password');
-            const eyeIcon = document.getElementById('eye-icon');
-            const type = passwordField.type === 'password' ? 'text' : 'password';
-            passwordField.type = type;
-
-            // Change icon based on visibility
-            if (type === 'password') {
-                eyeIcon.setAttribute('stroke', 'currentColor');
-            } else {
-                eyeIcon.setAttribute('stroke', '#4CAF50'); // change icon color when visible
-            }
-        }
-
-        // Close success modal
-        function closeModal() {
-            document.getElementById('successModal').style.display = 'none';
-        }
-    </script>
+   
 </body>
 </html>

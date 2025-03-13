@@ -1,0 +1,42 @@
+<section id="userslists" class="hidden">
+    <div class="topcontainer">
+        <h2 style="margin-left: 15px;"> Authenticated Users List</h2>
+        <div class="profile-container">
+            <img src="pic/redN.jpg" alt="Profile" class="profile-img">
+            <div class="profile-texts">
+                <h3 class="profileName">John Doe</h3>
+                <p class="profileRole">Administrator</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <select class="filter">
+                <option value="all">All</option>
+                <option value="teacher">Teacher</option>
+                <option value="staff">Staff</option>
+                <option value="co-admin">Co-Admin</option>
+            </select>
+            <input type="text" class="search-bar" placeholder="Search here ...">
+        </div>
+
+        <!-- List of Users -->
+
+        <div class="userlisttable">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Remove Account</th>
+                    </tr>
+                </thead>
+                <tbody id="userListBody">
+                    <!-- Dynamic rows will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

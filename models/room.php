@@ -17,6 +17,31 @@ class RoomModel {
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
+    public function getRoomCountByStatus() {
+        $sql = "
+            SELECT status, COUNT(*) AS count
+            FROM room
+            GROUP BY status
+        ";
+        $result = $this->conn->query($sql);
+
+        $statusCounts = [
+            'Occupied' => 0,
+            'Available' => 0,
+            'Closed' => 0,
+        ];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                if (array_key_exists($row['status'], $statusCounts)) {
+                    $statusCounts[$row['status']] = (int)$row['count']; 
+                }
+            }
+        }
+    
+        return $statusCounts;
+    }
+
     // get room by id
     public function getRoomById($id) {
         $sql = "SELECT * FROM room WHERE id = ?";

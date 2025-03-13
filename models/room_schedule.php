@@ -29,7 +29,7 @@ class RoomScheduleModel {
     public function getAllOngoingSchedules() {
     date('Y-m-d H:i:s');
 
-    $sql = "SELECT * FROM room_schedule WHERE date = CURDATE() AND starting_time <= CURTIME() AND ending_time > CURTIME()";
+    $sql = "SELECT rs.*, r.room_building, r.room_number FROM room_schedule rs JOIN room r ON rs.room_id = r.id WHERE rs.date = CURDATE() AND rs.starting_time <= CURTIME() AND rs.ending_time > CURTIME()";
     
     if ($stmt = $this->conn->prepare($sql)) {
         $stmt->execute();

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>University Room Finder</title>
+    <link rel="stylesheet" href="./assets/style/home.css"> <!-- Corrected relative path -->
+</head>
+
+<body>
+
+    <!-- Navigation Bar (Keep this outside of the content section) -->
+    <div class="navbar">
+        <div class="logo-container">
+            <img src="./assets/images/appLogo.png" alt="UPang Logo" class="logo">
+            <span class="roomsearchTxt">UPang Room Search</span>
+        </div>
+
+        <!-- Navigation Links -->
+        <a href="#" class="nav-item" onclick="showSection('dashboard')">
+            <img src="./assets/images/dashboardIcon.png" alt="Dashboard Icon">
+            Dashboard
+        </a>
+        
+        <a href="#" class="nav-item" onclick="loadSection('/roomfinder_website/view/room.html')">
+            <img src="./assets/images/room.png" alt="Rooms Icon">
+            Rooms
+        </a>
+        
+        <a href="#" class="nav-item" onclick="loadSection('/roomfinder_website/view/account.html')">
+            <img src="./assets/images/account.png" alt="Account Icon">
+            Account
+        </a>
+
+        <!-- Dropdown Menus for Room Requests and Room Schedules -->
+        <div class="dropdown">
+            <div class="dropdown-toggle">
+                <img src="./assets/images/requestIcon.png" alt="Room Requests Icon">
+                Room Request
+            </div>
+            <div class="dropdown-menu">
+                <a href="#" class="nav-item" onclick="loadSection('/roomfinder_website/view/pending_request.html')">Pending Requests</a>
+                <a href="#" class="nav-item" onclick="loadSection('/roomfinder_website/view/request_history.html')">Request History</a>   
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <div class="dropdown-toggle">
+                <img src="assets/images/roomscheduleIcon.png" alt="Room Schedules Icon">
+                Room Schedules
+            </div>
+            <div class="dropdown-menu">
+                <a href="#" class="nav-item" onclick="loadSection('/roomfinder_website/view/ongoing_schedule.html')">Ongoing Schedule</a>
+                <a href="#" class="nav-item" onclick="loadSection('/roomfinder_website/view/room_schedule.html')">Room Schedule</a>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <div class="dropdown-toggle">
+                <img src="assets/images/authIcon.png" alt="Authentication Icon">
+                Authentication
+            </div>
+            <div class="dropdown-menu">
+                <a href="#" class="nav-item" onclick="loadSection('/roomfinder_website/view/adduser.html')">Add User</a>
+                <a href="#" class="nav-item" onclick="loadSection('/roomfinder_website/view/userslist.html')">Users List</a>
+            </div>
+        </div>
+
+        <a href="./view/login.html" class="logoutBtn">
+            <img src="./assets/images/logoutIcon.png" alt="Logout Icon">
+            Logout
+        </a>
+    </div>
+
+    <!-- Main Content Section -->
+    <main id="content"></main> <!-- Dynamic content will be inserted here -->
+
+    <!-- Load the single script that contains all JavaScript functionality -->
+    <script src="./assets/js/router.js"></script> <!-- Updated path to the script.js file -->
+
+</body>
+
+</html>

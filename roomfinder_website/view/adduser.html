@@ -1,0 +1,35 @@
+<section id="adduser" class="hidden">
+    <div class="topcontainer">
+        <h2 style="margin-left: 15px;"> Add Administrator, Staff &  Teacher</h2>
+        <div class="profile-container">
+            <img src="pic/redN.jpg" alt="Profile" class="profile-img">
+        <div class="profile-texts">
+            <h3 class="profileName">John Doe</h3>
+            <p class="profileRole">Administrator</p>
+        </div>
+        </div>
+    </div>
+
+    <!-- AUTHENTICATION -->
+     
+    <form class="roleform">
+        <h1> Select Role </h1>
+        <select name="role" id="role">
+            <option value="admin">Administrator</option>
+            <option value="staff">Staff</option>
+            <option value="teacher">Teacher</option>
+        </select> <br/>
+    
+        <input type="text" name="username" id="username" placeholder="Username"> <br/>
+        <input type="text" name="department" id="department" placeholder="Department"> <br/>
+        <input type="email" name="email" id="email" placeholder="Email"> <br/>
+        <input type="password" name="password" id="password" placeholder="Password"> <br/>
+        <input type="password" name="ConfirmPassword" id="ConfirmPassword" placeholder="Confirm Password"> <br/>
+    
+        <div>
+            <button class="add" type="submit"> Add </button>
+            <button class="addanother" type="submit"> Add another </button>
+        </div>
+        
+    </form>
+</section>
