@@ -1,4 +1,6 @@
-class RoomRequest {
+
+
+class RoomRequestModel {
     // Fetch all room requests (e.g., for the dashboard)
     static getRoomRequests() {
         return fetch('http://localhost/RoomFinder_API/api/index.php/room_request', {
@@ -58,6 +60,33 @@ class RoomRequest {
             console.error('Error fetching pending requests:', error.message);
         });
     }
+
+
+    // Update request status (approved or rejected)
+    static updateRequestStatus(requestId, status) {
+        const requestData = { status: status };
+
+        return fetch(`http://localhost/RoomFinder_API/api/index.php/room_request/${requestId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(`Request status updated to ${status}:`, data);
+            return data;
+        })
+        .catch(error => {
+            console.error('Error updating request status:', error.message);
+        });
+    }
 }    
 
-export default RoomRequest;
+export default RoomRequestModel;

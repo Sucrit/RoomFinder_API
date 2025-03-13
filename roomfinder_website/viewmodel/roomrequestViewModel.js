@@ -1,14 +1,15 @@
-import RoomRequest from '../model/roomrequestModel.js';
+import RoomRequestModel from '../model/roomrequestModel.js';
 
 export default class RoomRequestViewModel {
 
-    // load all details needed for dashboard 
+    // load all dashboard details
     static loadRoomRequests() {
         console.log('Loading dashboard...');
-        RoomRequest.getRoomRequests()
+        RoomRequestModel.getRoomRequests()
             .then(data => {
-                console.log('Data received:', data);  // Log the entire data object
-   
+                console.log('Data received:', data);  
+
+                // percentage calculation
                 const totalRequests = parseInt(data["pending count"]) + parseInt(data["approved count"]) + parseInt(data["rejected count"]);
                 const pendingPercentage = ((data["pending count"] / totalRequests) * 100).toFixed(2);
                 const approvedPercentage = ((data["approved count"] / totalRequests) * 100).toFixed(2);
@@ -19,7 +20,7 @@ export default class RoomRequestViewModel {
                 const occupiedPercentage = ((data["occupied count"] / totalRoom) * 100).toFixed(2);
                 const closedPercentage = ((data["closed count"] / totalRoom) * 100).toFixed(2);
 
-                // Populate Requests Section
+                // update dashboard details
                 document.getElementById('totalRequests').innerText = totalRequests;
                 document.getElementById('pendingRequests').innerText = data["pending count"];
                 document.getElementById('pendingPercentage').innerText = pendingPercentage + '%';
@@ -28,7 +29,7 @@ export default class RoomRequestViewModel {
                 document.getElementById('rejectedRequests').innerText = data["rejected count"];
                 document.getElementById('rejectedPercentage').innerText = rejectedPercentage + '%';
 
-                // Populate Requests Section
+               
                 document.getElementById('totalRooms').innerText = totalRoom;
                 document.getElementById('availableRooms').innerText = data["available count"];
                 document.getElementById('availablePercentage').innerText = availablePercentage + '%';
@@ -36,10 +37,10 @@ export default class RoomRequestViewModel {
                 document.getElementById('occupiedPercentage').innerText = occupiedPercentage + '%';
                 document.getElementById('closedRooms').innerText = data["closed count"];
                 document.getElementById('closedPercentage').innerText = closedPercentage + '%';
-   
-                // Populate Ongoing Schedule Table
+
+                // ongoing schedules
                 const ongoingScheduleBody = document.getElementById('ongoingSchedule').querySelector('tbody');
-                ongoingScheduleBody.innerHTML = ''; // Clear existing rows
+                ongoingScheduleBody.innerHTML = ''; 
                 data["Ongoing schedule"].forEach(schedule => {
                     const row = document.createElement('tr');
                     row.innerHTML = `  
@@ -53,10 +54,9 @@ export default class RoomRequestViewModel {
                     ongoingScheduleBody.appendChild(row);
                 });
                 
-   
-                // Populate Request History Table
+                // request history
                 const requestHistoryBody = document.getElementById('requestHistory').querySelector('tbody');
-                requestHistoryBody.innerHTML = ''; // Clear existing rows
+                requestHistoryBody.innerHTML = ''; 
                 data["Request history"].forEach(request => {
                     const row = document.createElement('tr');
                     row.innerHTML = `  
@@ -74,18 +74,17 @@ export default class RoomRequestViewModel {
             });
     }   
 
-    static loadPendingRequests() {
+       // load pending room requests
+       static loadPendingRequests() {
         console.log('Loading pending room requests...');
-        RoomRequest.getPendingRequests()
+        RoomRequestModel.getPendingRequests()
             .then(response => {
-                console.log('Pending Data received:', response);  // Log the entire data object
+                console.log('Pending Data received:', response);  
     
-                // Check if the response has "Pending Requests" key and it is an array
                 const pendingRequests = response["Pending Requests"];
                 if (Array.isArray(pendingRequests)) {
-                    // Populate Pending Request Table
-                    const pendingRequestBody = document.getElementById('pendingRequest').querySelector('tbody');
-                    pendingRequestBody.innerHTML = ''; // Clear existing rows
+                    const pendingRequestBody = document.getElementById('pending_request').querySelector('tbody');
+                    pendingRequestBody.innerHTML = ''; 
     
                     pendingRequests.forEach(request => {
                         const row = document.createElement('tr');
@@ -95,8 +94,23 @@ export default class RoomRequestViewModel {
                             <td>${request.starting_time}</td>
                             <td>${request.ending_time}</td>
                             <td>${request.purpose || 'N/A'}</td>
+                            <td>
+                                <button class="approve-btn" data-username="${request.username}" data-id="${request.id}">Approve</button>
+                                <button class="reject-btn" data-username="${request.username}" data-id="${request.id}">Reject</button>
+                            </td>
                         `;
                         pendingRequestBody.appendChild(row);
+                    });
+
+                    // event listeners for status update    
+                    const approveButtons = document.querySelectorAll('.approve-btn');
+                    approveButtons.forEach(button => {
+                        button.addEventListener('click', RoomRequestViewModel.approvedStatus);
+                    });
+
+                    const rejectButtons = document.querySelectorAll('.reject-btn');
+                    rejectButtons.forEach(button => {
+                        button.addEventListener('click', RoomRequestViewModel.rejectedStatus);
                     });
                 } else {
                     console.error('Expected "Pending Requests" array but got:', response);
@@ -107,4 +121,32 @@ export default class RoomRequestViewModel {
             });
     }
 
+    // approve request
+    static approvedStatus(event) {
+        const requestId = event.target.getAttribute('data-id');
+        console.log(`Approved request ID: ${requestId}`);
+    
+        RoomRequestModel.updateRequestStatus(requestId, 'approved')
+            .then(() => {
+                RoomRequestViewModel.loadPendingRequests();
+            })
+            .catch((error) => {
+                console.error('Failed to approve request:', error.message);
+            });
+    }
+
+    // reject request
+    static rejectedStatus(event) {
+        const requestId = event.target.getAttribute('data-id');
+        console.log(`Rejected request ID: ${requestId}`);
+     
+        RoomRequestModel.updateRequestStatus(requestId, 'rejected')
+            .then(() => {
+
+                RoomRequestViewModel.loadPendingRequests();
+            })
+            .catch((error) => {
+                console.error('Failed to reject request:', error.message);
+            });
+    }
 }

@@ -1,4 +1,4 @@
-class AdminModel {
+export default class AdminModel {
     static login(email, password) {
         const loginData = {
             email: email,

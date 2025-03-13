@@ -1,4 +1,7 @@
-class AdminViewModel {
+import AdminModel from '../model/adminModel.js';
+
+
+export default class AdminViewModel {
     constructor() {
         this.email = '';
         this.password = '';
@@ -25,7 +28,11 @@ class AdminViewModel {
                     localStorage.setItem('role', role);          // Store role
 
                     // Redirect to home page
-                    window.location.href = 'home.html';
+                    window.location.href = '/roomfinder_website/index.html';
+                   
+
+
+
                     return { status: 'success', message: 'Login successful!' };
                 } else {
                     return { status: 'error', message: response.message || 'Login failed' };
