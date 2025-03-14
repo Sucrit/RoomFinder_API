@@ -1,0 +1,251 @@
+/* Top Header */
+.topcontainer {
+    color: rgba(6, 52, 111, 1);
+    background-color: white;
+    font-size: 16px;
+    height: 100px;
+    width: 85vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap:10px;
+   
+}
+
+/* Profile Image */
+.profile-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 70px;
+}
+
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(6, 52, 111, 1);
+}
+
+.profile-texts {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.profile-texts h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.profile-texts p {
+    margin: 0;
+    font-size: 12px;
+}
+
+/* Ongoing Table */
+
+.roomStats-ongoingroom {
+    background-color: white;
+    width: auto;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.roomStats-ongoing {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.roomStats-ongoingroom h1 {
+    font-size: 18px;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.ongoingbtn {
+    color: white;
+    background-color: rgba(66, 154, 104, 1);
+    width: 69px;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: right;
+    display: inline-block;
+}
+
+.roomStats-ongoingroom table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.roomStats-ongoingroom th, .roomStats td {
+    padding: 10px;
+    border-bottom: 1px solid #ffffff;
+    text-align: left;
+}
+
+.roomStats-ongoingroom tr {
+    font-size: 16px;
+}
+
+
+/* Recent Request Table */
+
+.roomStats-recent {
+    background-color: white;
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.roomStats-requests {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.roomStats-recent h1 {
+    font-size: 18px;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.rec-reqbtn {
+    color: white;
+    background-color: rgba(66, 154, 104, 1);
+    width: 69px;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: right;
+    display: inline-block;
+}
+
+.roomStats-recent table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.roomStats-recent th, .roomStats td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.roomStats-recent tr {
+    font-size: 16px;
+}
+
+
+/* Dashboard */
+#grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 50px;
+    padding: 20px;
+    overflow: hidden;
+    justify-content: space-evenly;
+    grid-template-rows: auto auto;
+}
+
+/* Pending, Approved, Rejected Requests */
+.statContainer {
+    background-color: white;
+    height: 120px;
+    width: 230px;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.stats-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.stats-box h2 {
+    font-size: 48px;
+    margin: 0;
+    color: rgba(6, 52, 111, 1);
+}
+
+.stats-box p {
+    font-size: 16px;
+    margin: 0;
+    color: rgba(176, 181, 188, 1);
+    
+}
+
+.stats-box img {
+    width: 40px;
+    height: 40px;
+
+}
+
+.requestforms {
+    background-color: white;
+    height: 120px;
+    width: 230px;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-left: 20px;
+    
+}
+
+.request-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.request-box h2 {
+    font-size: 15px;
+    margin: 0;
+    color: rgb(0, 0, 0);
+    align-items: center;
+}
+
+.request-box p {
+    font-size: 24px;
+    margin: 0;
+    color: rgba(6, 52, 111, 1);
+}
+
+.request-box h3 {
+    font-size: 10px;
+    margin: 0;
+    margin-top: 20px;
+    color: rgba(96, 96, 96, 1);
+    align-items: center;
+}
