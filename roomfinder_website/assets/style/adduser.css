@@ -1,0 +1,50 @@
+/*Add User*/
+.roleform{
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width:700px;
+    margin-top: 3%;
+    margin-left: 10%;
+    text-align: center;
+    
+}
+
+.roleform input {
+    margin: 5px;
+    padding: 10px;
+    width: 400px;
+    border-radius: 5px;
+    border: 1px solid #28773f;
+}
+
+.roleform select {
+    margin: 5px;
+    padding: 10px;
+    border-radius: 5px; 
+    border: 1px solid #ccc;
+    background-color: aquamarine;
+    
+}
+
+/* AUTHENTICATION */
+.add{
+    padding: 10px;
+    margin: 5px;
+    width: 100px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: rgb(7, 82, 7);
+    color: white;
+}
+
+.addanother{
+    padding: 10px;
+    margin: 5px;
+    width: 100px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: rgb(28, 15, 73);
+    color: white;
+}
