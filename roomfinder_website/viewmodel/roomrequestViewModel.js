@@ -4,6 +4,7 @@ import AdminViewModel from '../viewmodel/adminViewModel.js';
 export default class RoomRequestViewModel {
 
     // load all dashboard details
+
     static loadRoomRequests() {
         console.log('Loading dashboard...');
         RoomRequestModel.getRoomRequests()
@@ -69,88 +70,149 @@ export default class RoomRequestViewModel {
                     `;
                     requestHistoryBody.appendChild(row);
                 });
-                const adminViewModel = new AdminViewModel();  // Instantiate AdminViewModel
+                const adminViewModel = new AdminViewModel();  
                 console.log(adminViewModel); 
-                adminViewModel.updateProfile();
+                // adminViewModel.updateProfile();
             })
             .catch(error => {
                 console.error('Error fetching room requests:', error);
             });
     }   
 
-       // load pending room requests
-       static loadPendingRequests() {
-        console.log('Loading pending room requests...');
-        RoomRequestModel.getPendingRequests()
+    // load pending room requests
+    static loadPendingRequests() {
+    console.log('Loading pending room requests...');
+    RoomRequestModel.getPendingRequests()
+        .then(response => {
+            console.log('Pending Data received:', response);  
+
+            const pendingRequests = response["Pending Requests"];
+            if (Array.isArray(pendingRequests)) {
+                const pendingRequestBody = document.getElementById('pending_request').querySelector('tbody');
+                pendingRequestBody.innerHTML = ''; 
+
+                pendingRequests.forEach(request => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `  
+                        <td>${request.username || 'N/A'}</td>
+                        <td>${request.date}</td>
+                        <td>${request.starting_time}</td>
+                        <td>${request.ending_time}</td>
+                        <td>${request.purpose || 'N/A'}</td>
+                        <td>
+                            <button class="approve-btn" data-username="${request.username}" data-id="${request.id}">Approve</button>
+                            <button class="reject-btn" data-username="${request.username}" data-id="${request.id}">Reject</button>
+                        </td>
+                    `;
+                    pendingRequestBody.appendChild(row);
+                });
+
+                // event listeners for status update    
+                const approveButtons = document.querySelectorAll('.approve-btn');
+                approveButtons.forEach(button => {
+                    button.addEventListener('click', RoomRequestViewModel.approvedStatus);
+                });
+
+                const rejectButtons = document.querySelectorAll('.reject-btn');
+                rejectButtons.forEach(button => {
+                    button.addEventListener('click', RoomRequestViewModel.rejectedStatus);
+                });
+            } else {
+                console.error('Expected "Pending Requests" array but got:', response);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching pending requests:', error);
+        });
+    }
+
+
+// update request event listener
+static approvedStatus(event) {
+    const requestId = event.target.getAttribute('data-id');
+    console.log(`Approved request ID: ${requestId}`);
+
+    RoomRequestModel.updateRequestStatus(requestId, 'approved')
+        .then(() => {
+            RoomRequestViewModel.loadPendingRequests();
+        })
+        .catch((error) => {
+            console.error('Failed to approve request:', error.message);
+        });
+}
+
+// reject request event listener
+static rejectedStatus(event) {
+    const requestId = event.target.getAttribute('data-id');
+    console.log(`Rejected request ID: ${requestId}`);
+
+    RoomRequestModel.updateRequestStatus(requestId, 'rejected')
+        .then(() => {
+
+            RoomRequestViewModel.loadPendingRequests();
+        })
+        .catch((error) => {
+            console.error('Failed to reject request:', error.message);
+        });
+}
+
+
+
+    // get all request history (approved and rejected only)
+    static loadRequestHistory() {
+        console.log('Loading request history...');
+        RoomRequestModel.getRequestHistory()
             .then(response => {
-                console.log('Pending Data received:', response);  
-    
-                const pendingRequests = response["Pending Requests"];
-                if (Array.isArray(pendingRequests)) {
-                    const pendingRequestBody = document.getElementById('pending_request').querySelector('tbody');
-                    pendingRequestBody.innerHTML = ''; 
-    
-                    pendingRequests.forEach(request => {
+                console.log('Request History:', response);
+
+                const requestHistory = response["Room Request History"];
+                if (Array.isArray(requestHistory)) {
+                    const requestHistoryBody = document.getElementById('request_history').querySelector('tbody');
+                    requestHistoryBody.innerHTML = ''; 
+
+                    requestHistory.forEach(request => {
                         const row = document.createElement('tr');
                         row.innerHTML = `  
                             <td>${request.username || 'N/A'}</td>
-                            <td>${request.date}</td>
-                            <td>${request.starting_time}</td>
-                            <td>${request.ending_time}</td>
-                            <td>${request.purpose || 'N/A'}</td>
+                            <td>${request.room_building || 'N/A'}</td>
+                            <td>${request.room_number || 'N/A'}</td>
+                            <td>${request.block || 'N/A'}</td>
+                            <td>${request.date || 'N/A'}</td>
+                            <td>${request.starting_time || 'N/A'}</td>
+                            <td>${request.ending_time || 'N/A'}</td>
+                            <td>${request.status || 'N/A'}</td>
                             <td>
-                                <button class="approve-btn" data-username="${request.username}" data-id="${request.id}">Approve</button>
-                                <button class="reject-btn" data-username="${request.username}" data-id="${request.id}">Reject</button>
+                                <button class="delete-btn" data-username="${request.username}" data-id="${request.id}">Delete</button>  
                             </td>
                         `;
-                        pendingRequestBody.appendChild(row);
+                        requestHistoryBody.appendChild(row);
                     });
 
-                    // event listeners for status update    
-                    const approveButtons = document.querySelectorAll('.approve-btn');
-                    approveButtons.forEach(button => {
-                        button.addEventListener('click', RoomRequestViewModel.approvedStatus);
+                    const deleteButtons = document.querySelectorAll('.delete-btn');  
+                    deleteButtons.forEach(button => {
+                        button.addEventListener('click', RoomRequestViewModel.deleteRequest); 
                     });
 
-                    const rejectButtons = document.querySelectorAll('.reject-btn');
-                    rejectButtons.forEach(button => {
-                        button.addEventListener('click', RoomRequestViewModel.rejectedStatus);
-                    });
                 } else {
-                    console.error('Expected "Pending Requests" array but got:', response);
+                    console.error('Expected "Request History" array but got:', response);
                 }
             })
             .catch(error => {
-                console.error('Error fetching pending requests:', error);
+                console.error('Error fetching request history:', error);
             });
     }
 
-    // approve request
-    static approvedStatus(event) {
-        const requestId = event.target.getAttribute('data-id');
-        console.log(`Approved request ID: ${requestId}`);
-    
-        RoomRequestModel.updateRequestStatus(requestId, 'approved')
-            .then(() => {
-                RoomRequestViewModel.loadPendingRequests();
-            })
-            .catch((error) => {
-                console.error('Failed to approve request:', error.message);
-            });
-    }
+// delete request history
+static deleteRequest(event) {
+    const requestId = event.target.getAttribute('data-id');
+    console.log(`Deleting request ID: ${requestId}`);
 
-    // reject request
-    static rejectedStatus(event) {
-        const requestId = event.target.getAttribute('data-id');
-        console.log(`Rejected request ID: ${requestId}`);
-     
-        RoomRequestModel.updateRequestStatus(requestId, 'rejected')
-            .then(() => {
-
-                RoomRequestViewModel.loadPendingRequests();
-            })
-            .catch((error) => {
-                console.error('Failed to reject request:', error.message);
-            });
-    }
+    RoomRequestModel.deleteRequest(requestId)  // assuming deleteRequest method exists
+        .then(() => {
+            RoomRequestViewModel.loadPendingRequests();
+        })
+        .catch((error) => {
+            console.error('Failed to delete request:', error.message);
+        });
+}
 }

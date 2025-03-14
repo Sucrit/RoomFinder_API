@@ -1,14 +1,19 @@
 
 
+// ROUTER AND VIEW SECTION JS
+
 import RoomRequestViewModel from '/roomfinder_website/viewmodel/roomrequestViewModel.js';
 import AdminViewModel from '/roomfinder_website/viewmodel/adminViewModel.js';
 
-window.showSection = function(sectionId) {
+
+    window.showSection = function(sectionId) {
+
     // hide all sections
-    document.querySelectorAll('main section').forEach(section => {
+    document.querySelectorAll('section').forEach(section => {
         section.classList.add('hidden');
     });
     console.log(sectionId);
+    
     // load section content
     fetch(`./view/${sectionId}.html`)
         .then(response => {
@@ -19,24 +24,50 @@ window.showSection = function(sectionId) {
         })
         .then(content => {
             const mainContent = document.getElementById('content');
-            mainContent.innerHTML = content;  
+            mainContent.innerHTML = content;
+
+
+            fetch('./view/profile.html')
+                .then(response => response.text())
+                .then(profileContent => {
+                    const profilePlaceholder = document.querySelector('.profile-container');
+
+
+                    if (profilePlaceholder) {
+                        profilePlaceholder.innerHTML = profileContent;
+
+                        // const adminViewModel = new AdminViewModel();
+                        // const username = localStorage.getItem('username');
+                        // const role = localStorage.getItem('role');
+                        // adminViewModel.updateProfile(username, role);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading profile:', error);
+                });
 
             const section = document.getElementById(sectionId);
             if (section) {
                 section.classList.remove('hidden');
 
+                // Execute section-specific logic
                 if (sectionId === 'dashboard') {
-                    RoomRequestViewModel.loadRoomRequests();  
+                    console.log('Loading room requests...');
+                    RoomRequestViewModel.loadRoomRequests();
                 } else if (sectionId === 'pending_request') {
-                    RoomRequestViewModel.loadPendingRequests(); 
+                    RoomRequestViewModel.loadPendingRequests();
+                } else if (sectionId === 'request_history') {
+                    RoomRequestViewModel.loadRequestHistory();
+                } else if (sectionId === 'rooms') {
+                    RoomModel.loadRooms();
                 }
             } else {
-                console.error(`Section with ID '${sectionId}' not found in the loaded content.`);
+                console.error(`Section with ID '${sectionId}' not not.`);
             }
         })
         .catch(error => {
             console.error(`Error loading section: ${error.message}`);
-            document.getElementById('content').innerHTML = `<p>Sorry, an error occurred while loading the section.</p>`;
+            document.getElementById('content').innerHTML = `<p>Error occurred while loading the section.</p>`;
         });
 
     // update active link in the navigation
@@ -50,12 +81,15 @@ window.showSection = function(sectionId) {
             item.classList.add('active');
         }
     });
+
 }
 
-// dashboard is the default section to show
+// default section
 window.addEventListener('DOMContentLoaded', () => {
-    showSection('dashboard'); 
+    showSection('dashboard');
 });
+
+
 
 // toggle dropdown when clicked
 const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
@@ -75,4 +109,25 @@ window.addEventListener('click', function(event) {
         }
     });
 });
+
+
+// See all request history button
+document.querySelector('.seerequesthistory-btn').addEventListener('click', function() {
+    showSection('request_history');
+});
+
+// See all ongoing schedule button
+document.querySelector('.seeongoingschedule-btn').addEventListener('click', function() {
+    showSection('ongoing_schedule');
+});
+// const adminViewModel = new AdminViewModel();
+
+// const username = localStorage.getItem('username');
+// const role = localStorage.getItem('role');
+
+
+// console.log('Username before profile update:', username);
+// console.log('Role before profile update:', role);
+
+// adminViewModel.updateProfile(username, role);
 

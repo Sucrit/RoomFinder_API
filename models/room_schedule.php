@@ -124,7 +124,7 @@ class RoomScheduleModel {
         }
             
         $sql = "SELECT * FROM room_schedule WHERE room_id = ? AND date = ? AND ((starting_time < ? AND ending_time > ?) 
-                OR (starting_time < ? AND ending_time > ?) OR (? BETWEEN starting_time AND ending_time)   OR (? BETWEEN starting_time AND ending_time))"; 
+                OR (starting_time < ? AND ending_time > ?) OR (? BETWEEN starting_time AND ending_time) OR (? BETWEEN starting_time AND ending_time))"; 
 
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('isssssss', $room_id, $date, $starting_time, $ending_time, $starting_time, $ending_time, $starting_time, $ending_time);

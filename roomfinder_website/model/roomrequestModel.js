@@ -1,7 +1,9 @@
 
 
+
 class RoomRequestModel {
-    // Fetch all room requests (e.g., for the dashboard)
+
+    // get room requests for dashboard only!
     static getRoomRequests() {
         return fetch('http://localhost/RoomFinder_API/api/index.php/room_request', {
             method: 'GET',
@@ -10,15 +12,11 @@ class RoomRequestModel {
             }
         })
         .then(response => {
-            // Check if the response is OK
             if (!response.ok) {
-                // Handle non-OK response (e.g., 404, 500, etc.)
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
-            // Try to parse the response as JSON
+      
             return response.json().catch(err => {
-                // Handle invalid JSON
                 throw new Error("Failed to parse response as JSON: " + err);
             });
         })
@@ -26,11 +24,11 @@ class RoomRequestModel {
             return data;
         })
         .catch(error => {
-            // Catch and handle any errors
             console.error('Error fetching room requests:', error.message);
         });
     }
 
+    // get pending requests
     static getPendingRequests() {
         return fetch('http://localhost/RoomFinder_API/api/index.php/room_request/pending_request', {
             method: 'GET',
@@ -39,15 +37,11 @@ class RoomRequestModel {
             }
         })
         .then(response => {
-            // Check if the response is OK
             if (!response.ok) {
-                // Handle non-OK response (e.g., 404, 500, etc.)
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
-            // Try to parse the response as JSON
             return response.json().catch(err => {
-                // Handle invalid JSON
+
                 throw new Error("Failed to parse response as JSON: " + err);
             });
         })
@@ -56,13 +50,38 @@ class RoomRequestModel {
             return data;
         })
         .catch(error => {
-            // Catch and handle any errors
+            
             console.error('Error fetching pending requests:', error.message);
         });
     }
 
+    // get all request history
+    static getRequestHistory() {
+        return fetch('http://localhost/RoomFinder_API/api/index.php/room_request/history', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json().catch(err => {
+                throw new Error("Failed to parse response as JSON: " + err);
+            });
+        })
+        .then(data => {
+            console.log('Request History:', data);
+            return data;
+        })
+        .catch(error => {
+            console.error('Error fetching request history:', error.message);
+        });
+    }
 
-    // Update request status (approved or rejected)
+
+    // update request status (approved or rejected)
     static updateRequestStatus(requestId, status) {
         const requestData = { status: status };
 

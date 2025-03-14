@@ -11,8 +11,8 @@ class RoomRequestModel {
 
     // get room request history (approved or rejected only) (order from latest to oldest, descending based on created_at)
     public function getRoomRequestHistory() {
-        $sql = "SELECT rr.*, u.username FROM room_request rr JOIN user u ON rr.user_id = u.id
-        WHERE rr.status = 'approved' OR rr.status = 'rejected' ORDER BY rr.created_at DESC";
+        $sql = "SELECT rr.*, u.username, r.room_building, r.room_number FROM room_request rr JOIN user u ON rr.user_id = u.id
+        JOIN room r ON rr.room_id = r.id WHERE rr.status = 'approved' OR rr.status = 'rejected' ORDER BY rr.created_at DESC";
 
         $result = $this->conn->query($sql);
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
