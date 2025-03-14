@@ -1,0 +1,83 @@
+/* Users List */
+.container {
+    border-radius: 8px;
+    padding: 20px;
+    width: 90%;
+    max-width: 1000px;
+    margin-top:3%;
+    margin-left: 50px;
+    height: 400px;
+}
+
+.userlisttable {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    max-width: 1000px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.filter {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.search-bar {
+    padding: 8px;
+    flex-grow: 1;
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.td_del{
+    text-align: center;
+}
+
+table th {
+    background: #f5f5f5;
+    font-weight: bold;
+    text-align: left;
+}
+
+.delete-btn {
+    background: #d9534f;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.delete-btn:hover {
+    background: #c9302c;
+}
+
+.search-bar {
+    padding: 10px;
+    width: 100%;
+    max-width: 400px;
+    font-size: 14px;
+    border-radius: 5px;
+}
