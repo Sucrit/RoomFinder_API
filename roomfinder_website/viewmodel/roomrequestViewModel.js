@@ -1,4 +1,5 @@
 import RoomRequestModel from '../model/roomrequestModel.js';
+import AdminViewModel from '../viewmodel/adminViewModel.js';
 
 export default class RoomRequestViewModel {
 
@@ -68,6 +69,9 @@ export default class RoomRequestViewModel {
                     `;
                     requestHistoryBody.appendChild(row);
                 });
+                const adminViewModel = new AdminViewModel();  // Instantiate AdminViewModel
+                console.log(adminViewModel); 
+                adminViewModel.updateProfile();
             })
             .catch(error => {
                 console.error('Error fetching room requests:', error);

@@ -1,10 +1,12 @@
-import AdminModel from '../model/adminModel.js';
-
+// viewmodel/adminViewModel.js
+import AdminModel from '../model/adminModel.js';  // Import the model to interact with the API
 
 export default class AdminViewModel {
     constructor() {
         this.email = '';
         this.password = '';
+        this.username = '';
+        this.role = '';
     }
 
     loginUser() {
@@ -14,25 +16,21 @@ export default class AdminViewModel {
 
         return AdminModel.login(this.email, this.password)
             .then(response => {
-                console.log('Response from API:', response);  // Log the response to check
-
                 if (response.message === 'Login successful!') {
-                    const admin = response.admin;  // Access admin object
-                    const username = admin.username || 'Default User';  // Default value in case it's missing
-                    const role = admin.role || 'Default Role';  // Default value in case it's missing
+                    const admin = response.admin;  
+                    console.log('Admin data:', admin)
+                    const username = admin.username || 'Default User';  
+                    const role = admin.role || 'Default Role'; 
 
                     // Update profile and store in localStorage
                     this.updateProfile(username, role);
                     localStorage.setItem('authToken', response.token);
-                    localStorage.setItem('username', username);  // Store username
-                    localStorage.setItem('role', role);          // Store role
+                    localStorage.setItem('username', username);  
+                    localStorage.setItem('role', role);         
 
-                    // Redirect to home page
+                    // Redirect to home page (after login)
                     window.location.href = '/roomfinder_website/index.html';
                    
-
-
-
                     return { status: 'success', message: 'Login successful!' };
                 } else {
                     return { status: 'error', message: response.message || 'Login failed' };
@@ -45,19 +43,19 @@ export default class AdminViewModel {
     }
 
     updateProfile(username, role) {
-        const profileNameElement = document.getElementById('profileName');
-        const profileRoleElement = document.getElementById('profileRole');
+        const profileNameElement = document.getElementsByClassName('profileName')[0];
+        const profileRoleElement = document.getElementsByClassName('profileRole')[0];
 
         if (profileNameElement) {
             profileNameElement.textContent = username;
         } else {
-            console.error('Element with id "profileName" not found.');
+            console.error('Element with class "profileName" not found.');
         }
 
         if (profileRoleElement) {
             profileRoleElement.textContent = role;
         } else {
-            console.error('Element with id "profileRole" not found.');
+            console.error('Element with class "profileRole" not found.');
         }
     }
 

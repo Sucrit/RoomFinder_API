@@ -1,6 +1,7 @@
 
 
 import RoomRequestViewModel from '/roomfinder_website/viewmodel/roomrequestViewModel.js';
+import AdminViewModel from '/roomfinder_website/viewmodel/adminViewModel.js';
 
 window.showSection = function(sectionId) {
     // hide all sections
