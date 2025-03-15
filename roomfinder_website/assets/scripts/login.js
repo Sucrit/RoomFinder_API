@@ -1,6 +1,6 @@
 
 
-// VIEW JS
+// LOGIN VIEW JS
 
 import AdminViewModel from '/roomfinder_website/viewmodel/adminViewModel.js'; 
 
@@ -10,18 +10,13 @@ document.addEventListener('DOMContentLoaded', function () {
     loginForm.addEventListener('submit', function (e) {
         e.preventDefault();  
 
+        // get email and password from form
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
-        const username = localStorage.getItem('username');
-        const role = localStorage.getItem('role');
-        console.log(email, password, username, role);   
 
         const adminViewModel = new AdminViewModel();
 
-        
-        // Log the view model before setting values (this should be empty)
-        console.log('Before setting email and password:', adminViewModel);
-
+        // set email and password in view model
         adminViewModel.setEmail(email);
         adminViewModel.setPassword(password);
 
@@ -30,11 +25,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (result.status === 'success') {
                     console.log('Login successful');
 
+                    // save username and role in local storage if not already set
                     if (!localStorage.getItem('username') || !localStorage.getItem('role')) {
                         localStorage.setItem('username', adminViewModel.username);
                         localStorage.setItem('role', adminViewModel.role);
                     }
-
+                
                 } else {
                     console.error('Login failed:', result.message);
                     document.getElementById('error-message').textContent = result.message;

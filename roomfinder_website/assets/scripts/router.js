@@ -1,12 +1,11 @@
 
 
-// ROUTER AND VIEW SECTION JS
+// SECTION ROUTE HANDLER AND VIEW SECTION JS   
 
+import RoomViewModel from '/roomfinder_website/viewmodel/roomViewModel.js'; 
 import RoomRequestViewModel from '/roomfinder_website/viewmodel/roomrequestViewModel.js';
-import AdminViewModel from '/roomfinder_website/viewmodel/adminViewModel.js';
 
-
-    window.showSection = function(sectionId) {
+window.showSection = function(sectionId) {
 
     // hide all sections
     document.querySelectorAll('section').forEach(section => {
@@ -26,40 +25,30 @@ import AdminViewModel from '/roomfinder_website/viewmodel/adminViewModel.js';
             const mainContent = document.getElementById('content');
             mainContent.innerHTML = content;
 
-
             // load profile section
             fetch('./view/profile.html')
                 .then(response => response.text())
-                
                 .then(profileContent => {
                     const profilePlaceholder = document.querySelector('.profile-container');
 
-                    // update profile 
                     if (profilePlaceholder) {
                         profilePlaceholder.innerHTML = profileContent;
     
-                        // Get data from localStorage after login and update profile
+                        // get name and role from local storage
                         const username = localStorage.getItem('username');
                         const role = localStorage.getItem('role');
     
-                        // Update the profile div with the username and role
+                        // update the profile div with the username and role
                         if (username && role) {
                             const profileNameElement = document.querySelector('.profileName');
                             const profileRoleElement = document.querySelector('.profileRole');
-                            const profileImgElement = document.getElementById('profileImg');
     
-                            // Update profile name and role
+                            // update profile name and role text 
                             if (profileNameElement) {
                                 profileNameElement.textContent = username;
                             }
                             if (profileRoleElement) {
                                 profileRoleElement.textContent = role;
-                            }
-    
-                            // You can update the profile image here if needed
-                            // For example, you could add a dynamic image based on role or username
-                            if (profileImgElement) {
-                                profileImgElement.src = `pic/${username}-profile.jpg`; // Dynamically set profile image
                             }
                         }
                     }
@@ -68,21 +57,25 @@ import AdminViewModel from '/roomfinder_website/viewmodel/adminViewModel.js';
                     console.error('Error loading profile:', error);
                 });
                 
-
+            // remove hidden class from the section once access
             const section = document.getElementById(sectionId);
             if (section) {
                 section.classList.remove('hidden');
 
                 // execute section-specific logic
                 if (sectionId === 'dashboard') {
-                    console.log('Loading room requests...');
                     RoomRequestViewModel.loadRoomRequests();
-                } else if (sectionId === 'pending_request') {
+                }
+                else if (sectionId === 'pending_request') {
                     RoomRequestViewModel.loadPendingRequests();
-                } else if (sectionId === 'request_history') {
+                }
+                else if (sectionId === 'request_history') {
                     RoomRequestViewModel.loadRequestHistory();
-                } else if (sectionId === 'rooms') {
-                    RoomModel.loadRooms();
+                }
+                else if (sectionId === 'room') {
+                    const roomViewModel = new RoomViewModel();  
+                    console.log('RoomViewModel:', roomViewModel);
+                    roomViewModel.loadRooms();
                 }
             } else {
                 console.error(`Section with ID '${sectionId}' not not.`);
@@ -113,7 +106,6 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
 // toggle dropdown when clicked
 const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
 dropdownToggles.forEach(toggle => {
@@ -132,25 +124,4 @@ window.addEventListener('click', function(event) {
         }
     });
 });
-
-
-// See all request history button
-document.querySelector('.seerequesthistory-btn').addEventListener('click', function() {
-    showSection('request_history');
-}); 
-
-// See all ongoing schedule button
-document.querySelector('.seeongoingschedule-btn').addEventListener('click', function() {
-    showSection('ongoing_schedule');
-});
-// const adminViewModel = new AdminViewModel();
-
-// const username = localStorage.getItem('username');
-// const role = localStorage.getItem('role');
-
-
-// console.log('Username before profile update:', username);
-// console.log('Role before profile update:', role);
-
-// adminViewModel.updateProfile(username, role);
 

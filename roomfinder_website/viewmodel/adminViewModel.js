@@ -1,37 +1,33 @@
 
 
-
+import { updateProfile } from '../assets/scripts/profile.js';
 import AdminModel from '../model/adminModel.js';  
 
 
 export default class AdminViewModel {
-
-    constructor() {
-        this.username = localStorage.getItem('username') || '';
-        this.role = localStorage.getItem('role') || '';
-    }
 
    loginUser() {
     if (!this.email || !this.password) {
         return { status: 'error', message: 'Email and password are required' };
     }
 
+    // execute login function from admin model
     return AdminModel.login(this.email, this.password)
         .then(response => {
             if (response.message === 'Login successful!' && response.admin) {
                 const admin = response.admin;
-                this.username = admin.username || 'Default User';
-                this.role = admin.role || 'Default Role';
+                this.username = admin.username || 'Unknown User';
+                this.role = admin.role || 'Unknown Role';
+                // this.email = admin.email || 'Unknown Email'; 
 
-                // Save info in local storage
+                // save info in local storage
                 localStorage.setItem('authToken', response.token);
                 localStorage.setItem('username', this.username); 
                 localStorage.setItem('role', this.role);
 
-                // Call updateProfile to update UI
-                this.updateProfile(this.username, this.role); 
+                // update profile class from profile.js
+                updateProfile(this.username, this.role); 
 
-                // Redirect to another page after login success
                 window.location.href = '/roomfinder_website/index.html';   
                 return { status: 'success', message: 'Login successful!' };
             } else {
@@ -42,24 +38,6 @@ export default class AdminViewModel {
             console.error('Error during login:', error);
             return { status: 'error', message: error.message || 'Error occurred while logging in' };
         });
-}
-
-
-    updateProfile(username, role) {
-        const profileNameElement = document.getElementsByClassName('profileName')[0];
-        const profileRoleElement = document.getElementsByClassName('profileRole')[0];
-
-        if (profileNameElement) {
-            profileNameElement.textContent = username;
-        } else {
-            console.error('Element with class "profileName" not found.');
-        }
-
-        if (profileRoleElement) {
-            profileRoleElement.textContent = role;
-        } else {
-            console.error('Element with class "profileRole" not found.');
-        }
     }
 
     setEmail(email) {
@@ -68,5 +46,35 @@ export default class AdminViewModel {
 
     setPassword(password) {
         this.password = password;
+    }
+
+    // add user form 
+    static handleAddUserForm() {
+        const role = document.getElementById('role').value;
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('ConfirmPassword').value;
+
+        // check if pass and confirm pass match
+        if (password !== confirmPassword) {
+            alert('Passwords does not match!');
+            return;
+        }
+
+        // add user method
+        AdminModel.addUser(role, username, email, password)
+            .then(data => {
+                if (data.success) {
+                    alert('User added successfully!');
+                    // Optionally, clear form or navigate
+                    document.querySelector('.roleform').reset();
+                } else {
+                    alert('Failed to add user: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Error: ' + error.message);
+            });
     }
 }

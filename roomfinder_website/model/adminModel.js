@@ -28,4 +28,32 @@ export default class AdminModel {
             throw error;
         });
     }
+
+    // add user (auth page)
+    static addUser(role, username, email, password) {
+        const userData = {
+            role: role,
+            username: username,
+            email: email,
+            password: password
+        };
+
+        return fetch('http://localhost/RoomFinder_API/api/index.php/admin/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('User Added:', data);
+            return data;
+        })
+        .catch(error => {
+            console.error('Error adding user:', error);
+            throw error;
+        });
+    }
+
 }

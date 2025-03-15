@@ -117,7 +117,7 @@ class AdminController {
         echo json_encode(['message' => 'Password changed successfully']);
     }
 
-    // delete admin
+    // delete admin by id
     public function deleteAdminById($id) {
         $result = $this->adminModel->deleteAdmin($id);
 

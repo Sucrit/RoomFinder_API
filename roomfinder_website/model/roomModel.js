@@ -28,3 +28,5 @@ class RoomModel {
     });
 }
 }
+
+export default RoomModel;

@@ -84,7 +84,6 @@ export default class RoomRequestViewModel {
                 });
                 const adminViewModel = new AdminViewModel();  
                 console.log(adminViewModel); 
-                // adminViewModel.updateProfile();
             })
             .catch(error => {
                 console.error('Error fetching room requests:', error);
@@ -210,7 +209,8 @@ static rejectedStatus(event) {
                         `;
                         requestHistoryBody.appendChild(row);
                     });
-    
+                    
+                    // delete btn dom 
                     const deleteButtons = document.querySelectorAll('.delete-btn');  
                     deleteButtons.forEach(button => {
                         button.addEventListener('click', RoomRequestViewModel.deleteRequest); 
@@ -227,12 +227,12 @@ static rejectedStatus(event) {
     
 // delete request history event 
 static deleteRequest(event) {
-    const requestId = event.target.getAttribute('data-id'); // Fix: remove extra spaces
+    const requestId = event.target.getAttribute('data-id'); 
     console.log(`Deleting request ID: ${requestId}`);
 
-    RoomRequestModel.deleteRequestHistory(requestId)  // Assuming deleteRequestHistory exists in RoomRequestModel
+    RoomRequestModel.deleteRequestHistory(requestId) 
         .then(() => {
-            RoomRequestViewModel.loadRequestHistory(); // Reload the request history after deletion
+            RoomRequestViewModel.loadRequestHistory(); 
         })
         .catch((error) => {
             console.error('Failed to delete request:', error.message);
