@@ -3,7 +3,7 @@
 
 class RoomRequestModel {
 
-    // get room requests for dashboard only!
+    // get room requests for dashboard route
     static getRoomRequests() {
         return fetch('http://localhost/RoomFinder_API/api/index.php/room_request', {
             method: 'GET',
@@ -28,7 +28,7 @@ class RoomRequestModel {
         });
     }
 
-    // get pending requests
+    // get pending requests route
     static getPendingRequests() {
         return fetch('http://localhost/RoomFinder_API/api/index.php/room_request/pending_request', {
             method: 'GET',
@@ -55,7 +55,7 @@ class RoomRequestModel {
         });
     }
 
-    // get all request history
+    // get all request history route
     static getRequestHistory() {
         return fetch('http://localhost/RoomFinder_API/api/index.php/room_request/history', {
             method: 'GET',
@@ -81,7 +81,31 @@ class RoomRequestModel {
     }
 
 
-    // update request status (approved or rejected)
+    // delete request history route
+    static deleteRequestHistory(requestId) {
+        return fetch(`http://localhost/RoomFinder_API/api/index.php/room_request/${requestId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Request deleted:', data);
+            return data;
+        })
+        .catch(error => {
+            console.error('Error deleting request:', error.message);
+        });
+    }
+
+
+    // update request status route (approved or rejected) 
     static updateRequestStatus(requestId, status) {
         const requestData = { status: status };
 
@@ -106,6 +130,7 @@ class RoomRequestModel {
             console.error('Error updating request status:', error.message);
         });
     }
+
 }    
 
 export default RoomRequestModel;

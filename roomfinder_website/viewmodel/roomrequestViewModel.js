@@ -11,18 +11,30 @@ export default class RoomRequestViewModel {
             .then(data => {
                 console.log('Data received:', data);  
 
-                // percentage calculation
-                const totalRequests = parseInt(data["pending count"]) + parseInt(data["approved count"]) + parseInt(data["rejected count"]);
-                const pendingPercentage = ((data["pending count"] / totalRequests) * 100).toFixed(2);
-                const approvedPercentage = ((data["approved count"] / totalRequests) * 100).toFixed(2);
-                const rejectedPercentage = ((data["rejected count"] / totalRequests) * 100).toFixed(2);
+                
+                // fallback for room requests
+                const pendingCount = parseInt(data["pending count"]) || 0;
+                const approvedCount = parseInt(data["approved count"]) || 0;
+                const rejectedCount = parseInt(data["rejected count"]) || 0;
 
-                const totalRoom = parseInt(data["available count"]) + parseInt(data["occupied count"]) + parseInt(data["closed count"]);
-                const availablePercentage = ((data["available count"] / totalRoom) * 100).toFixed(2);
-                const occupiedPercentage = ((data["occupied count"] / totalRoom) * 100).toFixed(2);
-                const closedPercentage = ((data["closed count"] / totalRoom) * 100).toFixed(2);
+                // room request percentage calculation
+                const totalRequests = pendingCount + approvedCount + rejectedCount;
+                const pendingPercentage = totalRequests ? ((pendingCount / totalRequests) * 100).toFixed(2) : '0.00';
+                const approvedPercentage = totalRequests ? ((approvedCount / totalRequests) * 100).toFixed(2) : '0.00';
+                const rejectedPercentage = totalRequests ? ((rejectedCount / totalRequests) * 100).toFixed(2) : '0.00';
 
-                // update dashboard details
+                // fallback for room details
+                const availableCount = parseInt(data["available count"]) || 0;
+                const occupiedCount = parseInt(data["occupied count"]) || 0;
+                const closedCount = parseInt(data["closed count"]) || 0;
+
+                // room percentage calculation
+                const totalRoom = availableCount + occupiedCount + closedCount;
+                const availablePercentage = totalRoom ? ((availableCount / totalRoom) * 100).toFixed(2) : '0.00';
+                const occupiedPercentage = totalRoom ? ((occupiedCount / totalRoom) * 100).toFixed(2) : '0.00';
+                const closedPercentage = totalRoom ? ((closedCount / totalRoom) * 100).toFixed(2) : '0.00';
+
+                // update dashboard details with values from api    
                 document.getElementById('totalRequests').innerText = totalRequests;
                 document.getElementById('pendingRequests').innerText = data["pending count"];
                 document.getElementById('pendingPercentage').innerText = pendingPercentage + '%';
@@ -31,7 +43,7 @@ export default class RoomRequestViewModel {
                 document.getElementById('rejectedRequests').innerText = data["rejected count"];
                 document.getElementById('rejectedPercentage').innerText = rejectedPercentage + '%';
 
-               
+                // update room details with values from api
                 document.getElementById('totalRooms').innerText = totalRoom;
                 document.getElementById('availableRooms').innerText = data["available count"];
                 document.getElementById('availablePercentage').innerText = availablePercentage + '%';
@@ -161,15 +173,26 @@ static rejectedStatus(event) {
     // get all request history (approved and rejected only)
     static loadRequestHistory() {
         console.log('Loading request history...');
+        const requestHistorySection = document.getElementById('request_history');
+        if (!requestHistorySection) {
+            console.error('Error: #request_history section not found in the DOM.');
+            return;
+        }
+        
+        const requestHistoryBody = requestHistorySection.querySelector('tbody');
+        if (!requestHistoryBody) {
+            console.error('Error: tbody not found inside #request_history.');
+            return;
+        }
+    
         RoomRequestModel.getRequestHistory()
             .then(response => {
                 console.log('Request History:', response);
-
+    
                 const requestHistory = response["Room Request History"];
                 if (Array.isArray(requestHistory)) {
-                    const requestHistoryBody = document.getElementById('request_history').querySelector('tbody');
                     requestHistoryBody.innerHTML = ''; 
-
+    
                     requestHistory.forEach(request => {
                         const row = document.createElement('tr');
                         row.innerHTML = `  
@@ -187,32 +210,33 @@ static rejectedStatus(event) {
                         `;
                         requestHistoryBody.appendChild(row);
                     });
-
+    
                     const deleteButtons = document.querySelectorAll('.delete-btn');  
                     deleteButtons.forEach(button => {
                         button.addEventListener('click', RoomRequestViewModel.deleteRequest); 
                     });
-
+    
                 } else {
-                    console.error('Expected "Request History" array but got:', response);
+                    console.error('Expected "Room Request History" array but got:', response);
                 }
             })
             .catch(error => {
                 console.error('Error fetching request history:', error);
             });
     }
-
-// delete request history
+    
+// delete request history event 
 static deleteRequest(event) {
-    const requestId = event.target.getAttribute('data-id');
+    const requestId = event.target.getAttribute('data-id'); // Fix: remove extra spaces
     console.log(`Deleting request ID: ${requestId}`);
 
-    RoomRequestModel.deleteRequest(requestId)  // assuming deleteRequest method exists
+    RoomRequestModel.deleteRequestHistory(requestId)  // Assuming deleteRequestHistory exists in RoomRequestModel
         .then(() => {
-            RoomRequestViewModel.loadPendingRequests();
+            RoomRequestViewModel.loadRequestHistory(); // Reload the request history after deletion
         })
         .catch((error) => {
             console.error('Failed to delete request:', error.message);
         });
 }
+
 }

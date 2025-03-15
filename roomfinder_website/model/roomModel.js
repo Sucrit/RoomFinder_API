@@ -3,7 +3,6 @@
 
 class RoomModel {
 
-
     // get room list
    static getRoomList() {
     return fetch('http://localhost/RoomFinder_API/api/index.php/room', {
