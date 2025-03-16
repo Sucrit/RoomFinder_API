@@ -21,13 +21,14 @@ class AdminController {
             echo json_encode(['message' => 'Email already exists']);
             return;
         }
+
         $admin = $this->adminModel->createAdmin($username, $email, $password, $role);
         if ($admin) {
             echo json_encode( [
-                'message' => 'Successfully signed up',
-                'admin' => $admin
+                'message' => 'User added successfully'
             ]);
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Error signing up admin']);
         }
     }
@@ -55,7 +56,8 @@ class AdminController {
                 'admin' => $admin,
                 'token' => $token
             ]); 
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Invalid email or password']);
         }
     }
@@ -65,7 +67,8 @@ class AdminController {
         $admin = $this->adminModel->getAdminById($id);
         if ($admin) {
             echo json_encode(['admin' => $admin]);
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Admin not found']);
         }
     }
@@ -76,11 +79,12 @@ class AdminController {
         $users = $this->userModel->getUsers();
     
         // array merge admins and users 
-        $allUsersAndAdmins = array_merge($admins, $users);
+        $allUsers = array_merge($admins, $users);
 
-        if (!empty($allUsersAndAdmins)) {
-            echo json_encode($allUsersAndAdmins);
-        } else {
+        if (!empty($allUsers)) {
+            echo json_encode(['All Users' => $allUsers]);
+        } 
+        else {
             echo json_encode(['message' => 'No users or admins found']);
         }
     }

@@ -61,7 +61,8 @@ class RoomController {
             // update room status whether its occupied
             if ($room['status'] == 'Occupied') {
                 $this->roomModel->updateRoomStatus($room['id'], 'Occupied');
-            } else {
+            } 
+            else {
                 $this->roomModel->updateRoomStatus($room['id'], 'Available');
             }
         }
@@ -73,7 +74,8 @@ class RoomController {
         $room = $this->roomModel->createRoom($room_building, $room_number, $status, $equipment, $capacity, $roomType);
         if ($room) {
             echo json_encode($room);
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Room creation failed']);
         }
     }
@@ -105,7 +107,8 @@ class RoomController {
     
             if (empty($rooms)) {
                 echo json_encode(['message' => 'No rooms found for the keyword']);
-            } else {
+            } 
+            else {
                 echo json_encode($rooms);
             }
         } else {

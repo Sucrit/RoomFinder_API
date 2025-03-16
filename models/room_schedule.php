@@ -10,7 +10,6 @@ class RoomScheduleModel {
     }
 
     // get all room schedule
-
     public function getAllRoomSchedule() {
         $sql = "SELECT * FROM room_schedule";
         
@@ -19,7 +18,8 @@ class RoomScheduleModel {
             $result = $stmt->get_result();
 
             return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Error: ' . $this->conn->error]);
             return [];
         }
@@ -30,13 +30,14 @@ class RoomScheduleModel {
     date('Y-m-d H:i:s');
 
     $sql = "SELECT rs.*, r.room_building, r.room_number FROM room_schedule rs JOIN room r ON rs.room_id = r.id WHERE rs.date = CURDATE() AND rs.starting_time <= CURTIME() AND rs.ending_time > CURTIME()";
-    
+
     if ($stmt = $this->conn->prepare($sql)) {
         $stmt->execute();
         $result = $stmt->get_result();
         
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
-    } else {
+    } 
+    else {
         echo json_encode(['message' => 'Error: ' . $this->conn->error]);
         return [];
         }
@@ -52,7 +53,8 @@ class RoomScheduleModel {
             $result = $stmt->get_result();
             
             return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Error: ' . $this->conn->error]);
             return [];
         }
@@ -61,12 +63,14 @@ class RoomScheduleModel {
     // get room schedule by id
     public function getRoomScheduleById($id) {
         $sql = "SELECT * FROM room_schedule WHERE id = ?";
+
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('i', $id);
             $stmt->execute();
             $result = $stmt->get_result();
             return $result->num_rows > 0 ? $result->fetch_assoc() : null;
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Error executing query: ' . $this->conn->error]);
             return null;
         }
@@ -74,15 +78,16 @@ class RoomScheduleModel {
 
     // create room schedule of a room
     public function createRoomSchedule($room_id, $block, $date, $starting_time, $ending_time) {
-        $sql = "INSERT INTO room_schedule (room_id, block, date, starting_time, ending_time) 
-                VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO room_schedule (room_id, block, date, starting_time, ending_time) VALUES (?, ?, ?, ?, ?)";
+
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param('issss', $room_id, $block, $date, $starting_time, $ending_time);
         
         $stmt->execute();
         if ($stmt->affected_rows > 0) {
             return true;
-        } else {
+        } 
+        else {
             return false;
         }
     }

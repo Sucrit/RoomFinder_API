@@ -38,7 +38,6 @@ class RoomModel {
                 }
             }
         }
-    
         return $statusCounts;
     }
 
@@ -128,15 +127,10 @@ class RoomModel {
 
     // search room by keyword
     public function searchRooms($keyword) {
+        // sql injection search bar
         $escapedKeyword = $this->conn->real_escape_string($keyword);
 
-        $query = "SELECT * FROM room 
-                  WHERE room_building LIKE ? 
-                  OR room_type LIKE ? 
-                  OR room_number LIKE ? 
-                  OR status LIKE ? 
-                  OR capacity LIKE ? 
-                  OR equipment LIKE ?";
+        $query = "SELECT * FROM room WHERE room_building LIKE ? OR room_type LIKE ? OR room_number LIKE ? OR status LIKE ? OR capacity LIKE ? OR equipment LIKE ?";
 
         $stmt = $this->conn->prepare($query);
         $searchTerm = "%$escapedKeyword%";

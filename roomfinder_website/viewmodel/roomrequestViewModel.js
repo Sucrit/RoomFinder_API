@@ -1,14 +1,12 @@
+
 import RoomRequestModel from '../model/roomrequestModel.js';
-import AdminViewModel from '../viewmodel/adminViewModel.js';
 
 export default class RoomRequestViewModel {
 
-    // load all dashboard details
-
+    // load all dashboard details method
     static loadRoomRequests() {
         RoomRequestModel.getRoomRequests()
             .then(data => {
-                console.log('Data received:', data);  
                 
                 // fallback for room requests
                 const pendingCount = parseInt(data["pending count"]) || 0;
@@ -80,20 +78,19 @@ export default class RoomRequestViewModel {
                     `;
                     requestHistoryBody.appendChild(row);
                 });
-                const adminViewModel = new AdminViewModel();  
-                console.log(adminViewModel); 
             })
             .catch(error => {
                 console.error('Error fetching room requests:', error);
             });
     }   
 
-    // load pending room requests
+
+    // load pending room requests method
     static loadPendingRequests() {
     console.log('Loading pending room requests...');
     RoomRequestModel.getPendingRequests()
         .then(response => {
-            console.log('Pending Data received:', response);  
+            console.log('Pending Data received from model:', response);  
 
             const pendingRequests = response["Pending Requests"];
             if (Array.isArray(pendingRequests)) {
@@ -166,10 +163,8 @@ static rejectedStatus(event) {
 }
 
 
-
     // get all request history (approved and rejected only)
     static loadRequestHistory() {
-        console.log('Loading request history...');
         const requestHistorySection = document.getElementById('request_history');
         if (!requestHistorySection) {
             console.error('Error: #request_history section not found in the DOM.');
@@ -184,7 +179,6 @@ static rejectedStatus(event) {
     
         RoomRequestModel.getRequestHistory()
             .then(response => {
-                console.log('Request History:', response);
     
                 const requestHistory = response["Room Request History"];
                 if (Array.isArray(requestHistory)) {
@@ -236,5 +230,4 @@ static deleteRequest(event) {
             console.error('Failed to delete request:', error.message);
         });
 }
-
 }

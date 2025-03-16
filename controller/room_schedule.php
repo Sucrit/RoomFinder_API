@@ -18,7 +18,8 @@ class RoomScheduleController {
 
         if (empty($roomschedule)) {
             echo json_encode(['message' => 'Room Schedule is empty']);
-        } else {
+        } 
+        else {
             echo json_encode($roomschedule);
         }
     }
@@ -40,7 +41,8 @@ class RoomScheduleController {
         $roomSchedule = $this->roomScheduleModel->getRoomScheduleById($id);
         if ($roomSchedule) {
             echo json_encode($roomSchedule);
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Room schedule not found']);
         }
     }
@@ -51,10 +53,12 @@ class RoomScheduleController {
             $roomSchedules = $this->roomScheduleModel->getSchedulesByRoomId($roomId);
             if (empty($roomSchedules)) {
                 echo json_encode(['message' => 'Empty room schedules']);
-            } else {
+            } 
+            else {
                 echo json_encode(['Room Schedules' => $roomSchedules]);
             }
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Room ID is required']);
         }
     }
@@ -68,12 +72,13 @@ class RoomScheduleController {
             
             if ($scheduleConflict) {
                 echo json_encode(['message' => 'The room is already occupied for your requested time slot']);
-            } else {
+            } 
+            else {
                 $roomschedule = $this->roomScheduleModel->createRoomSchedule($room_id, $block, $date, $starting_time, $ending_time);
-        
                 if ($roomschedule) {
                     echo json_encode(['message' => 'Room schedule created successfully']); 
-                } else {
+                } 
+                else {
                     echo json_encode(['message' => 'Error creating room schedule']);
                 }
             }
@@ -97,7 +102,7 @@ class RoomScheduleController {
         $ending_time = isset($input['ending_time']) ? $input['ending_time'] : $schedule['ending_time'];
 
         // check room schedule conflict before updating
-    $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($room_id, $date, $starting_time, $ending_time, $id);
+        $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($room_id, $date, $starting_time, $ending_time, $id);
         if ($scheduleConflict) {
             echo json_encode(['message' => 'The room is already occupied for the requested time slot']);
             return;

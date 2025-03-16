@@ -282,7 +282,11 @@ function handleAdmin($requestMethod, $uri, $input, $AdminController, $UserContro
                 if (isset($input['username'], $input['email'], $input['password'], $input['role'])) {
                     $role = $input['role']; 
                     if ($role === 'teacher') {
-                        $UserController->createUser($input['teacher_id'], $input['username'], $input['email'], $input['password'], $input['role']);
+                        if (isset($input['teacher_id'])) {
+                            $UserController->createUser($input['teacher_id'], $input['username'], $input['email'], $input['password'], $input['role']);
+                        } else {
+                            echo json_encode(['message' =>'Teacher ID is missing']);
+                        }
                     } elseif ($role === 'admin' || $role === 'staff') {
                         // add to the admin table if the role is admin or staff
                         $AdminController->createAdmin($input['username'], $input['email'], $input['password'], $input['role']);

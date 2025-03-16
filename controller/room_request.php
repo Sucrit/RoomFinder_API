@@ -20,7 +20,8 @@ class RoomRequestController {
         $roomRequests = $this->roomRequestModel->getRoomRequestsByUser($userId);
         if ($roomRequests) {
             echo json_encode($roomRequests);
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'No room requests found for this student']);
         }
     }
@@ -60,7 +61,8 @@ class RoomRequestController {
         $roomRequest = $this->roomRequestModel->getRoomRequestById($id);
         if ($roomRequest) {
             echo json_encode($roomRequest);
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Room request not found']);
         }
     }
@@ -74,11 +76,12 @@ class RoomRequestController {
         if ($scheduleConflict) {
             echo json_encode(['message' => 'The room is already occupied for your requested time slot']);
             return false;
-        } else {
-            $roomrequest = $this->roomRequestModel->createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time);
+        } 
+        else {$roomrequest = $this->roomRequestModel->createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time);
             if ($roomrequest) {
                 echo json_encode(['message' => 'Request sent successfully']);
-            } else {
+            } 
+            else {
                 echo json_encode(['message' => 'Error creating room request']);
             }
         }

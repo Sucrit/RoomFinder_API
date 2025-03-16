@@ -11,14 +11,11 @@ class RoomRequestModel {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => {
+        .then(response => { 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-      
-            return response.json().catch(err => {
-                throw new Error("Failed to parse response as JSON: " + err);
-            });
+            return response.json();
         })
         .then(data => {
             return data;
@@ -36,14 +33,11 @@ class RoomRequestModel {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => {
+        .then(response => { 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.json().catch(err => {
-
-                throw new Error("Failed to parse response as JSON: " + err);
-            });
+            return response.json();
         })
         .then(data => {
             console.log('Pending Requests:', data);
@@ -63,16 +57,13 @@ class RoomRequestModel {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => {
+        .then(response => { 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.json().catch(err => {
-                throw new Error("Failed to parse response as JSON: " + err);
-            });
+            return response.json();
         })
         .then(data => {
-            console.log('Request History:', data);
             return data;
         })
         .catch(error => {
@@ -89,7 +80,7 @@ class RoomRequestModel {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => {
+        .then(response => { 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -116,7 +107,7 @@ class RoomRequestModel {
             },
             body: JSON.stringify(requestData)
         })
-        .then(response => {
+        .then(response => { 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -130,7 +121,6 @@ class RoomRequestModel {
             console.error('Error updating request status:', error.message);
         });
     }
-
 }    
 
 export default RoomRequestModel;

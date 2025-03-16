@@ -1,11 +1,13 @@
-<!-- AUTHENTICATION -->
+
+
+
 <section id="adduser" class="hidden">
     <div class="topcontainer">
         <h2 style="margin-left: 15px;"> Add Administrator, Staff & Teacher</h2>
         <div class="profile-container"></div>
     </div>
 
-    <form id="signUpForm" class="roleform">
+    <form id="signupform" class="roleform">
         <h1>Select Role</h1>
         <select name="roleselector" id="role">
             <option value="admin">Administrator</option>
@@ -18,11 +20,13 @@
         <input type="password" name="password" id="password" placeholder="Password"><br/>
         <input type="password" name="ConfirmPassword" id="ConfirmPassword" placeholder="Confirm Password"><br/>
         
+        <div id="teacher-id-container" style="display: none;">
+            <input type="text" name="teacherid" id="teacherID" placeholder="Teacher ID"><br/>
+        </div>
+        
         <div class="AddUserButtons">
-            <button class="addBtn" type="submit">Add</button>
-            <button class="addAnotherUserBtn" type="submit">Add Again</button>
+            <button class="addBtn" type="button">Add</button>
+            <button class="backBtn" type="button">Back</button>
         </div>
     </form>
 </section>
-
-<script src="../assets/scripts/adduser.js" type="module"></script>

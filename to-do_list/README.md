@@ -20,4 +20,8 @@ TO-DO LIST!!!
 -if room is closed, it cannot be accessed until updated to available
 -room request already exist
 -change password bug
--!!!CANNOT ADD STARTING TIME TO AN EXISTING SCHEDULE ENDING TIME (ex.add schedule starting time=10:00pm, existing schedule ending time 10:00 (overlap))
+
+-!!!CANNOT ADD STARTING TIME TO AN EXISTING SCHEDULE ENDING TIME (ex.add schedule starting time=10:00pm, existing schedule ending time 10:00 (overlap))(fix sql query)
+
+-add htaccess configuration for better routing
+-!!can send empty strings in backend

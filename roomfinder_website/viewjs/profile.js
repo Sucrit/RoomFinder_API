@@ -1,20 +1,22 @@
 
-// PROFILE DIV VIEW JS
+// profile view
 
-// update profile dom elements script
-export function updateProfile(username, role) {
+export function updateProfile() {
+
+    // get from local storage
+    const username = localStorage.getItem('username') || 'Unknown User'; 
+    const role = localStorage.getItem('role') || 'Unknown Role'; 
+
     const profileNameElement = document.getElementsByClassName('profileName')[0];
     const profileRoleElement = document.getElementsByClassName('profileRole')[0];
 
+    // set text content to profile dom
     if (profileNameElement) {
         profileNameElement.textContent = username;
-    } else {
-        console.error('Element with class "profileName" not found.');
     }
-
     if (profileRoleElement) {
         profileRoleElement.textContent = role;
     } else {
-        console.error('Element with class "profileRole" not found.');
+        console.error('Error: profileRole element not found');
     }
 }

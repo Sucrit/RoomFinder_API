@@ -38,7 +38,8 @@ class UserModel {
             $user = $result->fetch_assoc();
             $stmt->close();
             return $user === null ? null : $user;
-        } else {
+        } 
+        else {
             return "Error: " . $this->conn->error;
         }
     }
@@ -63,7 +64,8 @@ class UserModel {
             $stmt->close();
 
             return $user === null ? null : $user;
-        } else {
+        } 
+        else {
             return "Error: " . $this->conn->error;
         }
     }
@@ -76,7 +78,8 @@ class UserModel {
             $stmt->bind_param("sssi", $teacher_id, $username, $email, $id);
             $stmt->execute();
             $stmt->close();
-        } else {
+        } 
+        else {
             return "Error: " . $this->conn->error;
         }
     }
@@ -90,11 +93,11 @@ class UserModel {
             $stmt->execute();
             $stmt->close();
             return true;
-        } else {
+        } 
+        else {
             return "Error: " . $this->conn->error;
         }
     }
-    
     
     // delete user by id
     public function deleteUser($id) {
@@ -104,8 +107,9 @@ class UserModel {
             $stmt->bind_param("i", $id);
             $stmt->execute();
             $stmt->close();
-            return "User deleted successfully!";
-        } else {
+            return true;
+        } 
+        else {
             return "Error: " . $this->conn->error;
         }
     }
@@ -123,7 +127,8 @@ class UserModel {
             $stmt->execute();
             $stmt->close();
             return true;
-        } else {
+        } 
+        else {
             return "Error: " . $this->conn->error;
         }
     }
@@ -137,7 +142,8 @@ class UserModel {
             $stmt->execute();
             $stmt->close();
             return true;
-        } else {
+        } 
+        else {
             return "Error: " . $this->conn->error;
         }
     }

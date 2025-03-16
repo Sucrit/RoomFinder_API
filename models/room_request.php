@@ -66,7 +66,7 @@ class RoomRequestModel {
 
     // get all room request by teacher id
     public function getRoomRequestsByUser($userId) {
-        // get room request by user id with corresponding room details
+        // get room request with room details
         $sql = "SELECT room_request.id, room_request.room_id, room.room_building, room.room_number, room_request.user_id, 
             room_request.block, room_request.purpose, room_request.date, room_request.starting_time,
             room_request.ending_time, room_request.status FROM room_request
@@ -110,11 +110,13 @@ class RoomRequestModel {
             
             if ($stmt->execute()) {
                 return $this->getRoomRequestById($this->conn->insert_id);
-            } else {
+            } 
+            else {
                 echo json_encode(['message' => 'Error: ' . $this->conn->error]);
                 return null;
             }
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
             return null;
         }
@@ -140,13 +142,16 @@ class RoomRequestModel {
                         $this->addToRoomSchedule($roomRequest);
                     }
                     echo json_encode(['message' => 'Room request status updated successfully']);
-                } else {
+                } 
+                else {
                     echo json_encode(['message' => 'Error updating room request status: ' . $this->conn->error]);
                 }
-            } else {
+            } 
+            else {
                 echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
             }
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Room request not found']);
         }
     }
@@ -167,10 +172,12 @@ class RoomRequestModel {
     
             if (!$stmt->execute()) {
                 echo json_encode(['message' => 'Error inserting into room schedule: ' . $this->conn->error]);
-            } else {
+            } 
+            else {
                 echo json_encode(['message' => 'Room schedule created successfully']);
             }
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Error preparing SQL for room schedule: ' . $this->conn->error]);
         }
     }
@@ -190,10 +197,12 @@ class RoomRequestModel {
             $stmt->bind_param('i', $id);
             if ($stmt->execute()) {
                 echo json_encode(['message' => 'Deleted successfully']);
-            } else {
+            } 
+            else {
                 echo json_encode('Error deleting room request');
             }
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
         }
     }

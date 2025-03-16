@@ -1,10 +1,13 @@
 
 
 // SECTION ROUTE HANDLER AND VIEW SECTION JS   
+import { updateProfile } from '../viewjs/profile.js';
+import { InitUsersListSection } from '../viewjs/userslist.js'; 
+import { InitRoomsSection } from '../viewjs/room.js'; 
 
-import RoomViewModel from '/roomfinder_website/viewmodel/roomViewModel.js'; 
-import RoomRequestViewModel from '/roomfinder_website/viewmodel/roomrequestViewModel.js';
+import RoomRequestViewModel from '../viewmodel/roomrequestViewModel.js';
 
+// section router
 window.showSection = function(sectionId) {
 
     // hide all sections
@@ -13,7 +16,7 @@ window.showSection = function(sectionId) {
     });
     console.log(sectionId);
     
-    // load section content
+    // load section html view
     fetch(`./view/${sectionId}.html`)
         .then(response => {
             if (!response.ok) {
@@ -33,23 +36,14 @@ window.showSection = function(sectionId) {
 
                     if (profilePlaceholder) {
                         profilePlaceholder.innerHTML = profileContent;
-    
-                        // get name and role from local storage
+
                         const username = localStorage.getItem('username');
                         const role = localStorage.getItem('role');
-    
-                        // update the profile div with username and role
+
                         if (username && role) {
-                            const profileNameElement = document.querySelector('.profileName');
-                            const profileRoleElement = document.querySelector('.profileRole');
-    
-                            // update profile name and role text
-                            if (profileNameElement) {
-                                profileNameElement.textContent = username;
-                            }
-                            if (profileRoleElement) {
-                                profileRoleElement.textContent = role;
-                            }
+                            updateProfile(username, role);
+                        } else {
+                            console.error('No profile data found in localStorage.');
                         }
                     }
                 })
@@ -57,14 +51,15 @@ window.showSection = function(sectionId) {
                     console.error('Error loading profile:', error);
                 });
                 
-            // remove hidden class from the section once access
+            // remove hidden class to section
             const section = document.getElementById(sectionId);
             if (section) {
                 section.classList.remove('hidden');
 
-                // execute section-specific logic
+                // initialize section specific function
                 if (sectionId === 'dashboard') {
                     RoomRequestViewModel.loadRoomRequests();
+                    InitSeeAllButton(); 
                 }
                 else if (sectionId === 'pending_request') {
                     RoomRequestViewModel.loadPendingRequests();
@@ -73,15 +68,16 @@ window.showSection = function(sectionId) {
                     RoomRequestViewModel.loadRequestHistory();
                 }
                 else if (sectionId === 'room') {
-                    const roomViewModel = new RoomViewModel();  
-                    roomViewModel.loadRooms();
+                    InitRoomsSection();
                 }
                 else if (sectionId === 'adduser') {
-                    console.log("Add user section router js is visible");
-                    initializeAddUserForm();
+                    InitAddUserSection();
+                }
+                else if (sectionId === 'userslist') {
+                    InitUsersListSection();
                 }
             } else {
-                console.error(`Section with ID '${sectionId}' not not.`);
+                console.error(`Section with ID '${sectionId}' not exist`);
             }
         })
         .catch(error => {
@@ -103,7 +99,7 @@ window.showSection = function(sectionId) {
 
 }
 
-// default section
+// default section 
 window.addEventListener('DOMContentLoaded', () => {
     showSection('dashboard');
 });
@@ -117,6 +113,7 @@ dropdownToggles.forEach(toggle => {
         dropdown.classList.toggle('open'); 
     });
 });
+
 
 // close dropdown if clicked outside
 window.addEventListener('click', function(event) {

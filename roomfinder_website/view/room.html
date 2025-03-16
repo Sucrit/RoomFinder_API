@@ -8,11 +8,17 @@
       
         </div>
     </div>
-    
+
     <div class="room-container">
         <div class="room-header">
+            <select class="filter">
+                <option value="all">All</option>
+                <option value="available">Available</option>
+                <option value="occupied">Occupied</option>
+                <option value="closed">Closed</option>
+            </select>
             <input type="text" class="search-bar" placeholder="Search here..." id="roomSearch">
-        </div><br />
+        </div>
 
         <div class="room-table">
             <table>
@@ -25,7 +31,10 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="roomTableBody">
+                <tbody id="roomListBody">
+
+                    <!-- Table Container -->
+
                 </tbody>
             </table>
         </div>
@@ -175,7 +184,8 @@
                         <div class="form-group">
                             <label>Room Type</label>
                             <select name="roomType" id="editRoomTypeSelect">
-                                <!-- Dynamic options will be inserted here -->
+                                
+                                
                             </select><br />
                         </div>
 
@@ -191,7 +201,8 @@
                         <div class="form-group">
                             <label>Equipment</label>
                             <div class="equipment">
-                                <!-- Dynamic equipment checkboxes will be inserted here -->
+                               
+
                             </div>
                         </div>
                     </div>
@@ -204,7 +215,8 @@
                         <div class="form-group">
                             <label>Block:</label>
                             <select name="block" id="editBlockSelect">
-                                <!-- Dynamic options will be inserted here -->
+                                
+                                
                             </select><br />
                         </div>
 
@@ -231,7 +243,8 @@
                         <div class="form-group">
                             <label>Day</label>
                             <select name="day" id="editDaySelect">
-                                <!-- Dynamic options will be inserted here -->
+                                
+                                
                             </select><br />
                         </div>
 
@@ -243,3 +256,4 @@
         </div>
     </div>
 </section>        
+

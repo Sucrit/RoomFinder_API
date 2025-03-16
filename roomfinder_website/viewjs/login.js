@@ -1,0 +1,30 @@
+
+import AdminViewModel from '../viewmodel/adminViewModel.js';
+
+document.addEventListener('DOMContentLoaded', function () {
+    const loginForm = document.getElementById('loginForm');
+    
+    loginForm.addEventListener('submit', function (e) {
+        e.preventDefault();  
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        AdminViewModel.loginUser(email, password)
+            .then(result => {
+
+                if (result.status === 'success') {
+                    localStorage.setItem('username', result.username);
+                    localStorage.setItem('role', result.role);
+
+                    window.location.href = '/roomfinder_website/index.html'; 
+                } else {
+                    console.error('Login failed:', result.message);
+                    document.getElementById('error-message').textContent = result.message;
+                }
+            })
+            .catch(error => {
+                console.error('Error during login:', error);
+            });
+    });
+});

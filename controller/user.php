@@ -14,14 +14,16 @@ class UserController {
     // signup
     public function createUser($teacher_id, $username, $email, $password, $role) {
         $existingUser = $this->userModel->getUserByEmail($email);
+
         if ($existingUser) {
             echo json_encode(['message' => 'User already exists with this email']);
             return;
         }
         $user = $this->userModel->createUser($teacher_id,$username, $email, $password, $role);
         if ($user) {
-            echo json_encode($user);
-        } else {
+            echo json_encode(['message' => 'User added successfully']);
+        } 
+        else {
             echo json_encode(['message' => 'Error signing up user']);
         }
     }
@@ -48,7 +50,8 @@ class UserController {
                     'user' => $user,
                     'token' => $token
             ]);
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Password is incorrect']);
         }
     }
@@ -59,7 +62,8 @@ class UserController {
 
         if ($user) {
             echo json_encode(['user' => $user]);
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'User not found']);
         }
     }
@@ -70,7 +74,8 @@ class UserController {
 
         if ($users) {
             echo json_encode(['users' => $users]);
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'No users found']);
         }
     }
@@ -114,15 +119,16 @@ class UserController {
     }
     
     // delete user
-    public function deleteUserBydId($id) {
+    public function deleteUserById($id) {
         $result = $this->userModel->deleteUser($id);
-
+        
         if ($result) {
             echo json_encode(['message' => 'User deleted successfully']);
-        } else {
-            echo json_encode(['message' => 'Error deleting user']);
         }
-    }
+        else {
+            echo json_encode(['message' => 'Failed to delete user']);
+        }
+    } 
     
     // logout user
     public function logoutUser($token) {
@@ -132,7 +138,8 @@ class UserController {
             $userId = $decodedToken['id']; 
             $this->userModel->deleteUserToken($userId, $token); 
             echo json_encode(['message' => 'Admin logged out successfully']);
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Invalid token or missing ID']);
         }
     }

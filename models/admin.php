@@ -10,7 +10,7 @@ class AdminModel {
         $this->conn = Database::getInstance();
     }
 
-    // create admin 
+    // create admin, staff  
     public function createAdmin($username, $email, $password, $role) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $sql = "INSERT INTO admin (username, email, password, role) VALUES (?, ?, ?, ?)";
@@ -22,7 +22,8 @@ class AdminModel {
             $stmt->close();
             $admin = $this->getAdminById($insertedId);
             return $admin;
-        } else {
+        } 
+        else {
             return "Error: " . $this->conn->error;
         }
     }
@@ -31,7 +32,6 @@ class AdminModel {
     public function getAdmins() {
         $sql = "SELECT * FROM admin";
         $result = $this->conn->query($sql);
-
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
@@ -102,7 +102,8 @@ class AdminModel {
             $stmt->execute();
             $stmt->close();
             return true;
-        } else {
+        } 
+        else {
             return "Error: " . $this->conn->error;
         }
     }
@@ -120,7 +121,8 @@ class AdminModel {
             $stmt->execute();
             $stmt->close();
             return true;
-        } else {
+        } 
+        else {
             return "Error: " . $this->conn->error;
         }
     }
@@ -134,7 +136,8 @@ class AdminModel {
             $stmt->execute();
             $stmt->close();
             return true;
-        } else {
+        } 
+        else {
             return "Error: " . $this->conn->error;
         }
     }

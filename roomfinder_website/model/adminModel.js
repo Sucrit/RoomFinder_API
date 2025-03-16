@@ -3,9 +3,8 @@
 
 export default class AdminModel {
 
-    // login
+    // login web users route
     static login(email, password) {
-
         const loginData = {
             email: email,
             password: password
@@ -18,10 +17,13 @@ export default class AdminModel {
             },
             body: JSON.stringify(loginData)
         })
-        
-        .then(response => response.json())
-        .then(data => {
-            console.log('API Response:', data);     
+        .then(response => { 
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {   
             return data;
         })
         .catch(error => {
@@ -30,18 +32,19 @@ export default class AdminModel {
         });
     }
 
-    // add web specific users route (auth page)
-    static addUser(role, username, email, password) {
 
+    // add users route (auth page)
+    static addUser(role, username, email, password, teacher_id) {
         const userData = {
             role: role,
             username: username,
             email: email,
-            password: password
+            password: password,
+            teacher_id: teacher_id
         };
 
-        console.log("SignUp data being sent:", userData);
-
+        console.log('teacher added with data:', userData);
+    
         return fetch('http://localhost/RoomFinder_API/api/index.php/admin/signup', {
             method: 'POST',
             headers: {
@@ -49,7 +52,12 @@ export default class AdminModel {
             },
             body: JSON.stringify(userData)
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             console.log('User Added:', data);
             return data;
@@ -57,6 +65,79 @@ export default class AdminModel {
         .catch(error => {
             console.error('Error adding user:', error);
             throw error;
+        });
+    }    
+
+    
+    // get auth uses list route (auth page)
+    static getUsers() {
+        return fetch('http://localhost/RoomFinder_API/api/index.php/admin', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => { 
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('User Added:', data);
+            return data;
+        })
+        .catch(error => {
+            console.error('Error adding user:', error);
+            throw error;
+        });
+    }
+
+
+    // delete web users route (auth page)
+    static deleteAdmins(requestId) {
+        return fetch(`http://localhost/RoomFinder_API/api/index.php/admin/${requestId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => { 
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Request deleted:', data);
+            return data;
+        })
+        .catch(error => {
+            console.error('Error deleting request:', error.message);
+        });
+    }
+
+
+    // delete mobile users route (auth page)
+    static deleteAdmins(requestId) {
+        return fetch(`http://localhost/RoomFinder_API/api/index.php/user/${requestId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => { 
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Request deleted:', data);
+            return data;
+        })
+        .catch(error => {
+            console.error('Error deleting request:', error.message);
         });
     }
 }
