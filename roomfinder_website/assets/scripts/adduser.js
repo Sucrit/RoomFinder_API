@@ -1,20 +1,42 @@
+import AdminViewModel from '/roomfinder_website/viewmodel/adminViewModel.js'; 
 
+window.initializeAddUserForm = function() {
+    console.log("Script adduser.js loaded");
 
-// ADD USER VIEW JS
+    const signUpForm = document.getElementById('signUpForm');
+    console.log("Form found:", signUpForm);
 
-import AdminViewModel from '/roomfinder_website/viewmodel/adminViewModel.js';
+    // form event listener
+    signUpForm.addEventListener('submit', async function(event) {
+        event.preventDefault();  
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const addUserBtn = document.getElementById('addBtn');
-        const addAnotherUserBtn = document.getElementById('addAnotherUserBtn');
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('ConfirmPassword').value;
+        const role = document.getElementById('role').value;
 
-        // bind form submission to view model
-        addUserBtn.addEventListener('click', function() {
-            AdminViewModel.handleAddUserForm();
-        });
+        console.log('Form submitted with data:', {role, username, email, password, confirmPassword });
 
-        // bind the "Add another" button to reset the form
-        addAnotherUserBtn.addEventListener('click', function() {
-            document.querySelector('.roleform').reset();
-        });
+        // Check if password and confirm password match
+        if (password !== confirmPassword) {
+            alert("Passwords do not match!");
+            return; // Prevent form submission if passwords don't match
+        }
+
+        // If passwords match, proceed to handle sign-up
+        try {
+            const result = await AdminViewModel.handleSignUp(role, username, email, password);
+            console.log('SignUp Result:', result);  // Log the result here
+
+            if (result.success) {
+                alert(result.message);  // Success message from the API
+            } else {
+                alert(result.message || "An error occurred while adding the user");  // Error message or fallback
+            }
+        } catch (error) {
+            console.error("Error during sign-up:", error);
+            alert("An error occurred while signing up. Please try again.");
+        }
     });
+};

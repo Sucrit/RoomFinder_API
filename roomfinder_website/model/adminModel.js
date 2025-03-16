@@ -5,6 +5,7 @@ export default class AdminModel {
 
     // login
     static login(email, password) {
+
         const loginData = {
             email: email,
             password: password
@@ -29,14 +30,17 @@ export default class AdminModel {
         });
     }
 
-    // add user (auth page)
+    // add web specific users route (auth page)
     static addUser(role, username, email, password) {
+
         const userData = {
             role: role,
             username: username,
             email: email,
             password: password
         };
+
+        console.log("SignUp data being sent:", userData);
 
         return fetch('http://localhost/RoomFinder_API/api/index.php/admin/signup', {
             method: 'POST',
@@ -55,5 +59,4 @@ export default class AdminModel {
             throw error;
         });
     }
-
 }

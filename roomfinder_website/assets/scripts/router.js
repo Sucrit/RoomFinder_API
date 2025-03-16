@@ -38,12 +38,12 @@ window.showSection = function(sectionId) {
                         const username = localStorage.getItem('username');
                         const role = localStorage.getItem('role');
     
-                        // update the profile div with the username and role
+                        // update the profile div with username and role
                         if (username && role) {
                             const profileNameElement = document.querySelector('.profileName');
                             const profileRoleElement = document.querySelector('.profileRole');
     
-                            // update profile name and role text 
+                            // update profile name and role text
                             if (profileNameElement) {
                                 profileNameElement.textContent = username;
                             }
@@ -74,8 +74,11 @@ window.showSection = function(sectionId) {
                 }
                 else if (sectionId === 'room') {
                     const roomViewModel = new RoomViewModel();  
-                    console.log('RoomViewModel:', roomViewModel);
                     roomViewModel.loadRooms();
+                }
+                else if (sectionId === 'adduser') {
+                    console.log("Add user section router js is visible");
+                    initializeAddUserForm();
                 }
             } else {
                 console.error(`Section with ID '${sectionId}' not not.`);

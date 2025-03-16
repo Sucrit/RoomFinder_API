@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // mutationobserver to observe changes to the DOM
+    // mutationobserver to observe changes to DOM
     const observer = new MutationObserver(function (mutationsList) {
         for (const mutation of mutationsList) {
             if (mutation.type === 'childList') {
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const ongoingScheduleSection = document.getElementById('ongoing_schedule');
     const requestHistorySection = document.getElementById('request_history');
 
-    // section is initially hidden
+    // initially hidden
     if (ongoingScheduleSection) {
         ongoingScheduleSection.classList.add('hidden');
     }

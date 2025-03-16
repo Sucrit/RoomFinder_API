@@ -25,7 +25,7 @@ export default class AdminViewModel {
                 localStorage.setItem('username', this.username); 
                 localStorage.setItem('role', this.role);
 
-                // update profile class from profile.js
+                // update profile 
                 updateProfile(this.username, this.role); 
 
                 window.location.href = '/roomfinder_website/index.html';   
@@ -48,33 +48,25 @@ export default class AdminViewModel {
         this.password = password;
     }
 
+
     // add user form 
-    static handleAddUserForm() {
-        const role = document.getElementById('role').value;
-        const username = document.getElementById('username').value;
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('ConfirmPassword').value;
-
-        // check if pass and confirm pass match
-        if (password !== confirmPassword) {
-            alert('Passwords does not match!');
-            return;
+    static async handleSignUp(role, username, email, password) {
+        // Call the model to add the user
+        try {
+            const result = await AdminModel.addUser(role, username, email, password);
+            console.log('API Response:', result);  // Log the response from the API
+    
+            // Check if the API response contains a success message and return it
+            if (result && result.message) {
+                return { success: true, message: result.message }; // Use the message from the API
+            } else {
+                return { success: false, message: 'An error occurred while adding the user' };
+            }
+        } catch (error) {
+            console.error('Error adding user:', error);
+            return { success: false, message: 'Error adding user' };
         }
-
-        // add user method
-        AdminModel.addUser(role, username, email, password)
-            .then(data => {
-                if (data.success) {
-                    alert('User added successfully!');
-                    // Optionally, clear form or navigate
-                    document.querySelector('.roleform').reset();
-                } else {
-                    alert('Failed to add user: ' + data.message);
-                }
-            })
-            .catch(error => {
-                alert('Error: ' + error.message);
-            });
     }
+    
+    
 }

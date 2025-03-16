@@ -1,35 +1,28 @@
+<!-- AUTHENTICATION -->
+<section id="adduser" class="hidden">
+    <div class="topcontainer">
+        <h2 style="margin-left: 15px;"> Add Administrator, Staff & Teacher</h2>
+        <div class="profile-container"></div>
+    </div>
 
-
-
-    <section id="adduser" class="hidden">
-        <div class="topcontainer">
-            <h2 style="margin-left: 15px;"> Add Administrator, Staff &  Teacher</h2>
-            <div class="profile-container">
-            
-            </div>
+    <form id="signUpForm" class="roleform">
+        <h1>Select Role</h1>
+        <select name="roleselector" id="role">
+            <option value="admin">Administrator</option>
+            <option value="staff">Staff</option>
+            <option value="teacher">Teacher</option>
+        </select><br/>
+        
+        <input type="text" name="username" id="username" placeholder="Username"><br/>
+        <input type="email" name="email" id="email" placeholder="Email"><br/>
+        <input type="password" name="password" id="password" placeholder="Password"><br/>
+        <input type="password" name="ConfirmPassword" id="ConfirmPassword" placeholder="Confirm Password"><br/>
+        
+        <div class="AddUserButtons">
+            <button class="addBtn" type="submit">Add</button>
+            <button class="addAnotherUserBtn" type="submit">Add Again</button>
         </div>
+    </form>
+</section>
 
-        <!-- AUTHENTICATION -->
-        
-        <form class="roleform">
-            <h1> Select Role </h1>
-            <select name="roleselector" id="role">
-                <option value="admin">Administrator</option>
-                <option value="staff">Staff</option>
-                <option value="teacher">Teacher</option>
-            </select> <br/>
-        
-            <input type="text" name="username" id="username" placeholder="Username"> <br/>
-            <input type="email" name="email" id="email" placeholder="Email"> <br/>
-            <input type="password" name="password" id="password" placeholder="Password"> <br/>
-            <input type="password" name="ConfirmPassword" id="ConfirmPassword" placeholder="Confirm Password"> <br/>
-        
-            <div>
-                <button class="addBtn" type="submit">Add</button>
-                <button class="addAnotherUserBtn" type="submit">Add Again</button>
-            </div>
-            
-        </form>
-    </section>
-
-    <script src="../assets/scripts/adduser.js" type="module"></script>
+<script src="../assets/scripts/adduser.js" type="module"></script>

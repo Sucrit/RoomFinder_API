@@ -8,7 +8,6 @@ export default class RoomViewModel {
     loadRooms() {
         return RoomModel.getRoomList()
             .then(response => {
-                console.log('API Response:', response);  
                 if (response && response['Room List'] && Array.isArray(response['Room List'])) {
                     this.rooms = response['Room List'].map(room => ({
                         room_building: room.room_building,
@@ -54,7 +53,6 @@ export default class RoomViewModel {
             // ongoing schedules column
             const scheduleCell = document.createElement('td');
             if (room.schedules.length > 0) {
-                // readable string
                 const scheduleList = room.schedules.map(schedule => {
                     return `${schedule.block} (${schedule.starting_time} - ${schedule.ending_time}) on ${schedule.date}`;
                 }).join(', ');

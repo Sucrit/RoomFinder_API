@@ -6,11 +6,9 @@ export default class RoomRequestViewModel {
     // load all dashboard details
 
     static loadRoomRequests() {
-        console.log('Loading dashboard...');
         RoomRequestModel.getRoomRequests()
             .then(data => {
                 console.log('Data received:', data);  
-
                 
                 // fallback for room requests
                 const pendingCount = parseInt(data["pending count"]) || 0;

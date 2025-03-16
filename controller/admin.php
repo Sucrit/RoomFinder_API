@@ -14,6 +14,7 @@ class AdminController {
         $this->userModel = new UserModel();
     }
 
+    // create administrator, staff, teacher
     public function createAdmin($username, $email, $password, $role) {
         $existingAdmin = $this->adminModel->getAdminByEmail($email);
         if ($existingAdmin) {
@@ -22,7 +23,10 @@ class AdminController {
         }
         $admin = $this->adminModel->createAdmin($username, $email, $password, $role);
         if ($admin) {
-            echo json_encode( $admin);
+            echo json_encode( [
+                'message' => 'Successfully signed up',
+                'admin' => $admin
+            ]);
         } else {
             echo json_encode(['message' => 'Error signing up admin']);
         }
