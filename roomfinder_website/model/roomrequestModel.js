@@ -54,7 +54,7 @@ class RoomRequestModel {
     // update pending request status
     static updateRequestStatus(requestId, status) {
         const requestData = { status: status };
-
+    
         return fetch(`http://localhost/RoomFinder_API/api/index.php/room_request/${requestId}`, {
             method: 'PATCH',
             headers: {
@@ -63,19 +63,24 @@ class RoomRequestModel {
             body: JSON.stringify(requestData)
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
+            return response.text();  // Get the raw response as text
         })
-        .then(data => {
-            console.log(`Request status updated to ${status}:`, data);
-            return data;
+        .then(text => {
+            console.log('Raw response text:', text);  // Log the raw response
+            try {
+                const data = JSON.parse(text);  // Try parsing the raw text into JSON
+                return data;
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+                throw new Error('Failed to parse response JSON');
+            }
         })
         .catch(error => {
             console.error('Error updating request status:', error.message);
         });
     }
+    
+    
 
 
     // get all request history route

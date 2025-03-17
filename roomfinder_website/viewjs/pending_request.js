@@ -58,9 +58,13 @@ export function InitPendingRequestSection() {
     function handleApprove(requestId, row) {
         row.remove(); 
         RoomRequestViewModel.updateRequestStatus(requestId, 'approved')
-            .then(() => {
-                
-                console.log(`Request ID ${requestId} approved successfully`);
+            .then((response) => {
+
+                if (response.message === "Room request updated successfully") {
+                    console.log(`Request ID ${requestId} approved successfully`);
+                } else {
+                    console.error(`Failed to approve request ID ${requestId}:`, response.message);
+                }
             })
             .catch((error) => {
                 console.error('Failed to approve request:', error.message);
@@ -69,10 +73,14 @@ export function InitPendingRequestSection() {
 
     // reject request handler
     function handleReject(requestId, row) {
+        row.remove();  
         RoomRequestViewModel.updateRequestStatus(requestId, 'rejected')
-            .then(() => {
-                row.remove(); 
-                console.log(`Request ID ${requestId} rejected successfully`);
+            .then((response) => {
+                if (response.message === "Room request updated successfully") {
+                    console.log(response.message)
+                } else {
+                    console.error(`Failed to reject request ID ${requestId}:`, response.message);
+                }
             })
             .catch((error) => {
                 console.error('Failed to reject request:', error.message);

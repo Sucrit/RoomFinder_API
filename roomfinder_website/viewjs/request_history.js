@@ -15,7 +15,7 @@ export function InitRequestHistorySection() {
         return;
     }
 
-    // Load request history from server
+    // load request history from server
     function loadRequestHistory() {
         RoomRequestViewModel.getRoomRequestHistory()
             .then(response => {
@@ -42,22 +42,18 @@ export function InitRequestHistorySection() {
                         `;
                         requestHistoryBody.appendChild(row);
 
-                        // Delete button event listener
+                        // delete button event listener
                         const deleteBtn = row.querySelector('.delete-btn');
                         deleteBtn.addEventListener('click', () => {
                             const requestId = deleteBtn.getAttribute('data-id');
-                            
-                            // Remove the row immediately
-                            row.remove();
 
-                            // Delete the request from the server using RoomRequestViewModel
+                            row.remove();
                             RoomRequestViewModel.deleteRoomRequestHistory(requestId)
                                 .then(() => {
                                     console.log('Request deleted successfully');
                                 })
                                 .catch((error) => {
                                     console.error('Failed to delete request:', error.message);
-                                    // Optionally, restore the row if needed
                                 });
                         });
                     });

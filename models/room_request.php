@@ -141,8 +141,10 @@ class RoomRequestModel {
                     if ($status === 'approved') {
                         $this->addToRoomSchedule($roomRequest);
                     }
-                    echo json_encode(['message' => 'Room request status updated successfully']);
-                } 
+                    elseif ($status === 'rejected') {
+                        echo json_encode(['message' => 'Room request updated successfully']);
+                    }
+                }  
                 else {
                     echo json_encode(['message' => 'Error updating room request status: ' . $this->conn->error]);
                 }
@@ -174,7 +176,7 @@ class RoomRequestModel {
                 echo json_encode(['message' => 'Error inserting into room schedule: ' . $this->conn->error]);
             } 
             else {
-                echo json_encode(['message' => 'Room schedule created successfully']);
+                echo json_encode(['message' => 'Room request updated successfully']);
             }
         } 
         else {

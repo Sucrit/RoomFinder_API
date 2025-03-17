@@ -8,8 +8,8 @@ export default class RoomViewModel {
         try {
             const response = await RoomModel.getRoomList();
 
-            if (response && response['Room List']) {
-                return { success: true, rooms: response['Room List'] };
+            if (Array.isArray(response) && response.length > 0) {
+                return { success: true, rooms: response };
             } else {
                 return { success: false, message: 'No rooms found in the response' };
             }

@@ -34,22 +34,27 @@ export default class RoomRequestViewModel {
         }
     }
 
-
     // update request status (approve or reject)
     static async updateRequestStatus(requestId, status) {
         try {
             const response = await RoomRequestModel.updateRequestStatus(requestId, status);
-            if (response.success) {
-                console.log(`${status} request ID: ${requestId}`);
-                return response;
+    
+            if (!response || !response.message) {
+                throw new Error(`Invalid response format for request ID ${requestId}`);
+            }
+            if (response.message === "Room schedule created successfully" || response.message.includes("successfully")) {
+                console.log(`${status} request ID: ${requestId} successfully.`);
+                return response; 
             } else {
                 throw new Error(`Failed to update status: ${status}`);
             }
         } catch (error) {
             console.error(`Error updating request status for ID ${requestId}:`, error);
-            throw error;
+            throw error; 
         }
     }
+    
+    
 
     // get all room request history (request history section)
     static async getRoomRequestHistory() {

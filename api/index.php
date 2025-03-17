@@ -3,9 +3,9 @@
 // VIEW
 
 // website access controls
-header("Access-Control-Allow-Origin: *");  // allow all origins to access the resource
-header("Access-Control-Allow-Headers: Content-Type, Authorization");  // allow the content-type and authorization headers
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PATCH, DELETE");  // allow the required HTTP methods
+header("Access-Control-Allow-Origin: *");  
+header("Access-Control-Allow-Headers: Content-Type, Authorization");  
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PATCH, DELETE");  
 
 // token handler
 require_once __DIR__ . '/../vendor/autoload.php';

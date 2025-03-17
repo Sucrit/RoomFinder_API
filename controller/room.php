@@ -66,7 +66,7 @@ class RoomController {
                 $this->roomModel->updateRoomStatus($room['id'], 'Available');
             }
         }
-        echo json_encode(["Room List" => $rooms]);
+        echo json_encode($rooms);
     }
     
     // create room
