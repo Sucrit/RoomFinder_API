@@ -24,4 +24,4 @@ TO-DO LIST!!!
 -!!!CANNOT ADD STARTING TIME TO AN EXISTING SCHEDULE ENDING TIME (ex.add schedule starting time=10:00pm, existing schedule ending time 10:00 (overlap))(fix sql query)
 
 -add htaccess configuration for better routing
--!!can send empty strings in backend
+-!!can send empty strings (BACKEND ONLY)

@@ -1,6 +1,5 @@
 
-// profile view
-
+// profile view dom/M
 export function updateProfile() {
 
     // get from local storage

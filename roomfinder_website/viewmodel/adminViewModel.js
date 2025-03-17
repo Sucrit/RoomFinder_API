@@ -4,7 +4,7 @@ import AdminModel from '../model/adminModel.js';
 
 export default class AdminViewModel {
 
-    // Static login function
+    // login page
     static loginUser(email, password) {
         if (!email || !password) {
             return { status: 'error', message: 'Email and password are required' };
@@ -17,7 +17,7 @@ export default class AdminViewModel {
                     const username = admin.username || 'Unknown User';
                     const role = admin.role || 'Unknown Role'; 
 
-                    // Save info in local storage
+                    // save info to local storage
                     localStorage.setItem('authToken', response.token);
                     localStorage.setItem('username', username); 
                     localStorage.setItem('role', role);
@@ -33,21 +33,12 @@ export default class AdminViewModel {
             });
     }
 
-    // Setters for email and password (optional)
-     setEmail(email) {
-        this.email = email;
-    }
 
-     setPassword(password) {
-        this.password = password;
-    }
-
-
-    // add web users form (auth page)
+    // add web users form (auth section)
     static async handleSignUp(role, username, email, password, teacher_id) {
         try {
             const result = await AdminModel.addUser(role, username, email, password, teacher_id);
-            // check msg response from api
+ 
             if (result && result.message) {
                 return { success: true, message: result.message };
             } else {
@@ -60,7 +51,7 @@ export default class AdminViewModel {
     } 
 
     
-    // get all authenticated users
+    // get all authenticated users (auth section)
     static async getAllUsers() {
         try {
             const response = await AdminModel.getUsers();
@@ -73,6 +64,38 @@ export default class AdminViewModel {
         } catch (error) {
             console.error('Error fetching users:', error);
             return { success: false, message: 'Error fetching users' };
+        }
+    }
+
+
+    // delete admin (auth section)
+    static async deleteAdmin(adminId) {
+        try {
+            const response = await AdminModel.deleteAdmins(adminId); 
+            if (response && response.message === 'Admin deleted successfully') {
+                return { success: true, message: 'Admin deleted successfully' };
+            } else {
+                return { success: false, message: 'Failed to delete admin' };
+            }
+        } catch (error) {
+            console.error('Error deleting admin:', error);
+            return { success: false, message: 'Error deleting admin' };
+        }
+    }
+
+
+    // delete user (auth section)
+    static async deleteUser(userId) {
+        try {
+            const response = await AdminModel.deleteUsers(userId);  
+            if (response && response.message === 'User deleted successfully') {
+                return { success: true, message: 'User deleted successfully' };
+            } else {
+                return { success: false, message: 'Failed to delete user' };
+            }
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            return { success: false, message: 'Error deleting user' };
         }
     }
 

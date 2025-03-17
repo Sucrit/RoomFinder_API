@@ -13,8 +13,13 @@ class UserController {
 
     // signup
     public function createUser($teacher_id, $username, $email, $password, $role) {
-        $existingUser = $this->userModel->getUserByEmail($email);
 
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode(['message' => 'Please enter a valid email address']);
+            return;
+        }
+
+        $existingUser = $this->userModel->getUserByEmail($email);
         if ($existingUser) {
             echo json_encode(['message' => 'User already exists with this email']);
             return;

@@ -3,7 +3,7 @@
 
 class RoomModel {
 
-        // get room list
+    // get room list (room page)
     static getRoomList() {
         return fetch('http://localhost/RoomFinder_API/api/index.php/room', {
             method: 'GET',
@@ -25,10 +25,9 @@ class RoomModel {
         });
     }
 
-
-    // delete room route 
-    static deleteRoomById(roomId) {
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/room/${roomId}`, {
+    // delete room route (room page) 
+    static deleteRoomById(requestId) {
+        return fetch(`http://localhost/RoomFinder_API/api/index.php/room/${requestId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,10 +37,9 @@ class RoomModel {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.json();  // Parse the JSON response
+            return response.json();  
         })
         .then(data => {
-            // Check if the message indicates success
             if (data.message === 'Room has been deleted') {
                 console.log('Room deleted:', data);
                 return { success: true, message: 'Room deleted successfully' };

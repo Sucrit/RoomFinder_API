@@ -94,50 +94,50 @@ export default class AdminModel {
     }
 
 
-    // delete web users route (auth page)
+    // delete admin route
     static deleteAdmins(requestId) {
         return fetch(`http://localhost/RoomFinder_API/api/index.php/admin/${requestId}`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json'
-            }
+                'Content-Type': 'application/json',
+            },
         })
-        .then(response => { 
+        .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
-            console.log('Request deleted:', data);
+            console.log('Admin deleted:', data);
             return data;
         })
         .catch(error => {
-            console.error('Error deleting request:', error.message);
+            console.error('Error deleting admin:', error.message);
         });
     }
 
-
-    // delete mobile users route (auth page)
-    static deleteAdmins(requestId) {
+    // delete user route
+    static deleteUsers(requestId) {
         return fetch(`http://localhost/RoomFinder_API/api/index.php/user/${requestId}`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json'
-            }
+                'Content-Type': 'application/json',
+            },
         })
-        .then(response => { 
+        .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
-            console.log('Request deleted:', data);
+            console.log('User deleted:', data);
             return data;
         })
         .catch(error => {
-            console.error('Error deleting request:', error.message);
+            console.error('Error deleting user:', error.message);
         });
     }
+
 }

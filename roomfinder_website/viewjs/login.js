@@ -1,4 +1,5 @@
 
+// login dom
 import AdminViewModel from '../viewmodel/adminViewModel.js';
 
 document.addEventListener('DOMContentLoaded', function () {

@@ -3,7 +3,7 @@ import RoomModel from '../model/roomModel.js';
 
 export default class RoomViewModel {
 
-
+    // get all room (room section)
     static async getAllRooms() {
         try {
             const response = await RoomModel.getRoomList();
@@ -19,8 +19,7 @@ export default class RoomViewModel {
         }
     }
 
-
-    // delete room by id
+    // delete room by id (room section)
     static async deleteRoom(roomId) {
         try {
             const response = await RoomModel.deleteRoomById(roomId); 

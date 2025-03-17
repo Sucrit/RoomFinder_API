@@ -1,11 +1,11 @@
 
+// add user section dom/M
 import AdminViewModel from '../viewmodel/adminViewModel.js';    
 
 document.addEventListener('DOMContentLoaded', function() {
     window.InitAddUserSection = function() {
 
         // btn element
-        const signUpForm = document.getElementById('signupform');
         const addBtn = document.querySelector('.addBtn');
         const backBtn = document.querySelector('.backBtn');
         const roleSelector = document.getElementById('role');
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
             teacherIdContainer.style.display = 'none'; 
         }
 
-        // show teacher id input
+        // show teacher id input field
         roleSelector.addEventListener('change', function() {
             const role = roleSelector.value;
             if (role === 'teacher') {
@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+        // input field dom
         addBtn.addEventListener('click', async function(event) {
             event.preventDefault();
 
@@ -56,7 +57,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (result.success) {
                     alert(result.message);
-                    signUpForm.reset();
+                    // reset input field
+                    document.getElementById('username').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('password').value = '';
+                    document.getElementById('ConfirmPassword').value = '';
+
+                    // reset teacher id input fld
+                    if (role === 'teacher') {
+                        teacherIdInput.value = '';
+                    }
+                    roleSelector.dispatchEvent(new Event('change'));
+
                 } else {
                     alert(result.message || "Cannot get message response from API");
                 }
@@ -64,8 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error("Error during sign-up:", error);
                 alert("An error occurred while signing up. Please try again.");
             }
-        });
-
+        }); 
         // back button
         backBtn.addEventListener('click', function(event) {
             event.preventDefault();

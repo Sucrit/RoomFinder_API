@@ -1,3 +1,5 @@
+
+// room section dom/M
 import RoomViewModel from '../viewmodel/roomViewModel.js';
 
 export function InitRoomsSection() {
@@ -5,14 +7,14 @@ export function InitRoomsSection() {
     const filter = document.querySelector('.filter');
     const searchBar = document.querySelector('.search-bar');
 
-    // Reset table
+    // reset table 
     roomListBody.innerHTML = '';
     RoomViewModel.getAllRooms()
         .then(result => {
             if (result.success) {
                 const rooms = result.rooms;
                 if (rooms.length > 0) {
-                    // Create rows for each room
+                    // rows each room
                     rooms.forEach(room => {
                         const row = document.createElement('tr');
                         row.classList.add('room-item');
@@ -20,22 +22,24 @@ export function InitRoomsSection() {
                         row.innerHTML = `
                             <td>${room.room_building}</td>
                             <td>${room.room_number}</td>
-                            <td>${room.room_schedule || 'Fix API response'}</td>
+                            <td>${room.room_schedule || 'fix my api response'}</td>
                             <td>${room.status}</td>
                             <td><button class="remove-btn" data-room-id="${room.id}">Remove</button></td>
+
+                            <!-- <td><button class="update-btn" data-room-id="${room.id}">Update</button></td> -->
                         `;
                         roomListBody.appendChild(row);
 
-                        // Add event listener to remove button
+                        // remove btn event listener
                         const removeBtn = row.querySelector('.remove-btn');
                         removeBtn.addEventListener('click', () => {
                             const roomId = removeBtn.getAttribute('data-room-id');
-                            RoomViewModel.deleteRoom(roomId)  // Call deleteRoom in RoomViewModel
+
+                            row.remove();
+                            RoomViewModel.deleteRoom(roomId)  
                                 .then(response => {
-                                    if (response.success) {
-                                        row.remove();  // Remove the row if deletion was successful
-                                    } else {
-                                        alert(response.message);  // Alert if deletion fails
+                                    if (!response.success) {
+                                        alert(response.message)
                                     }
                                 })
                                 .catch(error => {
@@ -56,43 +60,40 @@ export function InitRoomsSection() {
             roomListBody.innerHTML = `<tr><td colspan="5">Error loading rooms.</td></tr>`;
         });
 
-    // filter event listeners
+    // track role, searchtxt value
+    let selectedStatus = 'all';  
+    let searchText = '';        
+
+    // event listener
     filter.addEventListener('change', function () {
-        const selectedStatus = filter.value;
-        filterByStatus(selectedStatus);
+        selectedStatus = filter.value; 
+        filterTable(); 
     });
     searchBar.addEventListener('input', function () {
-        const searchText = searchBar.value.toLowerCase();
-        filterBySearchBar(searchText);
+        searchText = searchBar.value.toLowerCase(); 
+        filterTable(); 
     });
 
-    // filter functions
-    function filterByStatus(status) {
-        const rows = roomListBody.querySelectorAll('tr');
+    // filter
+    function filterTable() {
+        const rows = roomListBody.querySelectorAll('tr'); 
         rows.forEach(row => {
-            const statusCell = row.cells[3];
+            const statusCell = row.cells[3];  
+            const buildingCell = row.cells[0];  
+            const roomNumberCell = row.cells[1]; 
+
             const roomStatus = statusCell ? statusCell.textContent.toLowerCase() : '';
-            if (status === 'all' || roomStatus === status.toLowerCase()) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-    }
-    function filterBySearchBar(searchText) {
-        const rows = roomListBody.querySelectorAll('tr');
-        rows.forEach(row => {
-            const buildingCell = row.cells[0];
-            const roomNumberCell = row.cells[1];
-            const statusCell = row.cells[3];
             const roomBuilding = buildingCell ? buildingCell.textContent.toLowerCase() : '';
             const roomNumber = roomNumberCell ? roomNumberCell.textContent.toLowerCase() : '';
-            const roomStatus = statusCell ? statusCell.textContent.toLowerCase() : '';
 
-            if (roomBuilding.includes(searchText) || roomNumber.includes(searchText) || roomStatus.includes(searchText)) {
-                row.style.display = '';
+            const statusMatches = selectedStatus === 'all' || roomStatus === selectedStatus.toLowerCase();
+
+            const searchMatches = roomBuilding.includes(searchText) || roomNumber.includes(searchText) || roomStatus.includes(searchText);
+
+            if (statusMatches && searchMatches) {
+                row.style.display = '';  
             } else {
-                row.style.display = 'none';
+                row.style.display = 'none'; 
             }
         });
     }

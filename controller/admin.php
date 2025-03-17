@@ -16,6 +16,13 @@ class AdminController {
 
     // create administrator, staff, teacher
     public function createAdmin($username, $email, $password, $role) {
+        
+        // filtrer valid email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode(['message' => 'Please enter a valid email address']);
+            return;
+        }
+
         $existingAdmin = $this->adminModel->getAdminByEmail($email);
         if ($existingAdmin) {
             echo json_encode(['message' => 'Email already exists']);

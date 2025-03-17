@@ -1,11 +1,11 @@
-
-
 // SECTION ROUTE HANDLER AND VIEW SECTION JS   
+
 import { updateProfile } from '../viewjs/profile.js';
+import { InitDashboard } from '../viewjs/dashboard.js'
+import { InitPendingRequestSection } from '../viewjs/pending_request.js'
 import { InitUsersListSection } from '../viewjs/userslist.js'; 
 import { InitRoomsSection } from '../viewjs/room.js'; 
-
-import RoomRequestViewModel from '../viewmodel/roomrequestViewModel.js';
+import { InitRequestHistorySection } from '../viewjs/request_history.js';
 
 // section router
 window.showSection = function(sectionId) {
@@ -56,16 +56,15 @@ window.showSection = function(sectionId) {
             if (section) {
                 section.classList.remove('hidden');
 
-                // initialize section specific function
+                // initialize section
                 if (sectionId === 'dashboard') {
-                    RoomRequestViewModel.loadRoomRequests();
-                    InitSeeAllButton(); 
+                    InitDashboard();
                 }
                 else if (sectionId === 'pending_request') {
-                    RoomRequestViewModel.loadPendingRequests();
+                    InitPendingRequestSection();
                 }
                 else if (sectionId === 'request_history') {
-                    RoomRequestViewModel.loadRequestHistory();
+                    InitRequestHistorySection();
                 }
                 else if (sectionId === 'room') {
                     InitRoomsSection();
@@ -75,6 +74,9 @@ window.showSection = function(sectionId) {
                 }
                 else if (sectionId === 'userslist') {
                     InitUsersListSection();
+                }
+                else if (section === 'ongoing_schedule') {
+                    // init ongoing schedule
                 }
             } else {
                 console.error(`Section with ID '${sectionId}' not exist`);
@@ -113,7 +115,6 @@ dropdownToggles.forEach(toggle => {
         dropdown.classList.toggle('open'); 
     });
 });
-
 
 // close dropdown if clicked outside
 window.addEventListener('click', function(event) {
