@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const teacherIdContainer = document.getElementById('teacher-id-container');
         const teacherIdInput = document.getElementById('teacherID');
 
-        if (roleSelector.value === 'teacher') {
+        if (roleSelector.value === 'Teacher') {
             teacherIdContainer.style.display = 'block'; 
         } else {
             teacherIdContainer.style.display = 'none'; 
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // show teacher id input field
         roleSelector.addEventListener('change', function() {
             const role = roleSelector.value;
-            if (role === 'teacher') {
+            if (role === 'Teacher') {
                 teacherIdContainer.style.display = 'block'; 
             } else {
                 teacherIdContainer.style.display = 'none'; 
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const confirmPassword = document.getElementById('ConfirmPassword').value;
             const teacherId = teacherIdInput ? teacherIdInput.value : ''; 
 
-            if (!role || !username || !email || !password || !confirmPassword || (role === 'teacher' && !teacherId)) {
+            if (!role || !username || !email || !password || !confirmPassword || (role === 'Teacher' && !teacherId)) {
                 alert('Please fill out all fields!');
                 return;
             }
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('ConfirmPassword').value = '';
 
                     // reset teacher id input fld
-                    if (role === 'teacher') {
+                    if (role === 'Teacher') {
                         teacherIdInput.value = '';
                     }
                     roleSelector.dispatchEvent(new Event('change'));

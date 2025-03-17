@@ -24,6 +24,12 @@ class UserController {
             echo json_encode(['message' => 'User already exists with this email']);
             return;
         }
+
+        // if (strlen($password) < 8) {
+        //     echo json_encode(['message' => 'Password is too short. It must be at least 8 characters long']);
+        //     return;
+        // }
+
         $user = $this->userModel->createUser($teacher_id,$username, $email, $password, $role);
         if ($user) {
             echo json_encode(['message' => 'User added successfully']);

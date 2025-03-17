@@ -210,7 +210,7 @@ function handleRoomRequest($requestMethod, $uri, $input, $roomRequestController)
             if (preg_match('/\/room_request\/(\d+)/', $uri, $matches)) {
                 $id = $matches[1]; 
                 
-                if (isset($input['status']) && in_array($input['status'], ['approved', 'rejected'])) {
+                if (isset($input['status']) && in_array($input['status'], ['Approved', 'Rejected'])) {
                     $roomRequestController->updateRoomRequestStatus($id, $input['status']);
                 } 
                 else {

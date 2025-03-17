@@ -29,6 +29,11 @@ class AdminController {
             return;
         }
 
+        // if (strlen($password) < 8) {
+        //     echo json_encode(['message' => 'Password is too short. It must be at least 8 characters long']);
+        //     return;
+        // }
+
         $admin = $this->adminModel->createAdmin($username, $email, $password, $role);
         if ($admin) {
             echo json_encode( [

@@ -42,7 +42,7 @@ export default class RoomRequestViewModel {
             if (!response || !response.message) {
                 throw new Error(`Invalid response format for request ID ${requestId}`);
             }
-            if (response.message === "Room schedule created successfully" || response.message.includes("successfully")) {
+            if (response.message === "Room request updated successfully") {
                 console.log(`${status} request ID: ${requestId} successfully.`);
                 return response; 
             } else {

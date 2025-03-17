@@ -63,12 +63,12 @@ class RoomRequestModel {
             body: JSON.stringify(requestData)
         })
         .then(response => {
-            return response.text();  // Get the raw response as text
+            return response.text();  
         })
         .then(text => {
-            console.log('Raw response text:', text);  // Log the raw response
+            console.log('Raw response text:', text); 
             try {
-                const data = JSON.parse(text);  // Try parsing the raw text into JSON
+                const data = JSON.parse(text); 
                 return data;
             } catch (error) {
                 console.error('Error parsing JSON:', error);

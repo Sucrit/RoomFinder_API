@@ -80,22 +80,22 @@ function updateTable(tableId, data) {
             // ongoing schedule (dashboard)
             if (tableId === 'ongoingSchedule') {
                 row.innerHTML = `
-                    <td>${item.room_building || 'N/A'}</td> <!-- Room Building -->
-                    <td>${item.room_number || 'N/A'}</td>   <!-- Room Number -->
-                    <td>${item.block || 'N/A'}</td>         <!-- Block -->
-                    <td>${item.date || 'N/A'}</td>          <!-- Date -->
-                    <td>${item.starting_time || 'N/A'}</td> <!-- Starting Time -->
-                    <td>${item.ending_time || 'N/A'}</td>   <!-- Ending Time -->
+                    <td>${item.room_building || 'N/A'}</td> 
+                    <td>${item.room_number || 'N/A'}</td>   
+                    <td>${item.block || 'N/A'}</td>        
+                    <td>${item.date || 'N/A'}</td>     
+                    <td>${item.starting_time || 'N/A'}</td>
+                    <td>${item.ending_time || 'N/A'}</td>   
                 `;
             } 
             // request history (dashboard)
             else if (tableId === 'requestHistory') {
                 row.innerHTML = `
-                    <td>${item.username || 'N/A'}</td>   <!-- Request From -->
-                    <td>${item.block || 'N/A'}</td>      <!-- Block -->
-                    <td>${item.date || 'N/A'}</td>       <!-- Date -->
-                    <td>${item.starting_time || 'N/A'}</td> <!-- Starting Time -->
-                    <td>${item.ending_time || 'N/A'}</td>   <!-- Ending Time -->
+                    <td>${item.username || 'N/A'}</td>  
+                    <td>${item.block || 'N/A'}</td>     
+                    <td>${item.date || 'N/A'}</td>       
+                    <td>${item.starting_time || 'N/A'}</td> 
+                    <td>${item.ending_time || 'N/A'}</td>  
                 `;
             }
 

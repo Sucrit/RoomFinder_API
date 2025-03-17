@@ -45,9 +45,9 @@ class RoomRequestController {
         $getOngoingSchedules = $this->roomScheduleModel->getAllOngoingSchedules();
 
         echo json_encode([
-            'pending count' => (string)$requeststatusCounts['pending'],
-            'approved count' => (string)$requeststatusCounts['approved'],
-            'rejected count' => (string)$requeststatusCounts['rejected'],
+            'pending count' => (string)$requeststatusCounts['Pending'],
+            'approved count' => (string)$requeststatusCounts['Approved'],
+            'rejected count' => (string)$requeststatusCounts['Rejected'],
             'available count' => (string)$roomstatusCounts['Available'],
             'occupied count' => (string)$roomstatusCounts['Occupied'],
             'closed count' => (string)$roomstatusCounts['Closed'],

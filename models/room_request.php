@@ -18,7 +18,7 @@ class RoomRequestModel {
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
-    // get all room request
+    // get dashboard details
     public function getAllRoomRequests() {
         $sql = "SELECT * FROM room_request";
 
@@ -33,9 +33,9 @@ class RoomRequestModel {
         $result = $this->conn->query($sql);
 
         $statusCounts = [
-            'pending' => 0,
-            'approved' => 0,
-            'rejected' => 0,
+            'Pending' => 0,
+            'Approved' => 0,
+            'Rejected' => 0,
         ];
 
         if ($result->num_rows > 0) {
@@ -128,7 +128,7 @@ class RoomRequestModel {
     
         if ($roomRequest) {
             // check if the room request status is pending
-            if ($roomRequest['status'] !== 'pending') {
+            if ($roomRequest['status'] !== 'Pending') {
                 echo json_encode(['message' => 'Only pending room requests can be updated']);
                 return;
             }
@@ -138,10 +138,10 @@ class RoomRequestModel {
                 $stmt->bind_param('si', $status, $id);
                 if ($stmt->execute()) {
                     // if the status is approved, add to the room schedule
-                    if ($status === 'approved') {
+                    if ($status === 'Approved') {
                         $this->addToRoomSchedule($roomRequest);
                     }
-                    elseif ($status === 'rejected') {
+                    elseif ($status === 'Rejected') {
                         echo json_encode(['message' => 'Room request updated successfully']);
                     }
                 }  
