@@ -33,3 +33,12 @@
     border-bottom: 1px solid #ddd;
     margin-bottom: 10px;
 }
+
+.remove-btn {
+    background: #CF2424;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}

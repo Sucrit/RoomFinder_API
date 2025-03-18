@@ -42,12 +42,10 @@ export function InitPendingRequestSection() {
                             handleReject(requestId, row);
                         });
                     });
-                } 
-                else {
+                } else {
                     pendingRequestBody.innerHTML = `<tr><td colspan="6">No pending requests available.</td></tr>`;
                 }
-            } 
-            else {
+            } else {
                 pendingRequestBody.innerHTML = `<tr><td colspan="6">Error: ${result.message}</td></tr>`;
             }
         })
@@ -59,7 +57,7 @@ export function InitPendingRequestSection() {
     // approve request handler
     function handleApprove(requestId, row) {
         row.remove(); 
-        RoomRequestViewModel.updateRequestStatus(requestId, 'Approved')
+        RoomRequestViewModel.updateRequestStatus(requestId, 'approved')
             .then((response) => {
 
                 if (response.message === "Room request updated successfully") {
@@ -76,7 +74,7 @@ export function InitPendingRequestSection() {
     // reject request handler
     function handleReject(requestId, row) {
         row.remove();  
-        RoomRequestViewModel.updateRequestStatus(requestId, 'Rejected')
+        RoomRequestViewModel.updateRequestStatus(requestId, 'rejected')
             .then((response) => {
                 if (response.message === "Room request updated successfully") {
                     console.log(response.message)

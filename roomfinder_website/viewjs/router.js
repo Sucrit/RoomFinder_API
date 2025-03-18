@@ -39,9 +39,10 @@ window.showSection = function(sectionId) {
 
                         const username = localStorage.getItem('username');
                         const role = localStorage.getItem('role');
+                        const profilePic = localStorage.getItem('profilepic');
 
                         if (username && role) {
-                            updateProfile(username, role);
+                            updateProfile(username, role, profilePic);
                         } else {
                             console.error('No profile data found in localStorage.');
                         }

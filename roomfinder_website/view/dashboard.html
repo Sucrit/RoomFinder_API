@@ -1,138 +1,141 @@
 
 
+<section id="dashboard" class="section-content hidden">
+<div class="topcontainer">
+    <h2 style="margin-left: 15px;">Dashboard</h2>
+    <div class="profile-container">
+        <div class="profile-img">
+            <img src="assets/images/web-svg-icons/profile-default.svg" alt="Profile Icon">
+        </div>
+        <!-- <div class="profile-details">
+            <h3>Admin</h3>
+            <p>Administrator</p>
+        </div> -->
+    </div>
+</div>
 
-<section id="dashboard" class="section-content hidden"></section>
-    <div class="topcontainer">
-        <h2 style="margin-left: 15px;">Dashboard</h2>
-        <div class="profile-container">
-       
+<!-- DASHBOARD -->
+<div id="grid-container">
+    <!-- Requests Section -->
+    <div class="statContainer">
+        <div class="stats-box">
+            <div style="text-align: center;">
+                <h2 id="totalRequests">0</h2>
+                <p>Requests</p>
+            </div>
+            <img src="assets/images/web-svg-icons/request-count-icon.svg" alt="Requests Icon">
         </div>
     </div>
 
-    <!-- DASHBOARD -->
-    <div id="grid-container">
-        <!-- Requests Section -->
-        <div class="statContainer">
-            <div class="stats-box">
-                <div>
-                    <h2 id="totalRequests">0</h2>
-                    <p>Requests</p>
-                </div>
-                <img src="assets/images/web-svg-icons/request-count-icon.svg" alt="Requests Icon">
+    <div class="requestforms">
+        <div class="request-box">
+            <div>
+                <h2>Pending Requests</h2>
+                <p id="pendingRequests">0</p>
+                <h3 id="pendingPercentage">0%</h3>
             </div>
         </div>
+    </div>
 
-        <div class="requestforms">
-            <div class="request-box">
-                <div>
-                    <h2>Pending Requests</h2>
-                    <p id="pendingRequests">0</p>
-                    <h3 id="pendingPercentage">0%</h3>
-                </div>
+    <div class="requestforms">
+        <div class="request-box">
+            <div>
+                <h2>Approved Requests</h2>
+                <p id="approvedRequests">0</p>
+                <h3 id="approvedPercentage">0%</h3>
             </div>
         </div>
+    </div>
 
-        <div class="requestforms">
-            <div class="request-box">
-                <div>
-                    <h2>Approved Requests</h2>
-                    <p id="approvedRequests">0</p>
-                    <h3 id="approvedPercentage">0%</h3>
-                </div>
+    <div class="requestforms">
+        <div class="request-box">
+            <div>
+                <h2>Rejected Requests</h2>
+                <p id="rejectedRequests">0</p>
+                <h3 id="rejectedPercentage">0%</h3>
             </div>
         </div>
+    </div>
 
-        <div class="requestforms">
-            <div class="request-box">
-                <div>
-                    <h2>Rejected Requests</h2>
-                    <p id="rejectedRequests">0</p>
-                    <h3 id="rejectedPercentage">0%</h3>
-                </div>
+    <!-- Rooms Section -->
+    <div class="statContainer">
+        <div class="stats-box">
+            <div style="text-align: center;">
+                <h2 id="totalRooms">0</h2>
+                <p>Rooms</p>
+            </div>
+            <img src="assets/images/web-svg-icons/room-count-icon.svg" alt="Rooms Icon">
+        </div>
+    </div>
+
+    <div class="requestforms">
+        <div class="request-box">
+            <div>
+                <h2>Available Rooms</h2>
+                <p id="availableRooms">0</p>
+                <h3 id="availablePercentage">0%</h3>
             </div>
         </div>
+    </div>
 
-        <!-- Rooms Section -->
-        <div class="statContainer">
-            <div class="stats-box">
-                <div>
-                    <h2 id="totalRooms">0</h2>
-                    <p>Rooms</p>
-                </div>
-                <img src="assets/images/web-svg-icons/room-count-icon.svg" alt="Rooms Icon">
+    <div class="requestforms">
+        <div class="request-box">
+            <div>
+                <h2>Occupied Rooms</h2>
+                <p id="occupiedRooms">0</p>
+                <h3 id="occupiedPercentage">0%</h3>
             </div>
         </div>
+    </div>
 
-        <div class="requestforms">
-            <div class="request-box">
-                <div>
-                    <h2>Available Rooms</h2>
-                    <p id="availableRooms">0</p>
-                    <h3 id="availablePercentage">0%</h3>
-                </div>
-            </div>
-        </div>
-
-        <div class="requestforms">
-            <div class="request-box">
-                <div>
-                    <h2>Occupied Rooms</h2>
-                    <p id="occupiedRooms">0</p>
-                    <h3 id="occupiedPercentage">0%</h3>
-                </div>
-            </div>
-        </div>
-
-        <div class="requestforms">
-            <div class="request-box">
-                <div>
-                    <h2>Closed Rooms</h2>
-                    <p id="closedRooms">0</p>
-                    <h3 id="closedPercentage">0%</h3>
-                </div>
+    <div class="requestforms">
+        <div class="request-box">
+            <div>
+                <h2>Closed Rooms</h2>
+                <p id="closedRooms">0</p>
+                <h3 id="closedPercentage">0%</h3>
             </div>
         </div>
     </div>
 
     <!-- Ongoing and Recent Request Table-->
-    <div id="grid-container">
-        <div class="roomStats-ongoingroom">
-            <div class="roomStats-ongoing">
-                <h1> Ongoing Schedule </h1>
-                <button class="seeongoingschedule-btn">See All</button>
-            </div>
-            <table id="ongoingSchedule">
-                <thead>
-                    <tr>
-                        <th>Room Building</th>
-                        <th>Room Number </th>
-                        <th>Block</th>
-                        <th>Date</th>
-                        <th>Starting Time</th>
-                        <th>Ending Time</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+    <div class="roomStats-ongoingroom">
+        <div class="roomStats-ongoing">
+            <h1> Ongoing Schedule </h1>
+            <button class="seeongoingschedule-btn">See All</button>
         </div>
-
-        <div class="roomStats-recent">
-            <div class="roomStats-requests">
-                <h1> Request History </h1>
-                <button class="seerequesthistory-btn">See All</button>
-            </div>
-            <table id="requestHistory">
-                <thead>
-                    <tr>
-                        <th>Request From</th>
-                        <th>Block</th>
-                        <th>Date</th>
-                        <th>Starting Time</th>
-                        <th>Ending Time</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
+        <table id="ongoingSchedule">
+            <thead>
+                <tr>
+                    <th>Room Building</th>
+                    <th>Room Number </th>
+                    <th>Block</th>
+                    <th>Date</th>
+                    <th>Starting Time</th>
+                    <th>Ending Time</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
+
+    <div class="roomStats-recent">
+        <div class="roomStats-requests">
+            <h1> Request History </h1>
+            <button class="seerequesthistory-btn">See All</button>
+        </div>
+        <table id="requestHistory">
+            <thead>
+                <tr>
+                    <th>Request From</th>
+                    <th>Block</th>
+                    <th>Date</th>
+                    <th>Starting Time</th>
+                    <th>Ending Time</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
 </section>
