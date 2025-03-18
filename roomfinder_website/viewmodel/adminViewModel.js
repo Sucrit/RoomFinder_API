@@ -98,5 +98,4 @@ export default class AdminViewModel {
             return { success: false, message: 'Error deleting user' };
         }
     }
-
 }

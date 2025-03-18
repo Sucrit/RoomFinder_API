@@ -1,109 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+		<title>University Room Finder</title>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>University Room Finder</title>
+		<!-- head logo  -->
+		<link rel="icon" href="./assets/images/web-svg-icons/web-logo.svg" type="image/x-icon" />
 
-    <!-- head logo  -->
-    <link rel="icon" href="./assets/images/web-svg-icons/web-logo.svg" type="image/x-icon">
+		<link rel="stylesheet" href="assets/style/home.css" />
+		<link rel="stylesheet" href="assets/style/dashboard.css" />
+		<link rel="stylesheet" href="assets/style/navbar.css" />
+		<link rel="stylesheet" href="assets/style/account.css" />
+		<link rel="stylesheet" href="assets/style/adduser.css" />
+		<link rel="stylesheet" href="assets/style/userslist.css" />
+		<link rel="stylesheet" href="assets/style/table-style.css" />
+		<link rel="stylesheet" href="assets/style/room.css" />
+		<link rel="stylesheet" href="assets/style/room_schedule.css" />
+		<link rel="stylesheet" href="assets/style/request_history.css" />
+        <link rel="stylesheet" href="assets/style/pending_request.css" />
+	</head>
 
-    <link rel="stylesheet" href="assets/style/home.css"> 
-    <link rel="stylesheet" href="assets/style/dashboard.css"> 
-    <link rel="stylesheet" href="assets/style/navbar.css"> 
-    <link rel="stylesheet" href="assets/style/account.css"> 
-    <link rel="stylesheet" href="assets/style/adduser.css"> 
-    <link rel="stylesheet" href="assets/style/userslist.css"> 
-    <link rel="stylesheet" href="assets/style/table-style.css"> 
-    <link rel="stylesheet" href="assets/style/room.css"> 
-    <link rel="stylesheet" href="assets/style/room_schedule.css"> 
-    <link rel="stylesheet" href="assets/style/request_history.css"> 
+	<body>
+		<!-- Navigation Bar -->
+		<div class="navbar">
+            <div class="logo-container">
+                <img
+                    src="assets/images/web-svg-icons/web-logo.svg"
+                    alt="UPang Logo"
+                    class="logo" />
+                <span class="roomsearchTxt">UPang Room Search</span>
+            </div>
 
-</head>
-
-<body>
-   <!-- Navigation Bar -->
-   <div class="navbar">
-    <div class="logo-container">
-        <img src="assets/images/web-svg-icons/web-logo.svg" alt="UPang Logo" class="logo">
-        <span class="roomsearchTxt">UPang Room Search</span>
-    </div>
-
-    <!-- Navigation Links -->
-    <a href="#" class="nav-item" onclick="showSection('dashboard')">
-        <img src="assets/images/web-svg-icons/dashboard-icon.svg" alt="Dashboard Icon">
-        Dashboard
-    </a>
-    
-    <a href="#" class="nav-item" onclick="showSection('room')">
-        <img src="assets/images/web-svg-icons/room-icon.svg" alt="Rooms Icon">
-        Rooms
-    </a>
-    
-    <a href="#" class="nav-item" onclick="showSection('account')">
-        <img src="assets/images/web-svg-icons/account-icon.svg" alt="Account Icon">
-        Account
-    </a>
-
-    <!-- Room Requests -->
-    <div class="dropdown">
-        <div class="dropdown-toggle">
-            <img src="assets/images/web-svg-icons/room-request-icon.svg" alt="Room Requests Icon">  
-            Room Request
-        </div>
-        <div class="dropdown-menu">
-            <a href="#" class="nav-item" onclick="showSection('pending_request')">
-                Pending Request
-            </a>
-            <a href="#" class="nav-item" onclick="showSection('request_history')">
-                Request History
-            </a>
-        </div>
-    </div>
-
-    <!-- Room Schedule  -->
-    <div class="dropdown">
-        <div class="dropdown-toggle">
-            <img src="assets/images/web-svg-icons/room-schedule-icon.svg" alt="Room Schedules Icon">
-            Room Schedules
-        </div>
-        <div class="dropdown-menu">
-            <a href="#" class="nav-item" onclick="showSection('ongoing_schedule')">
-                Ongoing Schedule
-            </a>
-            <a href="#" class="nav-item" onclick="showSection('room_schedule')">
-                Room Schedule
-            </a>
-        </div>
-    </div>
-    <div class="dropdown">
-        <div class="dropdown-toggle">
-            <img src="assets/images/web-svg-icons/auth-icon.svg" alt="Auth Icon" />
-            Authentication
-        </div>
-        <div class="dropdown-menu">
-            <a href="#" id="dropdown-item" onclick="showSection('adduser')">Add user</a>
-            <a href="#" id="dropdown-item" onclick="showSection ('userslist')">List of Users</a>
-        </div>
-    </div>
-
-    <a href="./view/login.html" class="logoutBtn">
-        <img src="assets/images/web-svg-icons/logout-icon.svg" alt="Logout Icon">
-        Logout
-    </a>
-</div>
-
-    <main id="content">
+            <!-- Navigation Links -->
+            <div class="navbar-options">
+                <div class="nav-links">
+                    <a href="#" class="nav-item" onclick="showSection('dashboard')">
+                        <img
+                            src="assets/images/web-svg-icons/dashboard-icon.svg"
+                            alt="Dashboard Icon" />
+                        Dashboard
+                    </a>
         
-        <!-- CONTENT SECTION  -->
+                    <a href="#" class="nav-item" onclick="showSection('room')">
+                        <img src="assets/images/web-svg-icons/room-icon.svg" alt="Rooms Icon" />
+                        Rooms
+                    </a>
+        
+                    <a href="#" class="nav-item" onclick="showSection('account')">
+                        <img
+                            src="assets/images/web-svg-icons/account-icon.svg"
+                            alt="Account Icon" />
+                        Account
+                    </a>
+        
+                    <!-- Room Requests -->
+                    <div class="dropdown">
+                        <div class="dropdown-toggle">
+                            <img
+                                src="assets/images/web-svg-icons/room-request-icon.svg"
+                                alt="Room Requests Icon" />
+                            Room Request
+                        </div>
+                        <div class="dropdown-menu">
+                            <a href="#" class="nav-item" onclick="showSection('pending_request')">
+                                Pending Request
+                            </a>
+                            <a href="#" class="nav-item" onclick="showSection('request_history')">
+                                Request History
+                            </a>
+                        </div>
+                    </div>
+        
+                    <!-- Room Schedule  -->
+                    <div class="dropdown">
+                        <div class="dropdown-toggle">
+                            <img
+                                src="assets/images/web-svg-icons/room-schedule-icon.svg"
+                                alt="Room Schedules Icon" />
+                            Room Schedules
+                        </div>
+                        <div class="dropdown-menu">
+                            <a
+                                href="#"
+                                class="nav-item"
+                                onclick="showSection('ongoing_schedule')">
+                                Ongoing Schedule
+                            </a>
+                            <a href="#" class="nav-item" onclick="showSection('room_schedule')">
+                                Room Schedule
+                            </a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <div class="dropdown-toggle">
+                            <img
+                                src="assets/images/web-svg-icons/auth-icon.svg"
+                                alt="Auth Icon" />
+                            Authentication
+                        </div>
+                        <div class="dropdown-menu">
+                            <a href="#" id="dropdown-item" onclick="showSection('adduser')"
+                                >Add user</a
+                            >
+                            <a href="#" id="dropdown-item" onclick="showSection ('userslist')"
+                                >List of Users</a
+                            >
+                        </div>
+                    </div>
+                </div>
+                <a href="./view/login.html" class="logoutBtn">
+                    <img
+                        src="assets/images/web-svg-icons/logout-icon.svg"
+                        alt="Logout Icon" />
+                    Logout
+                </a>
+            </div>
+		</div>
 
-    </main>
+		<main class="main_content" id="content">
+			<!-- CONTENT SECTION  -->
+		</main>
 
-    <script type="module" src="./viewjs/router.js"></script>
-    <script type="module" src="./viewjs/dashboard.js"></script>
-    <script type="module" src="./viewjs/adduser.js"></script>
-
-</body>
+		<script type="module" src="./viewjs/router.js"></script>
+		<script type="module" src="./viewjs/dashboard.js"></script>
+		<script type="module" src="./viewjs/adduser.js"></script>
+	</body>
 </html>

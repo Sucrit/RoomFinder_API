@@ -9,8 +9,13 @@ body {
     background-color: rgba(225, 255, 226, 1);
     margin: 0;
     font-family: Arial, sans-serif;
-    overflow: scroll;
     display: flex;
+    overflow: hidden;
+}
+
+.main_content {
+    flex: 1;
+    overflow: scroll;
     overflow-x: hidden;
 }
 
@@ -118,18 +123,23 @@ a.hover {
 /* Add and Edit Room */
 .floating-btn {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 30px;
+    right: 40px;
     background-color: #06346F;
     color: white;
     border-radius: 50%;
     width: 50px;
     height: 50px;
-    font-size: 24px;
-    text-align: center;
+    font-size: 34px;
     line-height: 50px;
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    transition: 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
 }
 
 .floating-btn:hover {
