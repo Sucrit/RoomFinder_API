@@ -8,8 +8,36 @@
             
         </div>
     </div>
+	<div class="schedule-content">
+		<!-- Floating Search Bar -->
+		<div class="search-container">
+			<img
+				src="../roomfinder_website/assets/images/web-svg-icons/search-icon.svg"
+				alt="Search" />
+			<input
+				type="text"
+				id="searchInput"
+				placeholder="Search here..."
+				onkeyup="searchTable()" />
+		</div>
 
-    <h1 style="text-align: center;">No Code Section</h1>
+		<div class="ongoing-schedule-content">
+			<h2>CITE</h2>
+            <div class="table-wrapper">
+                <table class="ongoing">
+                    <tr>
+                        <th>Room Name</th>
+                        <th>Block</th>
+                        <th>Prof/Teacher</th>
+                        <th>Time</th>
+                    </tr>
+                    <tbody  class="table-data" align="center">
+    
+                    </tbody>
+                </table>
+            </div>
+		</div>
+	</div>
 
 </section>
 

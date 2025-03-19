@@ -18,12 +18,11 @@ export function InitRoomsSection() {
                     rooms.forEach(room => {
                         const row = document.createElement('tr');
                         row.classList.add('room-item');
-
                         row.innerHTML = `
                             <td>${room.room_building}</td>
                             <td>${room.room_number}</td>
                             <td>${room.room_schedule || 'fix my api response'}</td>
-                            <td>${room.status}</td>
+                            <td><span class="status ${getStatusClass(room.status)}">${room.status}</span></td>
                             <td><button class="remove-btn" data-room-id="${room.id}">Remove</button></td>
 
                             <!-- <td><button class="update-btn" data-room-id="${room.id}">Update</button></td> -->
@@ -60,6 +59,18 @@ export function InitRoomsSection() {
             roomListBody.innerHTML = `<tr><td colspan="5">Error loading rooms.</td></tr>`;
         });
 
+    function getStatusClass(status) {
+        switch (status.toLowerCase()) {
+            case 'available':
+                return 'available';
+            case 'occupied':
+                return 'occupied';
+            case 'maintenance':
+                return 'closed';
+            default:
+                return '';
+        }
+    }
     // track role, searchtxt value
     let selectedStatus = 'all';  
     let searchText = '';        

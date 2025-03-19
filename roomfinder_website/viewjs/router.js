@@ -1,19 +1,21 @@
 // SECTION ROUTE HANDLER AND VIEW SECTION JS   
 
-import { updateProfile } from '../viewjs/profile.js';
+import { updateProfile, getProfile } from '../viewjs/profile.js';
 import { InitDashboard } from '../viewjs/dashboard.js'
 import { InitPendingRequestSection } from '../viewjs/pending_request.js'
 import { InitUsersListSection } from '../viewjs/userslist.js'; 
 import { InitRoomsSection } from '../viewjs/room.js'; 
 import { InitRequestHistorySection } from '../viewjs/request_history.js';
+import { InitRoomSchedule } from '../viewjs/room_schedule.js'
+import { initOngoingSchedule } from './ongoing_schedule.js';
 
 // section router
 window.showSection = function(sectionId) {
 
     // hide all sections
     document.querySelectorAll('section').forEach(section => {
-        section.classList.add('hidden');
     });
+
     console.log(sectionId);
     
     // load section html view
@@ -76,8 +78,14 @@ window.showSection = function(sectionId) {
                 else if (sectionId === 'userslist') {
                     InitUsersListSection();
                 }
-                else if (section === 'ongoing_schedule') {
-                    // init ongoing schedule
+                else if (sectionId === 'ongoing_schedule') {
+                    initOngoingSchedule()
+                }
+                else if (sectionId === 'room_schedule') {
+                    InitRoomSchedule();
+                }
+                else if (sectionId === 'account') {
+                    getProfile()
                 }
             } else {
                 console.error(`Section with ID '${sectionId}' not exist`);
@@ -107,7 +115,6 @@ window.addEventListener('DOMContentLoaded', () => {
     showSection('dashboard');
 });
 
-
 // toggle dropdown when clicked
 const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
 dropdownToggles.forEach(toggle => {
@@ -126,4 +133,3 @@ window.addEventListener('click', function(event) {
         }
     });
 });
-

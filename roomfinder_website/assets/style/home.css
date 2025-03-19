@@ -10,7 +10,7 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     display: flex;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 .main_content {
@@ -60,27 +60,24 @@ a.hover {
 
 /* js */
 .status {
-    padding: 6px 12px;
     border-radius: 15px;
-    font-size: 12px;
     font-weight: bold;
     display: inline-block;
     text-align: center;
+    font-size: 16px;
+    font-weight: bold;
 }
 
 .status.available {
-    background-color: #28a745;
-    color: white;
+    color: #28a745;
 }
 
 .status.occupied {
-    background-color: #f0ad4e;
-    color: white;
+    color: #f0ad4e;
 }
 
-.status.close {
-    background-color: #d9534f;
-    color: white;
+.status.closed {
+    color: #d9534f;
 }
 
 .edit-btn {

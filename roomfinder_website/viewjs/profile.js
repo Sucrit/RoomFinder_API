@@ -24,3 +24,15 @@ export function updateProfile() {
         console.error('Error: profileRole element not found');
     }
 }
+
+export function getProfile() {
+        // get from local storage
+        const username = localStorage.getItem('username') || 'Unknown User'; 
+    
+        const profileNameElement = document.getElementsByClassName('profileName')[0];
+    
+        // set text content to profile dom
+        if (profileNameElement) {
+            profileNameElement.textContent = username;
+        }
+}

@@ -6,13 +6,12 @@
     box-shadow: none;
   }
 
-  /* .table-container table {
+  .table-container table {
     width: 1530px;
     border-collapse: collapse;
   }
 
-  .table-container th,
-  td {
+  .table-container th, td {
     padding: 12px;
     border-bottom: none;
     vertical-align: middle;
@@ -22,10 +21,10 @@
     color: black;
     text-align: center;
     padding-right: 99px;
-  } */
+  }
 
   /* Floating Table Rows */
-  /* .table-container tbody tr {
+  .table-container tbody tr {
     background: white;
     box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
     margin-bottom: 10px;
@@ -43,7 +42,7 @@
     display: block;
     width: auto;
     padding: 10px;
-  } */
+  } 
 
   /* .table-container td {
     border: none;
@@ -62,7 +61,7 @@
     display: inline-block;
     width: auto;
     text-align: center;
-  } */
+  }
 
   .table-container .status.available {
     background: #4caf50;
@@ -98,7 +97,7 @@
     color: white;
   }
 
-  /* .table-container .floating-btn {
+  .table-container .floating-btn {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -112,7 +111,7 @@
     line-height: 50px;
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  } */
+  }
 
   .table-container .floating-btn:hover {
     background-color: #052a58;
@@ -163,9 +162,13 @@
   }
 
   /* dynamic styles */
-
+  table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
+  
   /* table tr {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
   } */
 
@@ -173,3 +176,5 @@
     background: #ffffff;
     font-weight: bold;
   }
+
+  
