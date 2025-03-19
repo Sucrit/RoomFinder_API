@@ -14,9 +14,6 @@ export function initOngoingSchedule() {
             { name: "Room 107", block: "2", teacher: "Dr. Martinez", time: "01:00 PM - 03:00 PM" },
             { name: "Room 108", block: "7", teacher: "Ms. Garcia", time: "03:00 PM - 05:00 PM" },
             { name: "Room 109", block: "1", teacher: "Mr. Lee", time: "08:00 AM - 10:00 AM" },
-            { name: "Room 109", block: "1", teacher: "Mr. Lee", time: "08:00 AM - 10:00 AM" },
-            { name: "Room 109", block: "1", teacher: "Mr. Lee", time: "08:00 AM - 10:00 AM" },
-            { name: "Room 109", block: "1", teacher: "Mr. Lee", time: "08:00 AM - 10:00 AM" },
             { name: "Room 110", block: "4", teacher: "Prof. White", time: "10:00 AM - 12:00 PM" }
         ];
     
