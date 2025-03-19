@@ -57,7 +57,7 @@ export function InitPendingRequestSection() {
     // approve request handler
     function handleApprove(requestId, row) {
         row.remove(); 
-        RoomRequestViewModel.updateRequestStatus(requestId, 'approved')
+        RoomRequestViewModel.updateRequestStatus(requestId, 'Approved')
             .then((response) => {
 
                 if (response.message === "Room request updated successfully") {
@@ -74,7 +74,7 @@ export function InitPendingRequestSection() {
     // reject request handler
     function handleReject(requestId, row) {
         row.remove();  
-        RoomRequestViewModel.updateRequestStatus(requestId, 'rejected')
+        RoomRequestViewModel.updateRequestStatus(requestId, 'Rejected')
             .then((response) => {
                 if (response.message === "Room request updated successfully") {
                     console.log(response.message)

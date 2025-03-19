@@ -1,37 +1,66 @@
-
-
-
 <section id="room_schedule" class="hidden">
-    <div class="topcontainer">
-        <h2 style="margin-left: 15px;"> Room Schedules</h2>
-        <div class="profile-container">
-      
-        </div>
-    </div>
+	<div class="topcontainer">
+		<h2>Room Schedules</h2>
+		<div class="profile-container"></div>
+	</div>
 
-    <div class="content">
-        <div class="room-details">
-            <!-- Floating Search Bar -->
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Search here..." onkeyup="searchTable()">
-            </div>
+	<div class="schedule-content">
+		<!-- Floating Search Bar -->
+		<div class="search-container">
+			<img
+				src="../roomfinder_website/assets/images/web-svg-icons/search-icon.svg"
+				alt="S" />
+			<input
+				type="text"
+				id="searchInput"
+				placeholder="Search here..."
+				onkeyup="searchTable()" />
+		</div>
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="room-name-header">Room Name</th>
-                            <th class="ongoing-schedule-header">Ongoing Schedule</th>
-                            <th class="status-header">Status</th>
-                            <th class="action-header">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="room-schedules-tbody">
-                    
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="floating-btn" onclick="openAddRoomForm()">+</div>
+		<div class="room-table-container">
+			<h2>CITE</h2>
+			<table>
+				<tr>
+					<th class="room-name-header">Room Name</th>
+					<th class="ongoing-schedule-header">Date and Time</th>
+					<th class="ongoing-schedule-header">Prof/Teacher</th>
+					<th class="status-header">Status</th>
+					<th class="action-header">Action</th>
+				</tr>
+				<tbody  class="table-data" align="center">
+					<tr>
+						<td>Room 1</td>
+						<td>Jan. 11, 2025 <br />10:30am - 12:00pm</td>
+						<td>John Doe</td>
+						<td>Available</td>
+						<td>
+							<button class="edit-btn">Edit</button
+							><button class="delete-btn">Delete</button>
+						</td>
+					</tr>
+					<tr>
+						<td>Room 2</td>
+						<td>Jan. 11, 2025 <br />10:30am - 12:00pm</td>
+						<td>John Doe</td>
+						<td>Occupied</td>
+						<td>
+							<button class="edit-btn">Edit</button
+							><button class="delete-btn">Delete</button>
+						</td>
+					</tr>
+					<tr>
+						<td>Room 3</td>
+						<td>Jan. 11, 2025 <br />10:30am - 12:00pm</td>
+						<td>John Doe</td>
+						<td>Closed</td>
+						<td>
+							<button class="edit-btn">Edit</button
+							><button class="delete-btn">Delete</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="floating-btn" onclick="openAddRoomForm()">+</div>
 </section>

@@ -5,10 +5,16 @@
     font-size: 16px;
     height: 100px;
     width: 100%;
+    padding: 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap:10px;
+}
+
+.topcontainer h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
 }
 
 /* Profile Image */
@@ -16,7 +22,6 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-right: 10px;
 }
 
 .profilePic {
