@@ -4,16 +4,24 @@
     padding: 0;
 }
 
-body {
+/* body {
     height: 100%;
     background-color: rgba(225, 255, 226, 1);
     margin: 0;
-    /* background-image: url('../images/upangbg.png'); */
     font-family: Arial, sans-serif;
     display: flex;
-    overflow-x: hidden;
-    /* overflow: hidden; */
     overflow-y: auto;
+} */
+
+
+body {
+    display: flex;
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    overflow-y: auto;
+    position: relative;
+    background: linear-gradient(rgba(111, 206, 137, 0.5), rgb(34, 97, 36)), url('../images/upangbg.png') no-repeat center center / cover;
 }
 
 .main_content {

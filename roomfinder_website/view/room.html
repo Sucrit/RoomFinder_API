@@ -7,31 +7,37 @@
     </div>
 
     <div class="room-container">
-        <div class="room-header">
-            <select class="filter">
-                <option value="all">All</option>
-                <option value="Available">Available</option>
-                <option value="Occupied">Occupied</option>
-                <option value="Closed">Closed</option>
-            </select>
-            <input type="text" class="search-bar" placeholder="Search here..." id="roomSearch">
-        </div>
 
-        <div class="room-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Room Building</th>
-                        <th>Room Number</th>
-                        <th>Ongoing Schedule</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="roomListBody">
-                    <!-- Room list will be dynamically populated -->
-                </tbody>
-            </table>
+        <div class="room-list">
+            <div class="room-header">
+                <select class="filter">
+                    <option value="all">All</option>
+                    <option value="Available">Available</option>
+                    <option value="Occupied">Occupied</option>
+                    <option value="Closed">Closed</option>
+                </select>
+                <div class="search-container">
+                    <img src="../roomfinder_website/assets/images/web-svg-icons/search-icon.svg" alt="">
+                    <input type="text" class="search-bar" placeholder="Search here..." id="roomSearch">
+                </div>
+            </div>
+    
+            <div class="table-wrapper">
+                <table  class="room-sched">
+                    <thead>
+                        <tr>
+                            <th>Room Building</th>
+                            <th>Room Number</th>
+                            <th>Ongoing Schedule</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="roomListBody" class="table-data">
+                        <!-- Room list will be dynamically populated -->
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Add Room and Schedule Button -->

@@ -9,6 +9,9 @@ import { InitRequestHistorySection } from '../viewjs/request_history.js';
 import { InitAddUserSection } from '../viewjs/adduser.js';
 import { InitAccountSection } from '../viewjs/account.js';
 import { InitRoomScheduleSection } from '../viewjs/room_schedule.js';
+
+import { InitOngoingScheduleSection } from './ongoing_schedule.js';
+=======
 import { InitOngoingScheduleSection } from '../viewjs/ongoing_schedule.js';
 
 
