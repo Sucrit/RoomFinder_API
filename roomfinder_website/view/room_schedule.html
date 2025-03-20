@@ -1,33 +1,25 @@
-
-
-
 <section id="room_schedule" class="hidden">
     <div class="topcontainer">
         <h2 style="margin-left: 15px;"> Room Schedules</h2>
-        <div class="profile-container">
-      
-        </div>
+        <div class="profile-container"></div>
     </div>
 
     <div class="content">
         <div class="room-details">
-            <!-- Floating Search Bar -->
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Search here..." onkeyup="searchTable()">
-            </div>
-
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th class="room-name-header">Room Name</th>
-                            <th class="ongoing-schedule-header">Ongoing Schedule</th>
-                            <th class="status-header">Status</th>
+                            <th class="room-building-header">Room Building</th>
+                            <th class="room-number-header">Room Number</th>
+                            <th class="date-header">Date</th>
+                            <th class="starting-time-header">Starting Time</th>
+                            <th class="ending-time-header">Ending Time</th>
                             <th class="action-header">Action</th>
                         </tr>
                     </thead>
                     <tbody id="room-schedules-tbody">
-                    
+                        <!-- Room schedules -->
                     </tbody>
                 </table>
             </div>

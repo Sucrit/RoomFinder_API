@@ -26,7 +26,7 @@ class RoomController {
         }
     }
 
-    // get all rooms
+
     public function getRooms() {
         $currentTime = date('H:i:s');  
         $currentDate = date('Y-m-d');   
@@ -37,37 +37,62 @@ class RoomController {
             return;
         }
     
-        foreach ($rooms as &$room) {
-            $schedules = $this->roomScheduleModel->getSchedulesByRoomId($room['id']);
-            $room['status'] = 'Available'; 
-            
-            if (!empty($schedules)) {
-                foreach ($schedules as $schedule) {
-                    $scheduleDate = $schedule['date'];
-                    $startingTime = $schedule['starting_time'];
-                    $endingTime = $schedule['ending_time'];
+        // Get all ongoing schedules
+        $ongoingSchedules = $this->roomScheduleModel->getAllOngoingSchedules();
     
-                    // check if the current date and time is within the scheduled time range
-                    if ($currentDate === $scheduleDate && $currentTime >= $startingTime && $currentTime < $endingTime) {
-                        // set status to occupied if the room is within the time range
-                        $room['status'] = 'Occupied'; 
-                        break;
-                    }
+        foreach ($rooms as &$room) {
+            // check if room status is close
+            if ($room['status'] == 'Closed') {
+                continue;
+            }
+    
+            // Initialize room status to 'Available'
+            $room['status'] = 'Available';
+            $room['ongoing_schedule'] = (object) [];  
+    
+            // Check for ongoing schedule for the room and set the status to 'Occupied' if found
+            $isOccupied = false;
+            foreach ($ongoingSchedules as $schedule) {
+                if ($schedule['room_id'] == $room['id']) {
+                    $room['ongoing_schedule'] = $schedule;  
+                    $room['status'] = 'Occupied';  
+                    $isOccupied = true;
+                    break;  
                 }
             }
     
-            $room['schedules'] = $schedules;
+            // If no ongoing schedule is found, check for future schedules
+            if (!$isOccupied) {
+                $schedules = $this->roomScheduleModel->getSchedulesByRoomId($room['id']);
+                $room['schedules'] = (object) []; 
     
-            // update room status whether its occupied
+                if (!empty($schedules)) {
+                    foreach ($schedules as $schedule) {
+                        $scheduleDate = $schedule['date'];
+                        $startingTime = $schedule['starting_time'];
+                        $endingTime = $schedule['ending_time'];
+    
+                        // Check if the current date and time is within the scheduled time range
+                        if ($currentDate === $scheduleDate && $currentTime >= $startingTime && $currentTime < $endingTime) {
+                            $room['status'] = 'Occupied';  // Update status to 'Occupied' if within scheduled time range
+                            break;
+                        }
+                    }
+                    $room['schedules'] = $schedules; 
+                }
+            }
+    
+            // update status
             if ($room['status'] == 'Occupied') {
                 $this->roomModel->updateRoomStatus($room['id'], 'Occupied');
-            } 
-            else {
+            } else {
                 $this->roomModel->updateRoomStatus($room['id'], 'Available');
             }
         }
         echo json_encode($rooms);
     }
+    
+    
     
     // create room
     public function createRoom($room_building, $room_number, $status, $equipment, $capacity, $roomType) {
@@ -79,7 +104,7 @@ class RoomController {
             echo json_encode(['message' => 'Room creation failed']);
         }
     }
-
+ 
     // update room details
     public function updateRoom($id, $input) {
         $room = $this->roomModel->getRoomById($id);

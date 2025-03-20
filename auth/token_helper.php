@@ -16,29 +16,29 @@ class JwtHelper {
             "data" => $data,  // id, username, role)
             "id" => $data['id']
         );
-        return JWT::encode($payload, self::$secretKey, 'HS256');  // symmetric algo HMAC SHA256
+        return JWT::encode($payload, self::$secretKey, 'HS256');  // symmetric algo 
     }
 
     // decode token 
     public static function decode($jwt) {
-        // split jwt into 3 components. header, payload, signature
+        // header, payload, signature
         $parts = explode('.', $jwt);
         if (count($parts) != 3) {
             throw new Exception("Invalid JWT token format");
         }
 
-        // decode header and payload from base64url
+        // decode header and payload base64url
         $header = json_decode(self::base64UrlDecode($parts[0]), true);
         $payload = json_decode(self::base64UrlDecode($parts[1]), true);
 
-        // get token algo from token header
+        // token algo from header
         $algorithm = $header['alg']; 
         // algo restriction
         if ($algorithm !== 'HS256') {
             throw new Exception("Invalid algorithm");
         }
 
-        // check token expiration
+        // token expiration
         $currentTime = time();
         if (isset($payload['exp']) && $payload['exp'] < $currentTime) {
             throw new TokenExpiredException("Token has expired"); 

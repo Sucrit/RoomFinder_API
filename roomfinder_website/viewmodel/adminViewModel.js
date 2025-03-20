@@ -1,5 +1,4 @@
 
-import { updateProfile } from '../viewjs/profile.js';
 import AdminModel from '../model/adminModel.js';  
 
 export default class AdminViewModel {
@@ -12,17 +11,22 @@ export default class AdminViewModel {
 
         return AdminModel.login(email, password)
             .then(response => {
+                
                 if (response.message === 'Login successful!' && response.admin) {
                     const admin = response.admin;
                     const username = admin.username || 'Unknown User';
                     const role = admin.role || 'Unknown Role'; 
+                    const email = admin.email || 'Unknown Email';
+                    const id = admin.id || 'Unknown ID';
 
                     // save info to local storage
                     localStorage.setItem('authToken', response.token);
                     localStorage.setItem('username', username); 
                     localStorage.setItem('role', role);
+                    localStorage.setItem('email', email);
+                    localStorage.setItem('id', id);
 
-                    return { status: 'success', username, role };
+                    return { status: 'success', username, role, email, id };
                 } else {
                     return { status: 'error', message: response.message || 'Login failed' };
                 }
@@ -96,6 +100,22 @@ export default class AdminViewModel {
         } catch (error) {
             console.error('Error deleting user:', error);
             return { success: false, message: 'Error deleting user' };
+        }
+    }  
+
+    // update password
+    static async updatePassword(adminId, oldPassword, newPassword, confirmPassword) {
+        try {
+            const response = await AdminModel.updatePasswordById(adminId, oldPassword, newPassword, confirmPassword);
+    
+            if (response && response.success) {
+                return { status: 'success', message: 'Password updated successfully' };
+            } else {
+                return { status: 'error', message: response.message || 'Failed to update password' };
+            }
+        } catch (error) {
+            console.error('Error updating password:', error);
+            return { status: 'error', message: 'Error updating password' };
         }
     }
 }

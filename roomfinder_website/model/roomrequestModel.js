@@ -1,6 +1,6 @@
 
 
-class RoomRequestModel {
+export class RoomRequestModel {
 
     // get room requests for dashboard route
     static getDashboardDetails() {
@@ -17,11 +17,11 @@ class RoomRequestModel {
             return response.json();
         })
         .then(data => {
-            return data;  // return the full data
+            return data;  
         })
         .catch(error => {
             console.error('Error fetching room requests:', error.message);
-            return {};  // Return empty object in case of an error
+            return {};  
         });
     }
 

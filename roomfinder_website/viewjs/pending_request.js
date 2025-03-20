@@ -1,6 +1,7 @@
 
 // pending request section dom/M
 import RoomRequestViewModel from '../viewmodel/roomrequestViewModel.js';
+import { showToast } from '../viewjs/toast.js';  
 
 export function InitPendingRequestSection() {
     const pendingRequestSection = document.getElementById('pending_request');
@@ -56,34 +57,44 @@ export function InitPendingRequestSection() {
 
     // approve request handler
     function handleApprove(requestId, row) {
-        row.remove(); 
-        RoomRequestViewModel.updateRequestStatus(requestId, 'approved')
-            .then((response) => {
+        row.classList.add('ud-button-animation');  
 
-                if (response.message === "Room request updated successfully") {
-                    console.log(`Request ID ${requestId} approved successfully`);
-                } else {
-                    console.error(`Failed to approve request ID ${requestId}:`, response.message);
-                }
-            })
-            .catch((error) => {
-                console.error('Failed to approve request:', error.message);
-            });
+        setTimeout(() => {
+            row.remove(); 
+            showToast('Request has been approved');
+            RoomRequestViewModel.updateRequestStatus(requestId, 'Approved')
+                .then((response) => {
+                    if (response.message === "Room request updated successfully") {
+                        console.log(`Request ID ${requestId} approved successfully`);
+                    } else {
+                        console.error(`Failed to approve request ID ${requestId}:`, response.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Failed to approve request:', error.message);
+                });
+        }, 250); 
     }
+
 
     // reject request handler
     function handleReject(requestId, row) {
-        row.remove();  
-        RoomRequestViewModel.updateRequestStatus(requestId, 'rejected')
-            .then((response) => {
-                if (response.message === "Room request updated successfully") {
-                    console.log(response.message)
-                } else {
-                    console.error(`Failed to reject request ID ${requestId}:`, response.message);
-                }
-            })
-            .catch((error) => {
-                console.error('Failed to reject request:', error.message);
-            });
+        row.classList.add('ud-button-animation');  
+
+        setTimeout(() => {
+            row.remove();  
+            showToast('Request has been rejected');
+            RoomRequestViewModel.updateRequestStatus(requestId, 'Rejected')
+                .then((response) => {
+                    if (response.message === "Room request updated successfully") {
+                        console.log(response.message)
+                    } else {
+                        console.error(`Failed to reject request ID ${requestId}:`, response.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Failed to reject request:', error.message);
+                });
+        }, 250);
     }
 }

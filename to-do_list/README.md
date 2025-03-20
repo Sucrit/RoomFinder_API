@@ -13,15 +13,20 @@ TO-DO LIST!!!
 -fix time overlap bug in room schedulee for datetime format
 
 -if room request is approved, add the room request schedule to room schedules(add room status logic to add via room status "approved")
+-if room is closed, it cannot be accessed until updated to available(backend)
+
+!!!WARNING
+-!!!CANNOT ADD STARTING TIME TO AN EXISTING SCHEDULE ENDING TIME (ex.add schedule starting         time=10:00pm, existing schedule ending time 10:00 (overlap))(fix sql query)
 
 (TODO)
 
--if room schedule is finished, delete the room schedule
--if room is closed, it cannot be accessed until updated to available
--room request already exist
--change password bug
+-if room schedule is finished, delete the room schedule(backend)
+-room request already exist(backend)
+-change password bug(backend)
+-room building and room number exist(backend)
+-protect routes using middleware
 
--!!!CANNOT ADD STARTING TIME TO AN EXISTING SCHEDULE ENDING TIME (ex.add schedule starting time=10:00pm, existing schedule ending time 10:00 (overlap))(fix sql query)
+-!!can send empty strings (BACKEND)
 
+!
 -add htaccess configuration for better routing
--!!can send empty strings (BACKEND ONLY)

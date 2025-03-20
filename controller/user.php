@@ -11,7 +11,7 @@ class UserController {
         $this->userModel = new UserModel();
     }
 
-    // signup
+    // create teacher
     public function createUser($teacher_id, $username, $email, $password, $role) {
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -44,7 +44,7 @@ class UserController {
         $user = $this->userModel->getUserByEmail($email);
 
         if (!$user) {
-            echo json_encode(['message' => 'No user found with this email']);
+            echo json_encode(['message' => 'Email or Password is incorrect']);
             return;
         }
 
@@ -63,7 +63,7 @@ class UserController {
             ]);
         } 
         else {
-            echo json_encode(['message' => 'Password is incorrect']);
+            echo json_encode(['message' => 'Email or Password is incorrect']);
         }
     }
 

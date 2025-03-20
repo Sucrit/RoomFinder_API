@@ -11,7 +11,7 @@ class RoomScheduleModel {
 
     // get all room schedule
     public function getAllRoomSchedule() {
-        $sql = "SELECT * FROM room_schedule";
+        $sql = "SELECT rs.*, r.room_number, room_building FROM room_schedule rs JOIN room r ON rs.room_id = r.id";
         
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->execute();
@@ -92,7 +92,6 @@ class RoomScheduleModel {
         }
     }
 
-
     // update room schedule
     public function updateRoomSchedule($id, $room_id, $block, $date, $starting_time, $ending_time) {
         $sql = "UPDATE room_schedule SET room_id = ?, block = ?, date = ?, starting_time = ?, ending_time = ? WHERE id = ?";  
@@ -112,27 +111,37 @@ class RoomScheduleModel {
         $sql = "DELETE FROM room_schedule WHERE id = ?";
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('i', $id);
-            if (!$stmt->execute()) {
-                echo json_encode(['message' => 'Room schedule deleted successfully']);
+            if ($stmt->execute()) {
+                if ($stmt->affected_rows > 0) {
+                    echo json_encode(['message' => 'Room schedule deleted successfully']);
+                } else {
+                    echo json_encode(['message' => 'Room schedule does not exist']);
+                }
             } else {
                 echo json_encode(['message' => 'Error: ' . $this->conn->error]);
             }
         }
     }
-
-    // check if room schedule exists (avoid time conflict)
+    
+    // check time schedule conflict
     public function roomScheduleExist($room_id, $date, $starting_time, $ending_time) {
+
         // check if starting time is greater than ending time (time conflict)
         if ($starting_time >= $ending_time) {
             echo json_encode(['message' => 'Starting time must be before ending time']);
             return true;
         }
-            
-        $sql = "SELECT * FROM room_schedule WHERE room_id = ? AND date = ? AND ((starting_time < ? AND ending_time > ?) 
-                OR (starting_time < ? AND ending_time > ?) OR (? BETWEEN starting_time AND ending_time) OR (? BETWEEN starting_time AND ending_time))"; 
-
+    
+        $sql = "SELECT * FROM room_schedule WHERE room_id = ? AND date = ? AND (
+                    (starting_time < ? AND ending_time > ?) 
+                    OR (starting_time < ? AND ending_time > ?) 
+                    OR (? BETWEEN starting_time AND ending_time) 
+                    OR (? BETWEEN starting_time AND ending_time)
+                    OR (? = ending_time)  -- Allow exact match between new schedule start time and existing schedule end time
+                )"; 
+    
         if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param('isssssss', $room_id, $date, $starting_time, $ending_time, $starting_time, $ending_time, $starting_time, $ending_time);
+            $stmt->bind_param('issssssss', $room_id, $date, $starting_time, $ending_time, $starting_time, $ending_time, $starting_time, $ending_time, $starting_time);
             $stmt->execute();
             $result = $stmt->get_result();
             
@@ -142,5 +151,6 @@ class RoomScheduleModel {
             return false;
         }
     }
+    
 }
 ?>

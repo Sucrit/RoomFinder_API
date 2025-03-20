@@ -6,6 +6,7 @@
     max-width: 1000px;
     margin: 0 auto;
     margin-top: 4%;
+    overflow: hidden;
 }
 
 /* Search Bar */
@@ -15,6 +16,10 @@
     margin-bottom: 15px;
     justify-content: center;
     align-items: center;
+}
+
+.closemodal {
+    cursor: pointer;
 }
 
 .room-table {

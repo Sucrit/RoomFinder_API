@@ -1,6 +1,5 @@
 
 
-
 export default class AdminModel {
 
     // login web users route
@@ -34,17 +33,14 @@ export default class AdminModel {
 
 
     // add users route (auth page)
-    static addUser(role, username, email, password, teacher_id) {
+    static addUser (role, username, email, password, teacher_id) {
         const userData = {
             role: role,
             username: username,
             email: email,
             password: password,
             teacher_id: teacher_id
-        };
-
-        console.log('teacher added with data:', userData);
-    
+        };    
         return fetch('http://localhost/RoomFinder_API/api/index.php/admin/signup', {
             method: 'POST',
             headers: {
@@ -94,7 +90,7 @@ export default class AdminModel {
     }
 
 
-    // delete admin route
+    // delete admin route (userlist page)
     static deleteAdmins(requestId) {
         return fetch(`http://localhost/RoomFinder_API/api/index.php/admin/${requestId}`, {
             method: 'DELETE',
@@ -117,7 +113,7 @@ export default class AdminModel {
         });
     }
 
-    // delete user route
+    // delete user route (userlist page)
     static deleteUsers(requestId) {
         return fetch(`http://localhost/RoomFinder_API/api/index.php/user/${requestId}`, {
             method: 'DELETE',
@@ -140,4 +136,32 @@ export default class AdminModel {
         });
     }
 
+    // change password route
+    static updatePasswordById(requestId, oldPassword, newPassword, confirmPassword) {
+        const passwordData = {
+            old_password: oldPassword,
+            new_password: newPassword,
+            confirm_password: confirmPassword
+        };
+        return fetch(`http://localhost/RoomFinder_API/api/index.php/admin/${requestId}`, {
+            method: 'PATCH', 
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(passwordData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data; 
+        })
+        .catch(error => {
+            console.error('Error updating password:', error);
+            throw error;
+        });
+    }
 }

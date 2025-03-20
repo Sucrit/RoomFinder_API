@@ -119,18 +119,31 @@ class AdminController {
     public function changePassword($adminId, $oldPassword, $newPassword, $confirmPassword) {
         $admin = $this->adminModel->getAdminById($adminId);
         
+        // check if admin exist
         if (!$admin) {
             echo json_encode(['message' => 'User not found']);
             return;
         }
+
+        // check if old pass value does not match the account pass
         if (!password_verify($oldPassword, $admin['password'])) {
             echo json_encode(['message' => 'Old password is incorrect']);
             return;
         }
+
+        // check new pass same as old
+        if ($oldPassword === $newPassword) {
+            echo json_encode(['message' => 'Your new password cannot be the same as the old password']);
+            return;
+        }
+
+        // check if new pass and confirm pass matched
         if ($newPassword !== $confirmPassword) {
             echo json_encode(['message' => 'New password and confirm password do not match']);
             return;
         }
+
+        // change pass
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         $this->adminModel->updateAdminPassword($adminId, $hashedPassword);
     

@@ -1,5 +1,5 @@
-
 import AdminViewModel from '../viewmodel/adminViewModel.js'; 
+import { showToast } from '../viewjs/toast.js';
 
 export function InitUsersListSection() {
     const userListBody = document.getElementById('userListBody'); 
@@ -31,40 +31,53 @@ export function InitUsersListSection() {
                         `;
                         userListBody.appendChild(row);
 
-                        // remove btn event lstener
+                        // remove button event listener
                         const removeBtn = row.querySelector('.remove-btn');
                         removeBtn.addEventListener('click', () => {
                             const userId = removeBtn.getAttribute('data-user-id');
                             const userRole = removeBtn.getAttribute('data-role');
-                            
-                            row.remove();
-                            // separate deletion by role
-                            if (userRole === 'admin') {
-                                AdminViewModel.deleteAdmin(userId)  
-                                    .then(response => {
-                                        if (!response.success) {
-                                            alert(response.message)
-                                        }
-                                    })
-                                    .catch(error => {
-                                        console.error('Error deleting admin:', error);
-                                        alert('Failed to delete admin');
-                                    });
-                            } else {
-                                console.log('Attempting to delete user with ID:', userId);
-                                AdminViewModel.deleteUser(userId) 
-                                    .then(response => {
-                                        if (response.success) {
-                                            row.remove();
+
+                            // confirmation toast
+                            showToast('Are you sure you want to delete this user?', 'info', {
+                                showButtons: true,
+                                onConfirm: () => {
+                                    row.classList.add('ud-button-animation');
+                                    setTimeout(() => {
+                                        row.remove();
+                                        // separate deletion by role
+                                        if (userRole === 'Administrator' || userRole === 'Staff') {
+                                            AdminViewModel.deleteAdmin(userId)  
+                                                .then(response => {
+                                                    if (!response.success) {
+                                                        showToast(response.message)
+                                                    } else if (response.success) {
+                                                        showToast(response.message);
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    console.error('Error deleting admin:', error);
+                                                    showToast('Failed to delete admin');
+                                                });
                                         } else {
-                                            alert(response.message);
+                                            AdminViewModel.deleteUser(userId) 
+                                                .then(response => {
+                                                    if (response.success) {
+                                                        showToast(response.message);
+                                                    } else {
+                                                        alert(response.message);
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    console.error('Error deleting user:', error);
+                                                    alert('Failed to delete user');
+                                                });
                                         }
-                                    })
-                                    .catch(error => {
-                                        console.error('Error deleting user:', error);
-                                        alert('Failed to delete user');
-                                    });
-                            }
+                                    }, 250);
+                                },
+                                onCancel: () => {
+                                    console.log('User deletion canceled');
+                                }
+                            });
                         });
                     });
                 } else {
@@ -78,7 +91,6 @@ export function InitUsersListSection() {
             console.error('Error loading users:', error);
             userListBody.innerHTML = `<tr><td colspan="5">Failed to load users.</td></tr>`;
         });
-
 
     // track role, searchtxt value
     let selectedRole = 'all';
@@ -94,19 +106,18 @@ export function InitUsersListSection() {
         filterTable(); 
     });
 
-    
     // filter
     function filterTable() {
         const rows = userListBody.querySelectorAll('tr');
         rows.forEach(row => {
-            const roleCell = row.cells[2]; 
             const usernameCell = row.cells[0]; 
             const emailCell = row.cells[1];    
+            const roleCell = row.cells[2]; 
             const teacherIdCell = row.cells[3];
 
-            const userRole = roleCell ? roleCell.textContent.toLowerCase() : '';
             const username = usernameCell ? usernameCell.textContent.toLowerCase() : '';
             const email = emailCell ? emailCell.textContent.toLowerCase() : '';
+            const userRole = roleCell ? roleCell.textContent.toLowerCase() : '';
             const teacherId = teacherIdCell ? teacherIdCell.textContent.toLowerCase() : '';
 
             const roleMatches = selectedRole === 'all' || userRole === selectedRole.toLowerCase();

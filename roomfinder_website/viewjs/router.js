@@ -1,11 +1,14 @@
-// SECTION ROUTE HANDLER AND VIEW SECTION JS   
-
+// SECTION ROUTE HANDLER AND INDEX VIEW SECTION JS   
 import { updateProfile } from '../viewjs/profile.js';
 import { InitDashboard } from '../viewjs/dashboard.js'
 import { InitPendingRequestSection } from '../viewjs/pending_request.js'
 import { InitUsersListSection } from '../viewjs/userslist.js'; 
 import { InitRoomsSection } from '../viewjs/room.js'; 
 import { InitRequestHistorySection } from '../viewjs/request_history.js';
+import { InitAddUserSection } from '../viewjs/adduser.js';
+import { InitAccountSection } from '../viewjs/account.js';
+import { InitRoomScheduleSection } from '../viewjs/room_schedule.js';
+
 
 // section router
 window.showSection = function(sectionId) {
@@ -76,8 +79,11 @@ window.showSection = function(sectionId) {
                 else if (sectionId === 'userslist') {
                     InitUsersListSection();
                 }
-                else if (section === 'ongoing_schedule') {
-                    // init ongoing schedule
+                else if (sectionId === 'account') {
+                    InitAccountSection();
+                }
+                else if (sectionId === 'room_schedule') {
+                    InitRoomScheduleSection();               
                 }
             } else {
                 console.error(`Section with ID '${sectionId}' not exist`);
@@ -85,7 +91,8 @@ window.showSection = function(sectionId) {
         })
         .catch(error => {
             console.error(`Error loading section: ${error.message}`);
-            document.getElementById('content').innerHTML = `<p>Error occurred while loading the section.</p>`;
+            document.getElementById('content').innerHTML = `<p>Error occurred while loading the section.(router.js)</p>`;
+
         });
 
     // update active link in the navigation

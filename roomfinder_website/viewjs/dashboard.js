@@ -1,8 +1,12 @@
 
 // dashboard section dom/M
 import RoomRequestViewModel from "../viewmodel/roomrequestViewModel.js";
+import { showLoading, hideLoading } from "../viewjs/loading.js";
 
 export async function InitDashboard() {
+
+    // showLoading();
+
     try {
         const response = await RoomRequestViewModel.getDashboardDetails();
 
@@ -30,21 +34,21 @@ export async function InitDashboard() {
             const closedPercentage = totalRoom ? ((closedCount / totalRoom) * 100).toFixed(2) : '0.00';
 
             // dom dashboard stats
-            document.getElementById('totalRequests').innerText = totalRequests;
-            document.getElementById('pendingRequests').innerText = data["pending count"] || 0;
-            document.getElementById('pendingPercentage').innerText = pendingPercentage + '%';
-            document.getElementById('approvedRequests').innerText = data["approved count"] || 0;
-            document.getElementById('approvedPercentage').innerText = approvedPercentage + '%';
-            document.getElementById('rejectedRequests').innerText = data["rejected count"] || 0;
-            document.getElementById('rejectedPercentage').innerText = rejectedPercentage + '%';
+            updateTextContent('totalRequests', totalRequests);
+            updateTextContent('pendingRequests', data["pending count"] || 0);
+            updateTextContent('pendingPercentage', pendingPercentage + '%');
+            updateTextContent('approvedRequests', data["approved count"] || 0);
+            updateTextContent('approvedPercentage', approvedPercentage + '%');
+            updateTextContent('rejectedRequests', data["rejected count"] || 0);
+            updateTextContent('rejectedPercentage', rejectedPercentage + '%');
 
-            document.getElementById('totalRooms').innerText = totalRoom;
-            document.getElementById('availableRooms').innerText = data["available count"] || 0;
-            document.getElementById('availablePercentage').innerText = availablePercentage + '%';
-            document.getElementById('occupiedRooms').innerText = data["occupied count"] || 0;
-            document.getElementById('occupiedPercentage').innerText = occupiedPercentage + '%';
-            document.getElementById('closedRooms').innerText = data["closed count"] || 0;
-            document.getElementById('closedPercentage').innerText = closedPercentage + '%';
+            updateTextContent('totalRooms', totalRoom);
+            updateTextContent('availableRooms', data["available count"] || 0);
+            updateTextContent('availablePercentage', availablePercentage + '%');
+            updateTextContent('occupiedRooms', data["occupied count"] || 0);
+            updateTextContent('occupiedPercentage', occupiedPercentage + '%');
+            updateTextContent('closedRooms', data["closed count"] || 0);
+            updateTextContent('closedPercentage', closedPercentage + '%');
 
             // ongoing schedules table 
             const ongoingScheduleData = data["Ongoing schedule"] || [];
@@ -63,8 +67,22 @@ export async function InitDashboard() {
         }
     } 
     catch (error) {
+        if (loadingSpinner) {
+            loadingSpinner.style.display = 'none';  
+        }
         console.error('Error fetching dashboard details:', error);
         showError('Failed to load dashboard details.');
+    }
+    // finally {
+    //     hideLoading();
+    // }
+}
+
+// utility update innertext with null check
+function updateTextContent(id, text) {
+    const element = document.getElementById(id);
+    if (element) {
+        element.innerText = text;
     }
 }
 
@@ -73,8 +91,11 @@ function updateTable(tableId, data) {
     const tableBody = document.getElementById(tableId).querySelector('tbody');
     tableBody.innerHTML = '';
 
-    if (Array.isArray(data) && data.length > 0) {
-        data.forEach(item => {
+    // limit to 5 items
+    const limitedData = data.slice(0, 5); 
+
+    if (Array.isArray(limitedData) && limitedData.length > 0) {
+        limitedData.forEach(item => {
             const row = document.createElement('tr');
 
             // ongoing schedule (dashboard)
@@ -111,11 +132,13 @@ function updateTable(tableId, data) {
         tableBody.appendChild(row);
     }
 }
+
+
 function InitSeeAllButton() {
     const seeRequestHistoryBtn = document.querySelector('.seerequesthistory-btn');
     if (seeRequestHistoryBtn) {
         seeRequestHistoryBtn.addEventListener('click', function() {
-            showSection('request_history');
+            showSection('pending_request');
         });
     }
 

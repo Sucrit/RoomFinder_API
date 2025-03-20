@@ -22,9 +22,17 @@
 		<link rel="stylesheet" href="assets/style/room_schedule.css" />
 		<link rel="stylesheet" href="assets/style/request_history.css" />
         <link rel="stylesheet" href="assets/style/pending_request.css" />
+
+        <link rel="stylesheet" href="assets/style/toast.css">
+        <link rel="stylesheet" href="assets/style/loading.css">
+
 	</head>
 
 	<body>
+        <!-- <div class="topcontainer">
+            <h2 style="margin-left: 15px;"> Add Administrator, Staff & Teacher</h2>
+            <div class="profile-container"></div>
+        </div> -->
 		<!-- Navigation Bar -->
 		<div class="navbar">
             <div class="logo-container">
@@ -121,12 +129,18 @@
             </div>
 		</div>
 
+
+        <!-- Toast msg cotainer -->
+        <div id="toast-container" class="toast-container"></div>
+
+
 		<main class="main_content" id="content">
 			<!-- CONTENT SECTION  -->
+
+            <div id="loadingSpinner" style="display: none;"></div> 
+
 		</main>
 
 		<script type="module" src="./viewjs/router.js"></script>
-		<script type="module" src="./viewjs/dashboard.js"></script>
-		<script type="module" src="./viewjs/adduser.js"></script>
 	</body>
 </html>

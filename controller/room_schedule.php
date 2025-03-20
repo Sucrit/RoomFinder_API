@@ -65,8 +65,19 @@ class RoomScheduleController {
 
     // create room schedule
     public function createRoomSchedule($room_id, $block, $date, $starting_time, $ending_time) {
+
         // check if the room exists
         if ($this->roomModel->roomExists($room_id)) {
+
+            // get room status
+            $room = $this->roomModel->getRoomById($room_id);
+            
+            // checkk closed status
+            if ($room['status'] == 'Closed') {
+                echo json_encode(['message' => 'This room is closed']);
+                return;
+            }
+
             // check room schedule conflict
             $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($room_id, $date, $starting_time, $ending_time);
             
@@ -115,6 +126,5 @@ class RoomScheduleController {
     public function deleteRoomSchedule($id) {
         $this->roomScheduleModel->deleteRoomSchedule($id);
     }
-
 }
 ?>

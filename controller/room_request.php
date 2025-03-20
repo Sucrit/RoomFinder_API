@@ -38,10 +38,13 @@ class RoomRequestController {
         echo json_encode(['Pending Requests' => $allPendingRequests]);
     }
 
+    // get dashboard details (web)
     public function getRoomRequests() {
+
         $requeststatusCounts = $this->roomRequestModel->getRoomRequestsCountByStatus();
         $roomstatusCounts = $this->roomModel->getRoomCountByStatus();
-        $getAllRoomRequestsHistory = $this->roomRequestModel->getRoomRequestHistory();
+
+        $getAllRoomRequestsHistory = $this->roomRequestModel->getAllPendingRoomRequests();
         $getOngoingSchedules = $this->roomScheduleModel->getAllOngoingSchedules();
 
         echo json_encode([
@@ -67,34 +70,78 @@ class RoomRequestController {
         }
     }
 
+    // create room request
     public function createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time) {
-        // check if room exist
+        // check if the room exists
         if ($this->roomModel->roomExists($room_id)) {
-        // check if room schedule exist in a room
-        $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($room_id, $date, $starting_time, $ending_time);
-
-        if ($scheduleConflict) {
-            echo json_encode(['message' => 'The room is already occupied for your requested time slot']);
-            return false;
-        } 
-        else {$roomrequest = $this->roomRequestModel->createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time);
-            if ($roomrequest) {
-                echo json_encode(['message' => 'Request sent successfully']);
-            } 
-            else {
-                echo json_encode(['message' => 'Error creating room request']);
+    
+            // get status
+            $room = $this->roomModel->getRoomById($room_id);
+            
+            // check if the room is closed
+            if ($room['status'] === 'Closed') {
+                echo json_encode(['message' => 'This room is closed']);
+                return;
             }
-        }
-    }
-    else {
-        echo json_encode(['message' => 'Room not found']);
+    
+            // check schedule conflict
+            $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($room_id, $date, $starting_time, $ending_time);
+    
+            if ($scheduleConflict) {
+                echo json_encode(['message' => 'The room is already occupied for your requested time slot']);
+                return;
+            } else {
+                
+                $roomrequest = $this->roomRequestModel->createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time);
+                if ($roomrequest) {
+                    echo json_encode(['message' => 'Request sent successfully']);
+                } else {
+                    echo json_encode(['message' => 'Error creating room request']);
+                }
+            }
+        } else {
+            echo json_encode(['message' => 'Room not found']);
         }
     }
     
-    // update room request status only
+    
+    // update room request status only (Approved, Rejected)
     public function updateRoomRequestStatus($id, $status) {
+        
+        // check room request exist
+        $roomRequest = $this->roomRequestModel->getRoomRequestById($id);
+
+        if (!$roomRequest) {
+            echo json_encode(['message' => 'Room request not found']);
+            return;
+        }
+
+        // get request schedule data
+        $room_id = $roomRequest['room_id'];
+        $date = $roomRequest['date'];
+        $starting_time = $roomRequest['starting_time'];
+        $ending_time = $roomRequest['ending_time'];
+
+        // if approved check for conflicts
+        if ($status == 'Approved') {
+            $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($room_id, $date, $starting_time, $ending_time);
+
+            if ($scheduleConflict) {
+                echo json_encode(['message' => 'The room schedule conflicts with an existing room schedule']);
+                return;
+            }
+        }
+
+        // If rejected or no conflict, update status
         $this->roomRequestModel->updateRoomRequestStatus($id, $status);
+
+        if ($status == 'Approved') {
+            echo json_encode(['message' => 'Room request approved successfully']);
+        } else if ($status == 'Rejected') {
+            echo json_encode(['message' => 'Room request rejected successfully']);
+        }
     }
+
 
     // delete room request
     public function deleteRoomRequest($id) {

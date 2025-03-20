@@ -10,15 +10,15 @@
     <form id="addUserForm" class="roleform">
         <h1>Select Role</h1>
         <select name="roleselector" id="role">
-            <option value="admin">Administrator</option>
-            <option value="staff">Staff</option>
-            <option value="teacher">Teacher</option>
+            <option value="Administrator">Administrator</option>
+            <option value="Staff">Staff</option>
+            <option value="Teacher">Teacher</option>
         </select><br/>
 
-        <input type="text" name="username" id="username" placeholder="Username"><br/>
-        <input type="email" name="email" id="email" placeholder="Email"><br/>
-        <input type="password" name="password" id="password" placeholder="Password"><br/>
-        <input type="password" name="ConfirmPassword" id="ConfirmPassword" placeholder="Confirm Password"><br/>
+        <input type="text" name="username" id="username" placeholder="Username" required><br/>
+        <input type="email" name="email" id="email" placeholder="Email" required><br/>
+        <input type="password" name="password" id="password" placeholder="Password" required><br/>
+        <input type="password" name="ConfirmPassword" id="ConfirmPassword" placeholder="Confirm Password" required><br/>
         
         <div id="teacher-id-container" style="display: none;">
             <input type="text" name="teacherid" id="teacherID" placeholder="Teacher ID"><br/>

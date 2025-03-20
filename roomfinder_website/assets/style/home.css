@@ -8,16 +8,21 @@ body {
     height: 100%;
     background-color: rgba(225, 255, 226, 1);
     margin: 0;
+    /* background-image: url('../images/upangbg.png'); */
     font-family: Arial, sans-serif;
     display: flex;
-    overflow: hidden;
+    overflow-x: hidden;
+    /* overflow: hidden; */
 }
 
 .main_content {
     flex: 1;
-    overflow: scroll;
-    overflow-x: hidden;
+    overflow-x: hidden; 
+    overflow-y: auto;   
+    position: relative;
 }
+
+
 
 /* .mainpage {
     display: flex;
@@ -215,17 +220,6 @@ a.hover {
     width: 100%;
 }
 
-.createbtn,
-.updatebtn {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #4CAF50;
-    color: white;
-    margin-top: 20px;
-    cursor: pointer;
-}
-
 .addanotherbtn {
     border-radius: 50%;
     background-color: #180a58;
@@ -320,7 +314,7 @@ button {
     border-radius: 5px;
 }
 
-.rejectbutton {
+.reject-button {
     background-color: rgba(22, 58, 22, 1);
     color: white;
     border-radius: 5px;
@@ -378,3 +372,18 @@ button {
     background-color: darkred;
 }
 
+
+.createbtn,
+.update-btn {
+    /* background-color: #4CAF50;
+    color: white;
+    cursor: pointer; */
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}

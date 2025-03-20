@@ -1,11 +1,8 @@
-
-
-
 <section id="room" class="hidden">
     <div class="topcontainer">
         <h2 style="margin-left: 15px;">Room Details</h2>
         <div class="profile-container">
-      
+            <!-- Profile information can go here -->
         </div>
     </div>
 
@@ -32,71 +29,74 @@
                     </tr>
                 </thead>
                 <tbody id="roomListBody">
-
-                    <!-- Table Container -->
-
+                    <!-- Room list will be dynamically populated -->
                 </tbody>
             </table>
         </div>
 
-        <!-- Add Room and Schedule -->
+        <!-- Add Room and Schedule Button -->
         <button class="floating-btn" onclick="openAddRoomModal()">+</button>
 
+        <!-- Add Room Modal -->
         <div id="modal" class="modal">
             <div class="modal-content">
-                <span class="closemodal" onclick="closeModal()">&times;</span>
+                <span class="closemodal">&times;</span>
 
                 <form action="#" method="POST" class="roomdetails_form">
                     <div>
-                        <h1>ADD ROOM & SCHEDULE</h1>
                         <h2>Room Details</h2>
                     </div>
 
                     <div class="roomform_container">
+                        <!-- Room Number -->
                         <div class="form-group">
                             <label>Room Number</label>
-                            <select name="roomNumber" id="roomNumberSelect">
-
-                                
-                            </select><br />
+                            <input type="number" name="roomNumber" min="1" placeholder="" /><br />
                         </div>
 
+                        <!-- Room Building -->
                         <div class="form-group">
                             <label>Room Building</label>
-                            <select name="roomBuilding" id="roomBuildingSelect">
-
-
+                            <select name="roomBuilding">
+                                <option value="PTC">PTC</option>
+                                <option value="ITS">ITS</option>
                             </select><br />
                         </div>
 
+                        <!-- Capacity -->
                         <div class="form-group">
                             <label>Capacity</label>
-                            <input type="number" name="capacity" min="1" max="45" required><br />
+                            <input type="number" name="capacity" min="1" required><br />
                         </div>
 
+                        <!-- Room Type -->
                         <div class="form-group">
                             <label>Room Type</label>
-                            <select name="roomType" id="roomTypeSelect">
+                            <select name="roomType">
+                                <option value="Lecture Room">Lecture Room</option>
+                                <option value="Laboratory Room">Laboratory Room</option>
                             </select><br />
-
-
                         </div>
 
+                        <!-- Availability -->
                         <div class="form-group">
                             <label>Availability</label>
-                            <select name="availability" id="availabilitySelect">
+                            <select name="availability">
                                 <option value="Available">Available</option>
-                                <option value="Occupied">Occupied</option>
                                 <option value="Closed">Closed</option>
                             </select><br />
                         </div>
 
+                        <!-- Equipment -->
                         <div class="form-group">
                             <label>Equipment</label>
                             <div class="equipment">
+                                <label><input type="checkbox" value="Air Conditioner"> Air Conditioner</label><br/>
+                                <label><input type="checkbox" value="Monitor"> Monitor</label><br/>
+                                <label><input type="checkbox" value="Computer"> Computer</label><br/>
+                                <label><input type="checkbox" value="Whiteboard"> Whiteboard</label><br/>
+                                <label><input type="checkbox" value="Wi-Fi"> Wi-Fi</label><br/>
                             </div>
-
-
                         </div>
                     </div>
 
@@ -105,43 +105,47 @@
                     </div>
 
                     <div class="roomform_container">
+                        <!-- Block -->
                         <div class="form-group">
                             <label>Block:</label>
-                            <select name="block" id="blockSelect">
-
-
+                            <select name="block">
+                                <option value="A">1</option>
+                                <option value="B">2</option>
+                                <option value="C">3</option>
+                                <option value="D">4</option>
+                                <option value="E">5</option>
+                                <option value="F">6</option>
+                                <option value="F">7</option>
+                                <option value="F">8</option>
+                                <option value="F">9</option>
+                                <option value="F">10</option>
                             </select><br />
                         </div>
 
+                        <!-- Date -->
                         <div class="form-group">
                             <label>Date</label><br />
-                            <input type="date" name="date" required><br />
+                            <input type="date" name="date" ><br />
                         </div>
 
+                        <!-- Time -->
                         <div class="form-group">
                             <label>Time</label>
                             <div class="form-group-horizontal">
                                 <div class="time">
-                                    <label>Start time</label><br />
-                                    <input type="time" name="timeStart" required>
+                                    <label>Starting Time</label><br />
+                                    <input type="time" name="timeStart" >
                                 </div>
 
                                 <div class="time">
-                                    <label>End time</label><br />
-                                    <input type="time" name="timeEnd" required>
+                                    <label>Ending Time</label><br />
+                                    <input type="time" name="timeEnd" >
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label>Day</label>
-                            <select name="day" id="daySelect">
-
-
-                            </select><br />
-                        </div>
-
-                        <button type="submit" class="addanotherbtn">+</button> Add another<br />
+                        <!-- Submit buttons -->
+                        <button type="button" class="addanotherbtn">+</button> Add another<br />
                         <button type="submit" class="createbtn">Create</button>
                     </div>
                 </form>
@@ -151,7 +155,7 @@
         <!-- Edit Room Modal -->
         <div id="editModal" class="modal">
             <div class="modal-content">
-                <span class="closemodal" onclick="closeEditModal()">&times;</span>
+                <span class="closemodal">&times;</span>
 
                 <form action="#" method="POST" class="roomdetails_form">
                     <div>
@@ -160,49 +164,50 @@
                     </div>
 
                     <div class="roomform_container">
+                        <!-- Room Number Edit -->
                         <div class="form-group">
                             <label>Room Number</label>
                             <select name="roomNumber" id="editRoomNumberSelect">
-
-
+                                <!-- Options will be populated dynamically -->
                             </select><br />
                         </div>
 
+                        <!-- Room Building Edit -->
                         <div class="form-group">
                             <label>Room Building</label>
                             <select name="roomBuilding" id="editRoomBuildingSelect">
-
-
+                                <!-- Options will be populated dynamically -->
                             </select><br />
                         </div>
 
+                        <!-- Capacity -->
                         <div class="form-group">
                             <label>Capacity</label>
-                            <input type="number" name="capacity" min="1" max="45" required><br />
+                            <input type="number" name="capacity" min="1" max="60" required><br />
                         </div>
 
+                        <!-- Room Type -->
                         <div class="form-group">
                             <label>Room Type</label>
                             <select name="roomType" id="editRoomTypeSelect">
-                                
-                                
+                                <!-- Options will be populated dynamically -->
                             </select><br />
                         </div>
 
+                        <!-- Status -->
                         <div class="form-group">
-                            <label>Availability</label>
+                            <label>Status</label>
                             <select name="availability" id="editAvailabilitySelect">
                                 <option value="Available">Available</option>
-                                <option value="Occupied">Occupied</option>
                                 <option value="Closed">Closed</option>
                             </select><br />
                         </div>
 
+                        <!-- Equipment -->
                         <div class="form-group">
                             <label>Equipment</label>
                             <div class="equipment">
-                               
-
+                                <!-- Equipment checkboxes will be populated dynamically -->
                             </div>
                         </div>
                     </div>
@@ -212,48 +217,42 @@
                     </div>
 
                     <div class="roomform_container">
+                        <!-- Block -->
                         <div class="form-group">
                             <label>Block:</label>
                             <select name="block" id="editBlockSelect">
-                                
-                                
+                                <!-- Options will be populated dynamically -->
                             </select><br />
                         </div>
 
+                        <!-- Date -->
                         <div class="form-group">
                             <label>Date</label><br />
-                            <input type="date" name="date" required><br />
+                            <input type="date" name="date" id="editDate" required><br />
                         </div>
 
+                        <!-- Time -->
                         <div class="form-group">
                             <label>Time</label>
                             <div class="form-group-horizontal">
                                 <div class="time">
                                     <label>Start time</label><br />
-                                    <input type="time" name="timeStart" required>
+                                    <input type="time" name="timeStart" id="editTimeStart" required>
                                 </div>
 
                                 <div class="time">
                                     <label>End time</label><br />
-                                    <input type="time" name="timeEnd" required>
+                                    <input type="time" name="timeEnd" id="editTimeEnd" required>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label>Day</label>
-                            <select name="day" id="editDaySelect">
-                                
-                                
-                            </select><br />
-                        </div>
-
-                        <button type="submit" class="addanotherbtn">+</button> Add another<br />
+                        <!-- Submit buttons -->
+                        <button type="button" class="addanotherbtn">+</button> Add another<br />
                         <button type="submit" class="updatebtn">Update</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-</section>        
-
+</section>

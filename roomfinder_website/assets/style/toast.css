@@ -1,0 +1,63 @@
+
+#toast-container {
+    position: fixed;
+    bottom: 20px; /* Adjust the space from the bottom */
+    left: 50%; /* Position container in the horizontal center */
+    transform: translateX(-50%); /* Offset by half of its own width to ensure it's centered */
+    width: 300px; /* Set a fixed width for the container */
+    z-index: 9999; /* Ensure the toast container is above other elements */
+    display: flex;
+    flex-direction: column; /* Stack toasts vertically */
+    gap: 10px; 
+    align-items: center; 
+}
+
+.toast {
+    background-color: #333; 
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.toast-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.toast-buttons button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.confirm-btn {
+    background-color: #4CAF50; /* Green for Confirm */
+    color: white;
+}
+
+.cancel-btn {
+    background-color: #f44336; /* Red for Cancel */
+    color: white;
+}
+
+/* Success toast */
+/* .toast.success {
+    background-color: #4CAF50; /* Green background for success 
+} 
+
+/* Error toast */
+/* .toast.error {
+    background-color: #f44336; /* Red background for error 
+} 
+
+/* When the toast is shown, it will fade in and move up */
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}

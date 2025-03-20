@@ -1,8 +1,8 @@
 
+// auto load in index.js
 // profile view dom/M
 export function updateProfile() {
 
-    // get from local storage
     const username = localStorage.getItem('username') || 'Unknown User'; 
     const role = localStorage.getItem('role') || 'Unknown Role'; 
     const profilepic = localStorage.getItem('profilepic') || '../roomfinder_website/assets/images/web-svg-icons/profile-default.svg';
@@ -10,6 +10,7 @@ export function updateProfile() {
     const profileNameElement = document.getElementsByClassName('profileName')[0];
     const profileRoleElement = document.getElementsByClassName('profileRole')[0];
     const profilePicElement = document.getElementsByClassName('profilePic')[0];
+    // const profileEmailElement = document.getElementsByClassName('profileEmail');
 
     if (profilePicElement) {
         profilePicElement.src = profilepic;
@@ -20,7 +21,11 @@ export function updateProfile() {
     }
     if (profileRoleElement) {
         profileRoleElement.textContent = role;
-    } else {
-        console.error('Error: profileRole element not found');
+    }
+    // if (profileEmailElement) {
+    //     profileEmailElement.textContent = email;
+    // }
+    else {
+        console.error('element not found');
     }
 }

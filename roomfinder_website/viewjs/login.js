@@ -5,6 +5,7 @@ import AdminViewModel from '../viewmodel/adminViewModel.js';
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('loginForm');
     
+    //listener
     loginForm.addEventListener('submit', function (e) {
         e.preventDefault();  
         
@@ -13,13 +14,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
         AdminViewModel.loginUser(email, password)
             .then(result => {
+                console.log(result);
 
                 if (result.status === 'success') {
                     localStorage.setItem('username', result.username);
                     localStorage.setItem('role', result.role);
+                    localStorage.setItem('email', result.email);
+                    localStorage.setItem('id', result.id)
 
                     window.location.href = '/roomfinder_website/index.html'; 
-                } else {
+                } 
+                else {
                     console.error('Login failed:', result.message);
                     document.getElementById('error-message').textContent = result.message;
                 }
