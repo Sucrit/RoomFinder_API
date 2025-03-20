@@ -1,5 +1,5 @@
   /* Style nang tables */
-  /* .table-container {
+  .table-container {
     background: transparent;
     padding: 20px;
     border-radius: 10px;
@@ -11,7 +11,8 @@
     border-collapse: collapse;
   }
 
-  .table-container th, td {
+  .table-container th,
+  td {
     padding: 12px;
     border-bottom: none;
     vertical-align: middle;
@@ -24,7 +25,7 @@
   }
 
   /* Floating Table Rows */
-  /* .table-container tbody tr {
+  .table-container tbody tr {
     background: white;
     box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
     margin-bottom: 10px;
@@ -42,9 +43,9 @@
     display: block;
     width: auto;
     padding: 10px;
-  } 
+  }
 
-  /* .table-container td {
+  .table-container td {
     border: none;
     vertical-align: middle;
   }
@@ -62,8 +63,8 @@
     width: auto;
     text-align: center;
   }
-    */
-  /* .table-container .status.available {
+
+
 
   .table-container .status.available {
     background: #4caf50;
@@ -78,10 +79,8 @@
   .table-container .status.closed {
     background: #d32f2f;
     color: white;
-  } */
-  
-  /* .table-container .edit-btn,
   }
+
 
   .table-container .edit-btn,
   .delete-btn {
@@ -96,8 +95,8 @@
     background: #4caf50;
     color: white;
   }
-   */
-  /* .table-container .delete-btn {
+
+
 
   .table-container .delete-btn {
     background: #d32f2f;
@@ -122,11 +121,11 @@
 
   .table-container .floating-btn:hover {
     background-color: #052a58;
-  } */
-  
+  }
+
 
   /* eto yung sa mga table data */
-  /* .table-container .room-name {
+  .table-container .room-name {
     text-align: left;
     padding-left: 10px;
     font-weight: bold;
@@ -167,17 +166,14 @@
     width: 20%;
     text-align: center;
     padding: 10px;
-  } */
+  }
 
   /* dynamic styles */
-/* 
-table tr{
-    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
   table {
     border-collapse: separate;
     border-spacing: 0 10px;
   }
-  
+
   /* table tr {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
@@ -186,32 +182,26 @@ table tr{
   table th {
     background: #ffffff;
     font-weight: bold;
-} */
-
-
-
-
-
-
-/* Dynamic Styling */
-
-
-/* ud button animation */
-.ud-button-animation {
-  animation: fadeOut 0.5s ease forwards;
-}
-
-/* keyframes for fade effect */
-@keyframes fadeOut {
-  0% {
-      opacity: 1;
   }
-  100% {
+
+
+  /* Dynamic Styling */
+
+
+  /* ud button animation */
+  .ud-button-animation {
+    animation: fadeOut 0.5s ease forwards;
+  }
+
+  /* keyframes for fade effect */
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+
+    100% {
       opacity: 0;
       /* slide */
-      transform: translateX(-50px); 
+      transform: translateX(-50px);
+    }
   }
-}
-
-
-  

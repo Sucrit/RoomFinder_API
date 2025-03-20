@@ -9,6 +9,7 @@ import { InitRequestHistorySection } from '../viewjs/request_history.js';
 import { InitAddUserSection } from '../viewjs/adduser.js';
 import { InitAccountSection } from '../viewjs/account.js';
 import { InitRoomScheduleSection } from '../viewjs/room_schedule.js';
+import { InitOngoingScheduleSection } from './ongoing_schedule.js';
 
 
 // section router
@@ -85,6 +86,9 @@ window.showSection = function(sectionId) {
                 }
                 else if (sectionId === 'room_schedule') {
                     InitRoomScheduleSection();               
+                }
+                else if (sectionId === 'ongoing_schedule') {
+                    InitOngoingScheduleSection();
                 }
             } else {
                 console.error(`Section with ID '${sectionId}' not exist`);

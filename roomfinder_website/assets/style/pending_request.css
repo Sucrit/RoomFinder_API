@@ -8,3 +8,10 @@
     color: white;
 }
 
+.pending_request-table td{
+    text-align: center;
+}
+
+.pending_request-table table {
+    padding: 20px;
+}

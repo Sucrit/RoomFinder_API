@@ -28,7 +28,6 @@
     align-items: center;
 }
 
-
 /* .room-schedules-table {
     width: 100%;
     table-layout: auto;
@@ -42,6 +41,7 @@
 .room-table-container {
     width: 90%;
     overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center;

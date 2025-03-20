@@ -1,12 +1,12 @@
 /* Users List */
-.container {
-    border-radius: 8px;
+.userslist-container {
     padding: 20px;
-    width: 90%;
-    max-width: 1000px;
     margin-top:3%;
-    margin-left: 50px;
     height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .userlisttable {
@@ -19,22 +19,28 @@
     max-width: 1000px;
 }
 
+.userlisttable td {
+    text-align: center;
+}
+
 .header {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
+    width: 500px;
 }
 
 .filter {
     padding: 8px;
     font-size: 14px;
+    border-radius: 5px;
 }
 
 .search-bar {
     padding: 8px;
-    flex-grow: 1;
-    margin-left: 10px;
     font-size: 14px;
+    border-radius: 5px;
+    border: none;
 }
 
 table {
@@ -78,5 +84,4 @@ table th {
     width: 100%;
     max-width: 400px;
     font-size: 14px;
-    border-radius: 5px;
 }
