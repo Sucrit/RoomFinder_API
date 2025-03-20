@@ -8,8 +8,8 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PATCH, DELETE");  
 
 // token handler
-require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../auth/middleware.php';
+// require_once __DIR__ . '/../vendor/autoload.php';
+// require_once __DIR__ . '/../auth/middleware.php';
 
 // controllers
 require_once '../controller/admin.php';

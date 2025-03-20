@@ -102,25 +102,39 @@ class RoomRequestModel {
 
     // create room request
     public function createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time) {
+        $current_date = date('Y-m-d');
+        $current_time = date('H:i:s');
+    
+        // check currect datetime and datetime request
+        if ($date < $current_date || ($date == $current_date && $starting_time <= $current_time)) {
+            echo json_encode(['message' => 'Cannot create a room request for a past date or time.']);
+            return null;
+        }
+    
+        //  ending time is after the starting time
+        if ($date == $current_date && $starting_time >= $ending_time) {
+            echo json_encode(['message' => 'The ending time must be greater than the starting time.']);
+            return null;
+        }
+
         $sql = "INSERT INTO room_request (room_id, user_id, block, purpose, date, starting_time, ending_time) 
                 VALUES (?, ?, ?, ?, ?, ?, ?)";
-
+    
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('iisssss', $room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time);
-            
+    
             if ($stmt->execute()) {
                 return $this->getRoomRequestById($this->conn->insert_id);
-            } 
-            else {
+            } else {
                 echo json_encode(['message' => 'Error: ' . $this->conn->error]);
                 return null;
             }
-        } 
-        else {
+        } else {
             echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
             return null;
         }
     }
+    
 
     // update room request status (approve or reject a pending room request only)
     public function updateRoomRequestStatus($id, $status) {
