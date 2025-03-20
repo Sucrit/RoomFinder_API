@@ -3,7 +3,7 @@ import { showToast } from '../viewjs/toast.js';
 
 export function InitRoomScheduleSection() {
     const scheduleSection = document.getElementById('room_schedule');
-    const scheduleBody = scheduleSection.querySelector('#room-schedules-tbody');
+    const scheduleBody = scheduleSection.querySelector('.table-data');
     
     scheduleBody.innerHTML = '';  
 
@@ -19,9 +19,8 @@ export function InitRoomScheduleSection() {
                         row.innerHTML = `
                             <td>${schedule.room_building || 'N/A'}</td>
                             <td>${schedule.room_number || 'N/A'}</td>
-                            <td>${schedule.date || 'N/A'}</td>
-                            <td>${schedule.starting_time || 'N/A'}</td>
-                            <td>${schedule.ending_time || 'N/A'}</td>
+                            <td>${schedule.date + '<br/>' + schedule.starting_time + ' - ' + schedule.ending_time || 'N/A'}</td>
+                            <td>${schedule.block || 'N/A'}</td>
                             <td>
                                 <button class="update-btn" data-id="${schedule.id}">Update</button>
                                 <button class="delete-btn" data-id="${schedule.id}">Delete</button>

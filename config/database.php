@@ -8,8 +8,6 @@ class Database {
     private $password = '';
 
     // fix establishing database connection per model (slow response issue)
-    // singleton pattern — to ensure a single, shared instance
-
 
     // prevents direct object creation every model
     private function __construct() {

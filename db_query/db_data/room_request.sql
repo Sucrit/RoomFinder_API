@@ -25,14 +25,8 @@ SET time_zone = "+00:00";
 -- Dumping data for table `room_request`
 --
 
-INSERT INTO `room_request` (`id`, `room_id`, `user_id`, `block`, `purpose`, `date`, `starting_time`, `ending_time`, `status`, `created_at`) VALUES
-(1, 1, 1, 'Block 2', 'lecture class', '2025-03-13', '01:00:00', '22:00:00', 'approved', '2025-03-17 11:50:24'),
-(2, 2, 2, 'Block 3', 'seminar', '2025-03-14', '09:00:00', '11:00:00', 'pending', '2025-03-17 11:50:24'),
-(3, 3, 3, 'Block 1', 'workshop', '2025-03-15', '10:00:00', '12:00:00', 'pending', '2025-03-17 11:50:24'),
-(4, 4, 4, 'Block 2', 'training session', '2025-03-16', '11:00:00', '13:00:00', 'pending', '2025-03-17 11:50:24'),
-(5, 5, 5, 'Block 3', 'lecture class', '2025-03-17', '12:00:00', '14:00:00', 'pending', '2025-03-17 11:50:24'),
-(6, 6, 6, 'Block 4', 'seminar', '2025-03-18', '13:00:00', '15:00:00', 'pending', '2025-03-17 11:50:24'),
-(7, 7, 9, 'Block 1', 'workshop', '2025-03-19', '14:00:00', '16:00:00', 'pending', '2025-03-17 11:50:24'),
+INSERT INTO `room_request` (`room_id`, `user_id`, `block`, `purpose`, `date`, `starting_time`, `ending_time`, `status`, `created_at`) VALUES
+(6, 6, 'Block 4', 'seminar', '2025-03-18', '13:00:00', '15:00:00', 'pending', '2025-03-17 11:50:24'),
 (8, 8, 10, 'Block 2', 'training session', '2025-03-20', '15:00:00', '17:00:00', 'pending', '2025-03-17 11:50:24'),
 (9, 9, 7, 'Block 3', 'lecture class', '2025-03-21', '16:00:00', '18:00:00', 'pending', '2025-03-17 11:50:24'),
 (10, 10, 8, 'Block 4', 'seminar', '2025-03-22', '17:00:00', '19:00:00', 'pending', '2025-03-17 11:50:24'),
@@ -48,12 +42,7 @@ INSERT INTO `room_request` (`id`, `room_id`, `user_id`, `block`, `purpose`, `dat
 (20, 10, 10, 'Block 10', 'Project Review', '2025-03-22', '14:30:00', '16:30:00', 'pending', '2025-03-17 12:05:02'),
 (21, 11, 11, 'Block 11', 'Workshop', '2025-03-23', '08:00:00', '10:00:00', 'pending', '2025-03-17 12:05:02'),
 (22, 12, 12, 'Block 12', 'Lecture class', '2025-03-24', '16:00:00', '18:00:00', 'pending', '2025-03-17 12:05:02'),
-(23, 13, 13, 'Block 13', 'Seminar', '2025-03-25', '10:30:00', '12:30:00', 'pending', '2025-03-17 12:05:02'),
-(24, 14, 14, 'Block 14', 'Discussion', '2025-03-26', '13:00:00', '15:00:00', 'pending', '2025-03-17 12:05:02'),
-(25, 15, 15, 'Block 15', 'Lecture class', '2025-03-27', '11:30:00', '13:30:00', 'pending', '2025-03-17 12:05:02'),
-(26, 16, 16, 'Block 16', 'Lab Session', '2025-03-28', '09:30:00', '11:30:00', 'pending', '2025-03-17 12:05:02'),
-(27, 17, 17, 'Block 17', 'Lecture class', '2025-03-29', '14:00:00', '16:00:00', 'pending', '2025-03-17 12:05:02');
-COMMIT;
+(23, 13, 13, 'Block 13', 'Seminar', '2025-03-25', '10:30:00', '12:30:00', 'pending', '2025-03-17 12:05:02');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
