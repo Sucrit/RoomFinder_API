@@ -148,7 +148,7 @@ class UserController {
         if (isset($decodedToken['id'])) {
             $userId = $decodedToken['id']; 
             $this->userModel->deleteUserToken($userId, $token); 
-            echo json_encode(['message' => 'Admin logged out successfully']);
+            echo json_encode(['message' => 'User logged out successfully']);
         } 
         else {
             echo json_encode(['message' => 'Invalid token or missing ID']);

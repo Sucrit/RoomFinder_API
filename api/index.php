@@ -21,12 +21,15 @@ require_once '../controller/room_schedule.php';
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
 $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+$input = json_decode(file_get_contents('php://input'), true);
+
+
+
 
 if (strpos($contentType, 'application/json') === false) {
     echo json_encode(['message' => 'Invalid json content type.']);
     exit;
 }
-$input = json_decode(file_get_contents('php://input'), true);
 
 // instantiate controllers
 $adminController = new AdminController();
@@ -58,20 +61,11 @@ function handleUser($requestMethod, $uri, $input, $UserController) {
                     echo json_encode(['message' => 'Missing email or password']);
                 }
             } 
-            elseif (preg_match('/\/user\/logout/', $uri)) {
-                // teacher logout
-                $Authorization = $_SERVER['HTTP_AUTHORIZATION'] ?? null;
-                // if ($Authorization) {
-                //     // invalidate token if token is authorized
-                //     $UserController->logoutUser($Authorization);    
-                    echo json_encode(['message' => 'User logged out successfully']);
-                } 
-                else {
-                    echo json_encode(['message' => 'Authorization token is missing']);
-                }
-            // }    else {
-            //     echo json_encode(['message' => 'Invalid user request']);
-            // }
+            else if (preg_match('/\/user\/logout/', $uri)) {
+               
+            } else {
+                echo json_encode(['message' => 'Invalid user request']);
+            }
             break;
 
         case 'PATCH':

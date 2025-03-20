@@ -1,7 +1,7 @@
 
 // dashboard section dom/M
 import RoomRequestViewModel from "../viewmodel/roomrequestViewModel.js";
-import { showLoading, hideLoading } from "../viewjs/loading.js";
+// import { showLoading, hideLoading } from "../viewjs/loading.js";
 
 export async function InitDashboard() {
 
@@ -133,7 +133,7 @@ function updateTable(tableId, data) {
     }
 }
 
-
+// see all buttonn
 function InitSeeAllButton() {
     const seeRequestHistoryBtn = document.querySelector('.seerequesthistory-btn');
     if (seeRequestHistoryBtn) {
@@ -150,8 +150,10 @@ function InitSeeAllButton() {
     }
 }
 
+
+// hide sec in dashboard
 document.addEventListener('DOMContentLoaded', function() {
-    // initially hide section
+
     const ongoingScheduleSection = document.getElementById('ongoing_schedule');
     const requestHistorySection = document.getElementById('request_history');
 

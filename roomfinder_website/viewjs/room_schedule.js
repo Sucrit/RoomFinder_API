@@ -5,6 +5,7 @@ export function InitRoomScheduleSection() {
     const scheduleSection = document.getElementById('room_schedule');
     const scheduleBody = scheduleSection.querySelector('.table-data');
 
+
     const addModal = document.getElementById('modal');
     const floatingBtn = document.querySelector('.floating-btn');
     const addCloseBtn = document.querySelector('#modal .closemodal');
@@ -14,6 +15,7 @@ export function InitRoomScheduleSection() {
         function openAddRoomForm() {
             addModal.style.display = 'block';  
         }
+
     
         function closeAddRoomModal() {
             addModal.style.display = 'none';
