@@ -1,29 +1,38 @@
 <section id="room_schedule" class="hidden">
-    <div class="topcontainer">
-        <h2 style="margin-left: 15px;"> Room Schedules</h2>
-        <div class="profile-container"></div>
-    </div>
+	<div class="topcontainer">
+		<h2>Room Schedules</h2>
+		<div class="profile-container"></div>
+	</div>
 
-    <div class="content">
-        <div class="room-details">
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="room-building-header">Room Building</th>
-                            <th class="room-number-header">Room Number</th>
-                            <th class="date-header">Date</th>
-                            <th class="starting-time-header">Starting Time</th>
-                            <th class="ending-time-header">Ending Time</th>
-                            <th class="action-header">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="room-schedules-tbody">
-                        <!-- Room schedules -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="floating-btn" onclick="openAddRoomForm()">+</div>
+	<div class="schedule-content">
+		<!-- Floating Search Bar -->
+		<div class="search-container">
+			<img
+				src="../roomfinder_website/assets/images/web-svg-icons/search-icon.svg"
+				alt="Search" />
+			<input
+				type="text"
+				id="searchInput"
+				placeholder="Search here..."
+				onkeyup="searchTable()" />
+		</div>
+
+		<div class="room-table-container">
+			<h2>CITE</h2>
+			<div class="table-wrapper">
+				<table class="room-sched">
+					<tr>
+						<th class="room-name-header">Room Name</th>
+						<th class="ongoing-schedule-header">Date and Time</th>
+						<th class="ongoing-schedule-header">Prof/Teacher</th>
+						<th class="status-header">Status</th>
+						<th class="action-header">Action</th>
+					</tr>
+					<tbody  class="table-data" align="center">
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="floating-btn" onclick="openAddRoomForm()">+</div>
 </section>

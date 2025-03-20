@@ -97,6 +97,18 @@ export function InitRoomsSection() {
     fetchRooms();
 
 
+    function getStatusClass(status) {
+        switch (status.toLowerCase()) {
+            case 'available':
+                return 'available';
+            case 'occupied':
+                return 'occupied';
+            case 'maintenance':
+                return 'closed';
+            default:
+                return '';
+        }
+    }
     // track role, searchtxt value
     let selectedStatus = 'all';  
     let searchText = '';        

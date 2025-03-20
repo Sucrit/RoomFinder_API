@@ -5,24 +5,24 @@
     border-radius: 10px;
     box-shadow: none;
   }
-  
+
   .table-container table {
-    width: 100%;
+    width: 1530px;
     border-collapse: collapse;
   }
-  
+
   .table-container th, td {
     padding: 12px;
     border-bottom: none;
     vertical-align: middle;
   }
-  
+
   .table-container th {
     color: black;
     text-align: center;
     padding-right: 99px;
   }
-  
+
   /* Floating Table Rows */
   /* .table-container tbody tr {
     background: white;
@@ -32,28 +32,28 @@
     grid-template-columns: 10% 26% 44% 20%;
     padding: 10px;
   }
-  
+
   .table-container tbody {
     display: block;
   }
-  
+
   .table-container tr {
     margin-bottom: 10px;
     display: block;
     width: auto;
     padding: 10px;
-  }
-  
-  .table-container td {
+  } 
+
+  /* .table-container td {
     border: none;
     vertical-align: middle;
   }
-  
+
   .table-container thead tr:nth-child(2) th {
     text-align: center;
     padding-top: 10px;
   }
-  
+
   .table-container .status {
     padding: 5px 10px;
     border-radius: 5px;
@@ -64,21 +64,26 @@
   }
     */
   /* .table-container .status.available {
+
+  .table-container .status.available {
     background: #4caf50;
     color: white;
   }
-  
+
   .table-container .status.occupied {
     background: #ff9800;
     color: white;
   }
-  
-  .table-container .status.close {
+
+  .table-container .status.closed {
     background: #d32f2f;
     color: white;
   } */
   
   /* .table-container .edit-btn,
+  }
+
+  .table-container .edit-btn,
   .delete-btn {
     border: none;
     padding: 5px 10px;
@@ -86,17 +91,19 @@
     font-size: 14px;
     border-radius: 5px;
   }
-  
+
   .table-container .edit-btn {
     background: #4caf50;
     color: white;
   }
    */
   /* .table-container .delete-btn {
+
+  .table-container .delete-btn {
     background: #d32f2f;
     color: white;
   }
-  
+
   .table-container .floating-btn {
     position: fixed;
     bottom: 20px;
@@ -112,49 +119,50 @@
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
-  
+
   .table-container .floating-btn:hover {
     background-color: #052a58;
   } */
   
+
   /* eto yung sa mga table data */
   /* .table-container .room-name {
     text-align: left;
     padding-left: 10px;
     font-weight: bold;
   }
-  
+
   .table-container .ongoing-schedule {
     text-align: center;
   }
-  
+
   .table-container .status-cell {
     text-align: left;
     padding-left: 50px;
   }
-  
+
   .table-container .action-cell {
     text-align: center;
     padding-left: 120px;
   }
-  
+
   .table-container .room-name-header {
     width: 20%;
     text-align: center;
     padding-left: 5px;
   }
-  
+
   .table-container .ongoing-schedule-header {
     width: 30%;
     text-align: center;
   }
-  
+
   .table-container .status-header {
     width: 30%;
     text-align: center;
     padding-right: 180px;
   }
-  
+
   .table-container .action-header {
     width: 20%;
     text-align: center;
@@ -165,11 +173,18 @@
 /* 
 table tr{
     box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+  table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
+  
+  /* table tr {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
-}
+  } */
 
-table th {
-    background: #f5f5f5;
+  table th {
+    background: #ffffff;
     font-weight: bold;
 } */
 
@@ -197,3 +212,6 @@ table th {
       transform: translateX(-50px); 
   }
 }
+
+
+  

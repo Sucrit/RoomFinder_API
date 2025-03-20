@@ -25,6 +25,7 @@
 
         <link rel="stylesheet" href="assets/style/toast.css">
         <link rel="stylesheet" href="assets/style/loading.css">
+        <link rel="stylesheet" href="assets/style/ongoing_schedule.css" />
 
 	</head>
 
@@ -68,10 +69,13 @@
                     <!-- Room Requests -->
                     <div class="dropdown">
                         <div class="dropdown-toggle">
-                            <img
-                                src="assets/images/web-svg-icons/room-request-icon.svg"
-                                alt="Room Requests Icon" />
-                            Room Request
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <img
+                                    src="assets/images/web-svg-icons/room-request-icon.svg"
+                                    alt="Room Requests Icon" />
+                                Room Request
+                            </div>
+                            <img src="assets/images/web-svg-icons/dropdown-arrow.svg" alt="arrow">
                         </div>
                         <div class="dropdown-menu">
                             <a href="#" class="nav-item" onclick="showSection('pending_request')">
@@ -86,10 +90,13 @@
                     <!-- Room Schedule  -->
                     <div class="dropdown">
                         <div class="dropdown-toggle">
-                            <img
-                                src="assets/images/web-svg-icons/room-schedule-icon.svg"
-                                alt="Room Schedules Icon" />
-                            Room Schedules
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <img
+                                    src="assets/images/web-svg-icons/room-schedule-icon.svg"
+                                    alt="Room Schedules Icon" />
+                                Room Schedules
+                            </div>
+                            <img src="assets/images/web-svg-icons/dropdown-arrow.svg" alt="arrow">
                         </div>
                         <div class="dropdown-menu">
                             <a
@@ -105,11 +112,15 @@
                     </div>
                     <div class="dropdown">
                         <div class="dropdown-toggle">
-                            <img
-                                src="assets/images/web-svg-icons/auth-icon.svg"
-                                alt="Auth Icon" />
-                            Authentication
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <img
+                                    src="assets/images/web-svg-icons/auth-icon.svg"
+                                    alt="Auth Icon" />
+                                Authentication
+                            </div>
+                            <img src="assets/images/web-svg-icons/dropdown-arrow.svg" alt="arrow">
                         </div>
+
                         <div class="dropdown-menu">
                             <a href="#" id="dropdown-item" onclick="showSection('adduser')"
                                 >Add user</a
@@ -140,7 +151,7 @@
             <div id="loadingSpinner" style="display: none;"></div> 
 
 		</main>
-
+        
 		<script type="module" src="./viewjs/router.js"></script>
 	</body>
 </html>

@@ -1,5 +1,6 @@
-// SECTION ROUTE HANDLER AND INDEX VIEW SECTION JS   
-import { updateProfile } from '../viewjs/profile.js';
+// SECTION ROUTE HANDLER AND VIEW SECTION JS   
+
+import { updateProfile, getProfile } from '../viewjs/profile.js';
 import { InitDashboard } from '../viewjs/dashboard.js'
 import { InitPendingRequestSection } from '../viewjs/pending_request.js'
 import { InitUsersListSection } from '../viewjs/userslist.js'; 
@@ -15,8 +16,8 @@ window.showSection = function(sectionId) {
 
     // hide all sections
     document.querySelectorAll('section').forEach(section => {
-        section.classList.add('hidden');
     });
+
     console.log(sectionId);
     
     // load section html view
@@ -114,7 +115,6 @@ window.addEventListener('DOMContentLoaded', () => {
     showSection('dashboard');
 });
 
-
 // toggle dropdown when clicked
 const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
 dropdownToggles.forEach(toggle => {
@@ -133,4 +133,3 @@ window.addEventListener('click', function(event) {
         }
     });
 });
-
