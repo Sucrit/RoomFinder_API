@@ -9,11 +9,10 @@ import { InitRequestHistorySection } from '../viewjs/request_history.js';
 import { InitAddUserSection } from '../viewjs/adduser.js';
 import { InitAccountSection } from '../viewjs/account.js';
 import { InitRoomScheduleSection } from '../viewjs/room_schedule.js';
-
-import { InitOngoingScheduleSection } from './ongoing_schedule.js';
-=======
 import { InitOngoingScheduleSection } from '../viewjs/ongoing_schedule.js';
 
+import { showToast } from '../viewjs/toast.js';
+import AdminViewModel from '../viewmodel/adminViewModel.js'; 
 
 // section router
 window.showSection = function(sectionId) {
@@ -140,3 +139,51 @@ window.addEventListener('click', function(event) {
         }
     });
 });
+
+
+// logout button 
+window.handleLogout = async function(event) {
+    event.preventDefault();
+ 
+    // toast msg
+    showToast('Are you sure you want to logout?', 'info', {
+        showButtons: true,
+        onConfirm: async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                
+                if (!token) {
+                    showToast('No active session found. Redirecting to login.', 'error');
+                    setTimeout(() => {
+                        window.location.href = './view/login.html';
+                    }, 1500);
+                    return;
+                }
+
+                // if token exists, logout
+                const result = await AdminViewModel.logoutUser();
+                
+                // remove token
+                localStorage.removeItem('authToken');
+                
+                if (result.status === 'success') {
+                    window.location.href = './view/login.html';
+                } else {
+                    showToast(result.message, 'error');
+                    setTimeout(() => {
+                        window.location.href = './view/login.html';
+                    }, 1500);
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                showToast('Error during logout', 'error');
+                setTimeout(() => {
+                    window.location.href = './view/login.html';
+                }, 1500);
+            }
+        },
+        onCancel: () => {
+            console.log('logout cancelled');
+        }
+    });
+};

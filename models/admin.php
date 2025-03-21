@@ -108,7 +108,7 @@ class AdminModel {
         }
     }
 
-    // store admin token
+    // store admin token (login)
     public function storeAdminToken($adminId, $token) { 
 
         $issuedAt = date('Y-m-d H:i:s'); 
@@ -130,16 +130,24 @@ class AdminModel {
     // delete admin token (logout)
     public function deleteAdminToken($adminId, $token) {
         $sql = "DELETE FROM admin_jwt_token WHERE admin_id = ? AND token = ?";
-        
+    
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param("is", $adminId, $token);
-            $stmt->execute();
-            $stmt->close();
-            return true;
-        } 
-        else {
-            return "Error: " . $this->conn->error;
+  
+            if ($stmt->execute()) {
+                $affectedRows = $stmt->affected_rows;
+                $stmt->close();
+                if ($affectedRows > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
-    }
+    }    
 }
 ?>

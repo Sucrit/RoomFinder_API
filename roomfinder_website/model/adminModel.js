@@ -34,6 +34,12 @@ export default class AdminModel {
 
     // add users route (auth page)
     static addUser (role, username, email, password, teacher_id) {
+
+        const authToken = localStorage.getItem('authToken'); 
+        if (!authToken) {
+            throw new Error("You are not authorized");
+        }
+
         const userData = {
             role: role,
             username: username,
@@ -44,7 +50,8 @@ export default class AdminModel {
         return fetch('http://localhost/RoomFinder_API/api/index.php/admin/signup', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
             },
             body: JSON.stringify(userData)
         })
@@ -67,10 +74,17 @@ export default class AdminModel {
     
     // get auth uses list route (auth page)
     static getUsers() {
+
+        const authToken = localStorage.getItem('authToken'); 
+        if (!authToken) {
+            throw new Error("You are not authorized");
+        }
+        
         return fetch('http://localhost/RoomFinder_API/api/index.php/admin', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
             },
         })
         .then(response => { 
@@ -92,10 +106,17 @@ export default class AdminModel {
 
     // delete admin route (userlist page)
     static deleteAdmins(requestId) {
+
+        const authToken = localStorage.getItem('authToken'); 
+        if (!authToken) {
+            throw new Error("You are not authorized");
+        }
+
         return fetch(`http://localhost/RoomFinder_API/api/index.php/admin/${requestId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
             },
         })
         .then(response => {
@@ -115,10 +136,17 @@ export default class AdminModel {
 
     // delete user route (userlist page)
     static deleteUsers(requestId) {
+
+        const authToken = localStorage.getItem('authToken'); 
+        if (!authToken) {
+            throw new Error("You are not authorized");
+        }
+
         return fetch(`http://localhost/RoomFinder_API/api/index.php/user/${requestId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
             },
         })
         .then(response => {
@@ -138,6 +166,12 @@ export default class AdminModel {
 
     // change password route
     static updatePasswordById(requestId, oldPassword, newPassword, confirmPassword) {
+
+        const authToken = localStorage.getItem('authToken'); 
+        if (!authToken) {
+            throw new Error("You are not authorized");
+        }
+
         const passwordData = {
             old_password: oldPassword,
             new_password: newPassword,
@@ -147,6 +181,7 @@ export default class AdminModel {
             method: 'PATCH', 
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
             },
             body: JSON.stringify(passwordData)
         })
@@ -164,4 +199,35 @@ export default class AdminModel {
             throw error;
         });
     }
+
+    // logout admin
+    static logout() {
+
+        const authToken = localStorage.getItem('authToken');
+        console.log('Auth Token:', authToken);
+
+        if (!authToken) {
+            throw new Error("No authentication token found");
+        }
+        return fetch('http://localhost/RoomFinder_API/api/index.php/admin/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}` 
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data;
+        })
+        .catch(error => {
+            console.error('Error during logout:', error);
+            throw error;
+        });
+    }    
 }

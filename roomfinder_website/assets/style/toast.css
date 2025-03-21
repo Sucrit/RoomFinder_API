@@ -1,60 +1,84 @@
-
 #toast-container {
     position: fixed;
-    bottom: 20px; /* Adjust the space from the bottom */
-    left: 50%; /* Position container in the horizontal center */
-    transform: translateX(-50%); /* Offset by half of its own width to ensure it's centered */
-    width: 300px; /* Set a fixed width for the container */
-    z-index: 9999; /* Ensure the toast container is above other elements */
+    top: 50%; /* Center the container vertically */
+    left: 50%; /* Center the container horizontally */
+    transform: translate(-50%, -50%); /* Adjust by half of the container's size to truly center */
+    z-index: 9999; /* Ensure it stays on top of other elements */
     display: flex;
-    flex-direction: column; /* Stack toasts vertically */
-    gap: 10px; 
-    align-items: center; 
+    flex-direction: column;
+    gap: 10px; /* Space between toasts */
+    align-items: center; /* Center the toasts horizontally */
+    pointer-events: none; /* Prevent interaction with other elements */
 }
 
 .toast {
-    background-color: #333; 
+    background-color: #333;
     color: white;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    padding: 15px 20px; /* More padding for better visual appearance */
+    border-radius: 8px; /* Round the corners for a more modern look */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Add a shadow for better contrast */
     opacity: 0;
     transform: translateY(10px);
-    transition: opacity 0.3s, transform 0.3s;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    width: 100%; /* Ensure the toast takes the full width of the container */
+    max-width: 350px; /* Maximum width for the toast */
+    text-align: center; /* Center the message inside the toast */
+    pointer-events: all; /* Allow interaction with toast buttons */
+    display: flex; /* Use flexbox to center content inside the toast */
+    flex-direction: column;
+    justify-content: center; /* Vertically center content inside the toast */
+    align-items: center; /* Horizontally center content inside the toast */
+}
+
+.toast-message {
+    font-size: 16px;
+    line-height: 1.4;
 }
 
 .toast-buttons {
     display: flex;
     justify-content: space-between;
     gap: 10px;
+    margin-top: 10px;
 }
 
 .toast-buttons button {
-    padding: 5px 10px;
+    padding: 8px 15px;
     border: none;
-    border-radius: 3px;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .confirm-btn {
     background-color: #4CAF50; /* Green for Confirm */
     color: white;
+    font-weight: bold;
+}
+
+.confirm-btn:hover {
+    background-color: #45a049; 
 }
 
 .cancel-btn {
     background-color: #f44336; /* Red for Cancel */
     color: white;
+    font-weight: bold;
+}
+
+.cancel-btn:hover {
+    background-color: #e53935; /* Darker red on hover */
 }
 
 /* Success toast */
 /* .toast.success {
-    background-color: #4CAF50; /* Green background for success 
-} 
+    background-color: #4CAF50; /* Green background for success */
+/* } */
 
 /* Error toast */
 /* .toast.error {
-    background-color: #f44336; /* Red background for error 
-} 
+    background-color: #f44336; Red background for error */
+/* } */
 
 /* When the toast is shown, it will fade in and move up */
 .toast.show {

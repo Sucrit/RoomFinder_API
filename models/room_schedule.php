@@ -123,25 +123,19 @@ class RoomScheduleModel {
         }
     }
     
-    // check time schedule conflict
+    // check if room schedule exists (avoid time conflict)
     public function roomScheduleExist($room_id, $date, $starting_time, $ending_time) {
-
         // check if starting time is greater than ending time (time conflict)
         if ($starting_time >= $ending_time) {
             echo json_encode(['message' => 'Starting time must be before ending time']);
             return true;
         }
-    
-        $sql = "SELECT * FROM room_schedule WHERE room_id = ? AND date = ? AND (
-                    (starting_time < ? AND ending_time > ?) 
-                    OR (starting_time < ? AND ending_time > ?) 
-                    OR (? BETWEEN starting_time AND ending_time) 
-                    OR (? BETWEEN starting_time AND ending_time)
-                    OR (? = ending_time)  -- Allow exact match between new schedule start time and existing schedule end time
-                )"; 
-    
+            
+        $sql = "SELECT * FROM room_schedule WHERE room_id = ? AND date = ? AND ((starting_time < ? AND ending_time > ?) 
+                OR (starting_time < ? AND ending_time > ?) OR (? BETWEEN starting_time AND ending_time) OR (? BETWEEN starting_time AND ending_time))"; 
+
         if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param('issssssss', $room_id, $date, $starting_time, $ending_time, $starting_time, $ending_time, $starting_time, $ending_time, $starting_time);
+            $stmt->bind_param('isssssss', $room_id, $date, $starting_time, $ending_time, $starting_time, $ending_time, $starting_time, $ending_time);
             $stmt->execute();
             $result = $stmt->get_result();
             
@@ -151,6 +145,5 @@ class RoomScheduleModel {
             return false;
         }
     }
-    
 }
 ?>

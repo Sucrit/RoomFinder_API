@@ -50,6 +50,7 @@ class UserController {
 
         if (password_verify($password, $user['password'])) {
             $token = JwtHelper::encode(array(
+                // create payload data to token
                 'id' => $user['id'],
                 'username' => $user['username'],
                 'role' => $user['role'],
@@ -143,17 +144,27 @@ class UserController {
     
     // logout user
     public function logoutUser($token) {
-        $decodedToken = JwtHelper::decode($token);
+        try {
+            // remove Bearer to string to compare in userjwttokens
+            $token = str_replace("Bearer ", "", $token);
 
-        if (isset($decodedToken['id'])) {
-            $userId = $decodedToken['id']; 
-            $this->userModel->deleteUserToken($userId, $token); 
-            echo json_encode(['message' => 'User logged out successfully']);
-        } 
-        else {
-            echo json_encode(['message' => 'Invalid token or missing ID']);
-        }
-    }
+            $decodedToken = JwtHelper::decode($token);
     
+            if (isset($decodedToken['id'])) {
+                $userId = $decodedToken['id'];
+                $result = $this->userModel->deleteUserToken($userId, $token);
+    
+                if ($result === true) {
+                    echo json_encode(['message' => 'User logged out successfully']);
+                } else {
+                    echo json_encode(['message' => $result]); 
+                }
+            } else {
+                echo json_encode(['message' => 'Invalid token or missing ID']);
+            }
+        } catch (Exception $e) {
+            echo json_encode(['message' => 'An error occurred during logout']);
+        }
+    }  
 }
 ?>

@@ -2,24 +2,23 @@ import RoomScheduleViewModel from '../viewmodel/roomscheduleViewModel.js';
 import { showToast } from '../viewjs/toast.js';  
 
 export function InitRoomScheduleSection() {
+
     const scheduleSection = document.getElementById('room_schedule');
     const scheduleBody = scheduleSection.querySelector('.table-data');
-
 
     const addModal = document.getElementById('modal');
     const floatingBtn = document.querySelector('.floating-btn');
     const addCloseBtn = document.querySelector('#modal .closemodal');
     const addRoomForm = document.querySelector('.roomdetails_form');
 
-        // Modal functions
+        // modal functions
         function openAddRoomForm() {
             addModal.style.display = 'block';  
         }
-
-    
         function closeAddRoomModal() {
             addModal.style.display = 'none';
         }
+
 
         addCloseBtn.onclick = closeAddRoomModal;
         window.onclick = function(event) {
@@ -68,17 +67,17 @@ export function InitRoomScheduleSection() {
                             deleteBtn.addEventListener('click', () => {
                                 const scheduleId = deleteBtn.getAttribute('data-id');
                                 
-                                // Show the confirmation toast
+                                // show toast
                                 showToast('Are you sure you want to delete this schedule?', 'info', {
                                     showButtons: true,
                                     onConfirm: () => {
                                         row.classList.add('ud-button-animation');
-                                        // Remove the row after toast message stays visible
+                                        // remove the row after toast message stays visible
                                         RoomScheduleViewModel.deleteRoomSchedule(scheduleId)
                                             .then(response => {
                                                 if (response.success) {
                                                     showToast(response.message, 'success'); 
-                                                    row.remove(); // Remove row after successful deletion
+                                                    row.remove(); 
                                                 } else {
                                                     showToast(response.message, 'error');
                                                 }

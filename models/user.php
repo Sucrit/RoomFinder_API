@@ -134,19 +134,26 @@ class UserModel {
     }
 
     // delete user token (logout)
-    public function deleteUserToken($userId, $token) {
+    public function deleteUserToken($userId, $token) {        
         $sql = "DELETE FROM user_jwt_token WHERE user_id = ? AND token = ?";
-        
+
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param("is", $userId, $token);
-            $stmt->execute();
-            $stmt->close();
-            return true;
-        } 
-        else {
-            return "Error: " . $this->conn->error;
+            if ($stmt->execute()) {
+                if ($stmt->affected_rows > 0) {
+                    $stmt->close();
+                    return true; 
+                } else {
+                    $stmt->close();
+                    return "No token found";
+                }
+            } else {
+                $stmt->close();
+                return "Error: " . $this->conn->error;
+            }
+        } else {
+            return "Error preparing query: " . $this->conn->error;
         }
-    }
-    
+    }   
 }
 ?>

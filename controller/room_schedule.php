@@ -68,24 +68,41 @@ class RoomScheduleController {
 
         // check if the room exists
         if ($this->roomModel->roomExists($room_id)) {
-
+    
             // get room status
             $room = $this->roomModel->getRoomById($room_id);
             
-            // checkk closed status
+            // check closed status
             if ($room['status'] == 'Closed') {
                 echo json_encode(['message' => 'This room is closed']);
                 return;
             }
-
+    
+            // current time!
+            $currentTimestamp = time();
+    
+            // combine date to starting time & ending time
+            $requestedStartTimestamp = strtotime("$date $starting_time");
+            $requestedEndTimestamp = strtotime("$date $ending_time");
+    
+            // -1 second to ending time
+            $endingTimeStamp = $requestedEndTimestamp - 1;
+            $adjustedEndingTime = date('H:i:s', $endingTimeStamp); 
+    
+            // check time conflict
+            if ($requestedStartTimestamp < $currentTimestamp || $endingTimeStamp < $currentTimestamp) {
+                echo json_encode(['message' => 'The requested time is invalid, Try again']);
+                return;
+            }
+    
             // check room schedule conflict
-            $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($room_id, $date, $starting_time, $ending_time);
+            $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($room_id, $date, $starting_time, $adjustedEndingTime);
             
             if ($scheduleConflict) {
                 echo json_encode(['message' => 'The room is already occupied for your requested time slot']);
             } 
             else {
-                $roomschedule = $this->roomScheduleModel->createRoomSchedule($room_id, $block, $date, $starting_time, $ending_time);
+                $roomschedule = $this->roomScheduleModel->createRoomSchedule($room_id, $block, $date, $starting_time, $adjustedEndingTime);
                 if ($roomschedule) {
                     echo json_encode(['message' => 'Room schedule created successfully']); 
                 } 
@@ -97,6 +114,7 @@ class RoomScheduleController {
             echo json_encode(['message' => 'Room not found']);
         }
     }
+    
 
     // update room schedule
     public function updateRoomSchedule($id, $input) {

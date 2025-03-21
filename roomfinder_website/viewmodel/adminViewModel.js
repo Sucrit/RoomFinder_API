@@ -21,6 +21,7 @@ export default class AdminViewModel {
 
                     // save info to local storage
                     localStorage.setItem('authToken', response.token);
+                    console.log('Viewmodel auth token:', response.token);
                     localStorage.setItem('username', username); 
                     localStorage.setItem('role', role);
                     localStorage.setItem('email', email);
@@ -118,4 +119,43 @@ export default class AdminViewModel {
             return { status: 'error', message: 'Error updating password' };
         }
     }
+
+
+    // logout
+    static async logoutUser() {
+        try {
+            const authToken = localStorage.getItem('authToken');  // Get the token first
+            console.log('Auth Token:', authToken);
+            if (!authToken) {
+                throw new Error('No authentication token found');  // Ensure token is available
+            }
+    
+            const response = await AdminModel.logout(authToken); // Pass token explicitly if necessary
+    
+            // Remove the local storage items only after the request is successful
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('username');
+            localStorage.removeItem('role');
+            localStorage.removeItem('email');
+            localStorage.removeItem('id');
+    
+            if (response && response.message) {
+                return { status: 'success', message: response.message };
+            }
+            return { status: 'success', message: 'Logged out successfully' };
+        } catch (error) {
+            // Remove items even in case of error to ensure proper cleanup
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('username');
+            localStorage.removeItem('role');
+            localStorage.removeItem('email');
+            localStorage.removeItem('id');
+    
+            console.error('Error during logout:', error);
+            return { 
+                status: 'error', 
+                message: error.message || 'Error occurred during logout' 
+            };
+        }
+    }    
 }

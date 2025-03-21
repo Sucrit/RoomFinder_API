@@ -26,7 +26,7 @@ class RoomController {
         }
     }
 
-
+    // get all rooms and schedules or room
     public function getRooms() {
         $currentTime = date('H:i:s');  
         $currentDate = date('Y-m-d');   
@@ -37,7 +37,7 @@ class RoomController {
             return;
         }
     
-        // Get all ongoing schedules
+        // get ongoing schedule of room
         $ongoingSchedules = $this->roomScheduleModel->getAllOngoingSchedules();
     
         foreach ($rooms as &$room) {
@@ -46,11 +46,11 @@ class RoomController {
                 continue;
             }
     
-            // Initialize room status to 'Available'
+            // Initialize room status to available
             $room['status'] = 'Available';
             $room['ongoing_schedule'] = (object) [];  
     
-            // Check for ongoing schedule for the room and set the status to 'Occupied' if found
+            // check for ongoing schedule of and set the status to occupied
             $isOccupied = false;
             foreach ($ongoingSchedules as $schedule) {
                 if ($schedule['room_id'] == $room['id']) {
@@ -61,7 +61,7 @@ class RoomController {
                 }
             }
     
-            // If no ongoing schedule is found, check for future schedules
+            // if no ongoing schedule get room schedules
             if (!$isOccupied) {
                 $schedules = $this->roomScheduleModel->getSchedulesByRoomId($room['id']);
                 $room['schedules'] = (object) []; 
@@ -72,10 +72,9 @@ class RoomController {
                         $startingTime = $schedule['starting_time'];
                         $endingTime = $schedule['ending_time'];
     
-                        // Check if the current date and time is within the scheduled time range
+                        // set status to occupied if schedule met current datetime
                         if ($currentDate === $scheduleDate && $currentTime >= $startingTime && $currentTime < $endingTime) {
-                            $room['status'] = 'Occupied';  // Update status to 'Occupied' if within scheduled time range
-                            break;
+                            $room['status'] = 'Occupied';  
                         }
                     }
                     $room['schedules'] = $schedules; 
@@ -91,7 +90,6 @@ class RoomController {
         }
         echo json_encode($rooms);
     }
-    
     
     
     // create room

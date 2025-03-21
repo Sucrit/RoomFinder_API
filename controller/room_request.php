@@ -72,6 +72,20 @@ class RoomRequestController {
 
     // create room request
     public function createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time) {
+
+        // get current time
+        $currentTimestamp = time();
+
+        // combine date to starting time & ending time
+        $requestedStartTimestamp = strtotime("$date $starting_time");
+        $requestedEndTimestamp = strtotime("$date $ending_time");
+
+        // check time conflict
+        if ($requestedStartTimestamp < $currentTimestamp || $requestedEndTimestamp < $currentTimestamp) {
+            echo json_encode(['message' => 'The requested time is invalid, Try again']);
+            return;
+        }
+
         // check if the room exists
         if ($this->roomModel->roomExists($room_id)) {
     
@@ -135,13 +149,10 @@ class RoomRequestController {
         // If rejected or no conflict, update status
         $this->roomRequestModel->updateRoomRequestStatus($id, $status);
 
-        if ($status == 'Approved') {
-            echo json_encode(['message' => 'Room request approved successfully']);
-        } else if ($status == 'Rejected') {
-            echo json_encode(['message' => 'Room request rejected successfully']);
+        if ($status == 'Approved' || $status == 'Rejected') {
+            echo json_encode(['message' => 'Room request updated successfully']);
         }
     }
-
 
     // delete room request
     public function deleteRoomRequest($id) {

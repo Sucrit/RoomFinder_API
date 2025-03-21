@@ -50,7 +50,7 @@ class AdminController {
         $admin = $this->adminModel->getAdminByEmail($email);
 
         if (!$admin) {
-            echo json_encode(['message' => 'No admin found with this email']);
+            echo json_encode(['message' => 'Invalid Email or Password']);
             return;
         }
 
@@ -59,7 +59,7 @@ class AdminController {
             $token = JwtHelper::encode(array(
                 'id' => $admin['id'],
                 'username' => $admin['username'],
-                'role' => 'admin',
+                'role' => $admin['role'],
                 'exp' => time() + 3600 // 1 hour
             ));
             $this->adminModel->storeAdminToken($admin['id'], $token);
@@ -67,6 +67,7 @@ class AdminController {
                 'message' => 'Login successful!',
                 'admin' => $admin,
                 'token' => $token
+                
             ]); 
         } 
         else {
@@ -161,16 +162,39 @@ class AdminController {
         }
     }
 
-    // delete token in token table when logging out
+    // logout admin or staff
     public function logoutAdmin($token) {
-        $decodedToken = JwtHelper::decode($token);
+        try {
+            // remove 'Bearer ' from the token string to compare in adminjwtoken
+            $token = str_replace("Bearer ", "", $token);
 
-        if (isset($decodedToken['id'])) {
-            $adminId = $decodedToken['id']; 
-            $this->adminModel->deleteAdminToken($adminId, $token); 
-            echo json_encode(['message' => 'Admin logged out successfully']);
-        } else {
-            echo json_encode(['message' => 'Invalid token or missing ID']);
+             // Log the token to confirm it's being received correctly
+        error_log('Received token: ' . $token);
+
+            $decodedToken = JwtHelper::decode($token);
+
+             // Log the decoded token to confirm it's being decoded properly
+        error_log('Decoded token: ' . print_r($decodedToken, true));
+            
+            // check token user id
+            if (isset($decodedToken['id'])) {
+                $adminId = $decodedToken['id'];
+
+                $result = $this->adminModel->deleteAdminToken($adminId, $token);
+
+                 // Log the result of deleting the token
+            error_log('Delete result: ' . $result);
+    
+                if ($result === true) {
+                    echo json_encode(['message' => 'User logged out successfully']);
+                } else if ($result === false) {
+                    echo json_encode(['message' => 'Token does not exist']);
+                }
+            } else {
+                echo json_encode(['message' => 'Invalid token or missing ID']);
+            }
+        } catch (Exception $e) {
+            echo json_encode(['message' => 'An error occurred during admin logout']);
         }
     }
 }

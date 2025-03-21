@@ -18,7 +18,7 @@ class RoomRequestModel {
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
-    // get dashboard details
+    // get all room request
     public function getAllRoomRequests() {
         $sql = "SELECT * FROM room_request";
 
@@ -28,7 +28,6 @@ class RoomRequestModel {
 
     // get room requests counts based on status (approved, rejected, pending)
     public function getRoomRequestsCountByStatus() {
-        // count room requests grouped by request status
         $sql = "SELECT status, COUNT(*) AS count FROM room_request GROUP BY status";
         $result = $this->conn->query($sql);
 
@@ -78,7 +77,8 @@ class RoomRequestModel {
             $result = $stmt->get_result();
     
             return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Error executing query: ' . $this->conn->error]);
             return [];
         }
@@ -94,14 +94,16 @@ class RoomRequestModel {
             $result = $stmt->get_result();
 
             return $result->num_rows > 0 ? $result->fetch_assoc() : null;
-        } else {
+        } 
+        else {
             echo json_encode(['message' => 'Error: ' . $this->conn->error]);
             return null;
         }
     }
 
     // create room request
-    public function createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time) {
+    public function createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time) { 
+
         $sql = "INSERT INTO room_request (room_id, user_id, block, purpose, date, starting_time, ending_time) 
                 VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -137,12 +139,9 @@ class RoomRequestModel {
             if ($stmt = $this->conn->prepare($sql)) {
                 $stmt->bind_param('si', $status, $id);
                 if ($stmt->execute()) {
-                    // if the status is approved, add to the room schedule
+                    // if the status is approved, add to room schedule
                     if ($status === 'Approved') {
                         $this->addToRoomSchedule($roomRequest);
-                    }
-                    elseif ($status === 'Rejected') {
-                        echo json_encode(['message' => 'Room request updated successfully']);
                     }
                 }  
                 else {
@@ -160,29 +159,27 @@ class RoomRequestModel {
 
     // helper method to add room request to room schedule
     private function addToRoomSchedule($roomRequest) {
+        // -1 seconds to ending time before adding to room schedule
+        $adjustedEndTimestamp = strtotime($roomRequest['ending_time']) - 1;
+        $adjustedEndingTime = date('H:i:s', $adjustedEndTimestamp);  
+    
         $sql = "INSERT INTO room_schedule (room_id, block, date, starting_time, ending_time) 
                 VALUES (?, ?, ?, ?, ?)";
-        
+    
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('issss', 
-                $roomRequest['room_id'], 
-                $roomRequest['block'], 
-                $roomRequest['date'], 
-                $roomRequest['starting_time'], 
-                $roomRequest['ending_time']
+                $roomRequest['room_id'], $roomRequest['block'],
+                $roomRequest['date'], $roomRequest['starting_time'], $adjustedEndingTime
             );
     
             if (!$stmt->execute()) {
                 echo json_encode(['message' => 'Error inserting into room schedule: ' . $this->conn->error]);
-            } 
-            else {
-                echo json_encode(['message' => 'Room request updated successfully']);
             }
-        } 
-        else {
+        } else {
             echo json_encode(['message' => 'Error preparing SQL for room schedule: ' . $this->conn->error]);
         }
     }
+    
     
     // delete room request
     public function deleteRoomRequest($id) {

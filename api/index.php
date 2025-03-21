@@ -39,12 +39,12 @@ $roomRequestController = new RoomRequestController();
 $roomScheduleController = new RoomScheduleController();
 
 // user method handler
-function handleUser($requestMethod, $uri, $input, $UserController) {
+function handleUser($requestMethod, $uri, $input, $userController) {
     switch ($requestMethod) {
         case 'GET':
             if (preg_match('/\/user\/(\d+)/', $uri, $matches)) {
                 // get user by id
-                $UserController->getUser($matches[1]);
+                $userController->getUser($matches[1]);
             } 
             else {
                 echo json_encode(['message' => 'Invalid user request']);
@@ -55,15 +55,23 @@ function handleUser($requestMethod, $uri, $input, $UserController) {
             if (preg_match('/\/user\/login/', $uri)) {
                 // teacher login
                 if (isset($input['email'], $input['password'])) {
-                    $UserController->loginUser($input['email'], $input['password']);
+                    $userController->loginUser($input['email'], $input['password']);
                 } 
                 else {
                     echo json_encode(['message' => 'Missing email or password']);
                 }
             } 
-            else if (preg_match('/\/user\/logout/', $uri)) {
-               
-            } else {
+            elseif (preg_match('/\/user\/logout/', $uri)) {
+                // teacher logout
+                $Authorization = $_SERVER['HTTP_AUTHORIZATION'] ?? null;
+                if ($Authorization) {
+                    // invalidate token if token is authorized
+                    $userController->logoutUser($Authorization);    
+                } 
+                else {
+                    echo json_encode(['message' => 'Authorization token is missing']);
+                }
+            }    else {
                 echo json_encode(['message' => 'Invalid user request']);
             }
             break;
@@ -72,16 +80,16 @@ function handleUser($requestMethod, $uri, $input, $UserController) {
             if (preg_match('/\/user\/(\d+)/', $uri, $matches)) {
                 $id = $matches[1];
                 if (!empty($input)) {
-                    // check if variable old, new, confirm pass is present
+                    // check if variable old, new, confirm pass (change pass)
                     if (isset($input['old_password']) && isset($input['new_password']) && isset($input['confirm_password'])) {
                         $oldPassword = $input['old_password'];
                         $newPassword = $input['new_password'];
                         $confirmPassword = $input['confirm_password'];
-                        $UserController->changePassword($id, $oldPassword, $newPassword, $confirmPassword);
+                        $userController->changePassword($id, $oldPassword, $newPassword, $confirmPassword);
                     } 
                     else {
                         // use update user profile
-                        $UserController->updateUser($id, $input);
+                        $userController->updateUser($id, $input);
                     }
                 } 
                 else {
@@ -95,7 +103,7 @@ function handleUser($requestMethod, $uri, $input, $UserController) {
                     
         case 'DELETE':
             if (preg_match('/\/user\/(\d+)/', $uri, $matches)) {
-                $UserController->deleteUserById($matches[1]);
+                $userController->deleteUserById($matches[1]);
             } 
             else {
                 echo json_encode(['message' => 'Invalid user ID']);
@@ -286,14 +294,14 @@ function handleRoomSchedule($requestMethod, $uri, $input, $roomScheduleControlle
 }
 
 // admin request method handler
-function handleAdmin($requestMethod, $uri, $input, $AdminController, $UserController) {
+function handleAdmin($requestMethod, $uri, $input, $adminController, $userController) {
     switch ($requestMethod) {
         case 'GET':
             if (preg_match('/\/admin\/(\d+)/', $uri, $matches)) {
-                $AdminController->getAdmin($matches[1]);
+                $adminController->getAdmin($matches[1]);
             } 
             elseif (preg_match('/\/admin/', $uri)) {
-                $AdminController->getAllUsersAndAdmin();
+                $adminController->getAllUsersAndAdmin();
             } 
             else {
                 echo json_encode(['message' => 'Invalid admin request']);
@@ -307,7 +315,7 @@ function handleAdmin($requestMethod, $uri, $input, $AdminController, $UserContro
                     $role = $input['role']; 
                     if ($role === 'Teacher') {
                         if (isset($input['teacher_id'])) {
-                            $UserController->createUser($input['teacher_id'], $input['username'], $input['email'], $input['password'], $input['role']);
+                            $userController->createUser($input['teacher_id'], $input['username'], $input['email'], $input['password'], $input['role']);
                         } 
                         else {
                             echo json_encode(['message' =>'Teacher ID is missing']);
@@ -315,7 +323,7 @@ function handleAdmin($requestMethod, $uri, $input, $AdminController, $UserContro
                     } 
                     elseif ($role === 'Administrator' || $role === 'Staff') {
                         // add to the admin table if the role is admin or staff
-                        $AdminController->createAdmin($input['username'], $input['email'], $input['password'], $input['role']);
+                        $adminController->createAdmin($input['username'], $input['email'], $input['password'], $input['role']);
                     } 
                     else {
                         echo json_encode(['message' => 'Invalid role specified']);
@@ -324,18 +332,23 @@ function handleAdmin($requestMethod, $uri, $input, $AdminController, $UserContro
                 else {
                     echo json_encode(['message' => 'Missing required fields']);
                 }
-            } elseif (preg_match('/\/admin\/login/', $uri)) {
+            } 
+            elseif (preg_match('/\/admin\/login/', $uri)) {
                 // admin login
                 if (isset($input['email'], $input['password'])) {
-                    $AdminController->loginAdmin($input['email'], $input['password']);
+                    $adminController->loginAdmin($input['email'], $input['password']);
                 } 
                 else {
                     echo json_encode(['message' => 'Missing email or password']);
                 }
             } 
             elseif (preg_match('/\/admin\/logout/', $uri)) {
-                $AdminController->logoutAdmin();
-                echo json_encode(['message' => 'Admin logged out successfully']);
+                // admin or staff logout
+                $Authorization = $_SERVER['HTTP_AUTHORIZATION'] ?? null;
+                if ($Authorization) {
+                    // invalidate token if token is authorized
+                    $adminController->logoutAdmin($Authorization);
+                } 
             }
             break;
 
@@ -348,11 +361,11 @@ function handleAdmin($requestMethod, $uri, $input, $AdminController, $UserContro
                     $oldPassword = $input['old_password'];
                     $newPassword = $input['new_password'];
                     $confirmPassword = $input['confirm_password'];
-                    $AdminController->changePassword($id, $oldPassword, $newPassword, $confirmPassword);
+                    $adminController->changePassword($id, $oldPassword, $newPassword, $confirmPassword);
                 } 
                 else {
                     // update other input values via updateAdmin
-                    $AdminController->updateAdmin($id, $input);
+                    $adminController->updateAdmin($id, $input);
                 }
             } else {
                 echo json_encode(['message' => 'No fields to update']);
@@ -364,7 +377,7 @@ function handleAdmin($requestMethod, $uri, $input, $AdminController, $UserContro
 
         case 'DELETE':
             if (preg_match('/\/admin\/(\d+)/', $uri, $matches)) {
-                $AdminController->deleteAdminById($matches[1]);
+                $adminController->deleteAdminById($matches[1]);
             } 
             else {
                 echo json_encode(['message' => 'Invalid admin ID']);
@@ -376,20 +389,35 @@ function handleAdmin($requestMethod, $uri, $input, $AdminController, $UserContro
     }
 }
 
-// main request routing (fix pattern execution logical error)
+// main request routing (fix pattern execution logic)
 if (preg_match('/\/admin/', $uri)) {
+    if (!preg_match('/\/admin\/login/', $uri) && !preg_match('/\/admin\/logout/', $uri)) {
+        AuthMiddleware::verifyToken();
+    }
     handleAdmin($requestMethod, $uri, $input, $adminController, $userController);
 } 
 elseif (preg_match('/\/room_request/', $uri)) {
+    if ($requestMethod !== 'GET') {
+        AuthMiddleware::verifyToken(); 
+    }
     handleRoomRequest($requestMethod, $uri, $input, $roomRequestController);
 } 
 elseif (preg_match('/\/room_schedule/', $uri)) {
+    if ($requestMethod !== 'GET') {
+        AuthMiddleware::verifyToken();
+    }
     handleRoomSchedule($requestMethod, $uri, $input, $roomScheduleController);
 } 
 elseif (preg_match('/\/user/', $uri)) {
+    if (!preg_match('/\/user\/login/', $uri) && !preg_match('/\/user\/logout/', $uri)) {
+        AuthMiddleware::verifyToken(); 
+    }
     handleUser($requestMethod, $uri, $input, $userController);
 } 
 elseif (preg_match('/\/room/', $uri)) {
+    if ($requestMethod !== 'GET') {
+        AuthMiddleware::verifyToken(); 
+    }
     handleRoom($requestMethod, $uri, $input, $roomController);
 } 
 else {

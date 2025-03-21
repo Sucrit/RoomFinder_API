@@ -63,16 +63,6 @@ export function InitPendingRequestSection() {
             row.remove(); 
             showToast('Request has been approved');
             RoomRequestViewModel.updateRequestStatus(requestId, 'Approved')
-                .then((response) => {
-                    if (response.message === "Room request updated successfully") {
-                        console.log(`Request ID ${requestId} approved successfully`);
-                    } else {
-                        console.error(`Failed to approve request ID ${requestId}:`, response.message);
-                    }
-                })
-                .catch((error) => {
-                    console.error('Failed to approve request:', error.message);
-                });
         }, 250); 
     }
 

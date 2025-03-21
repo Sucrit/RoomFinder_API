@@ -67,9 +67,9 @@ export async function InitDashboard() {
         }
     } 
     catch (error) {
-        if (loadingSpinner) {
-            loadingSpinner.style.display = 'none';  
-        }
+        // if (loadingSpinner) {
+        //     loadingSpinner.style.display = 'none';  
+        // }
         console.error('Error fetching dashboard details:', error);
         showError('Failed to load dashboard details.');
     }
