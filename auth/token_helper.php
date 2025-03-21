@@ -11,7 +11,7 @@ class JwtHelper {
         // issued time
         $issuedAt = time(); 
         // expiration
-        $expirationTime = $issuedAt + 3600;
+        $expirationTime = $issuedAt + 86400;
         // payload body  
         $payload = array(
             "iat" => $issuedAt,  

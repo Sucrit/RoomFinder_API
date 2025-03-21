@@ -41,15 +41,17 @@ class RoomController {
         $ongoingSchedules = $this->roomScheduleModel->getAllOngoingSchedules();
     
         foreach ($rooms as &$room) {
+            
+            $room['ongoing_schedule'] = (object) [];  
+            $room['schedules'] = []; 
+            
             // check if room status is close
             if ($room['status'] == 'Closed') {
                 continue;
             }
     
-            // Initialize room status to available
             $room['status'] = 'Available';
-            $room['ongoing_schedule'] = (object) [];  
-    
+            
             // check for ongoing schedule of and set the status to occupied
             $isOccupied = false;
             foreach ($ongoingSchedules as $schedule) {
@@ -64,7 +66,6 @@ class RoomController {
             // if no ongoing schedule get room schedules
             if (!$isOccupied) {
                 $schedules = $this->roomScheduleModel->getSchedulesByRoomId($room['id']);
-                $room['schedules'] = (object) []; 
     
                 if (!empty($schedules)) {
                     foreach ($schedules as $schedule) {

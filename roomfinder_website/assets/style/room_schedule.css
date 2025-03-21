@@ -44,14 +44,15 @@
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     margin-top: 20px;
     background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 4px rgba(2, 1, 1, 0.1);
     padding: 20px;
     text-align: center;
+    height: 580px;
+    scrollbar-color: transparent transparent;
 }
 
 /* Style for status indicators */
@@ -84,5 +85,4 @@
 
 
 .room-sched {
-    padding: 20px;
 }
