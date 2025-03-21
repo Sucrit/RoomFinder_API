@@ -9,6 +9,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: sticky;
+    top: 0;
 }
 
 .topcontainer h2 {
@@ -278,3 +280,39 @@
     text-align: right;
     display: inline-block;
 }
+
+
+
+
+/* Default Gradient Backgrounds */
+/* .pending-gradient {
+    background-image: linear-gradient(to right, rgb(251, 201, 126) 0%, #fff 0%);
+    transition: background-image 10s ease-out;  Add smooth transition for background-image */
+/* }
+
+.approved-gradient {
+    background-image: linear-gradient(to right, rgb(151, 248, 151) 0%, #fff 0%);
+    transition: background-image 10s ease-out;
+}
+
+.rejected-gradient {
+    background-image: linear-gradient(to right, rgb(252, 152, 152) 0%, #fff 0%);
+    transition: background-image 10s ease-out;
+} */
+
+/* Progress Bar Width */
+/* .pending-progress-bar {
+    width: 0%;
+    transition: width 10s ease-out; Smooth width transition */
+/* }
+
+.approved-progress-bar {
+    width: 0%;
+    transition: width 10s ease-out;
+}
+
+.rejected-progress-bar {
+    width: 0%;
+    transition: width 10s ease-out;
+} */
+

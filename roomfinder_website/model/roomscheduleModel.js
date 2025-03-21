@@ -2,10 +2,18 @@ export default class RoomScheduleModel {
 
     // get room schedules (roomschedule section)
     static getRoomSchedules() {
+
+        const authToken = localStorage.getItem('authToken');
+
+        if (!authToken) {
+            throw new Error("No authentication token found");
+        }
+
         return fetch('http://localhost/RoomFinder_API/api/index.php/room_schedule', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
             }
         })
         .then(response => {
@@ -27,16 +35,24 @@ export default class RoomScheduleModel {
 
     // delete a room schedule by id
     static deleteRoomSchedule(id) {
+
+        const authToken = localStorage.getItem('authToken');
+
+        if (!authToken) {
+            throw new Error("No authentication token found");
+        }
+
         return fetch(`http://localhost/RoomFinder_API/api/index.php/room_schedule/${id}`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
             }
         })
         .then(response => response.json())
         .then(data => {
             if (data.message) {
-                return data.message;  // Handle response message
+                return data.message;  
             } else {
                 throw new Error('Failed to delete schedule');
             }

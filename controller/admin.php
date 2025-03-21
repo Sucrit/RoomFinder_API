@@ -19,13 +19,13 @@ class AdminController {
         
         // filtrer valid email
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            echo json_encode(['message' => 'Please enter a valid email address']);
+            echo json_encode(['status' => 'error', 'message' => 'Please enter a valid email address']);
             return;
         }
 
         $existingAdmin = $this->adminModel->getAdminByEmail($email);
         if ($existingAdmin) {
-            echo json_encode(['message' => 'Email already exists']);
+            echo json_encode(['status' => 'error', 'message' => 'Email already exists']);
             return;
         }
 
@@ -37,11 +37,12 @@ class AdminController {
         $admin = $this->adminModel->createAdmin($username, $email, $password, $role);
         if ($admin) {
             echo json_encode( [
-                'message' => 'User added successfully'
+                'message' => 'User added successfully',
+                'status' => 'success'
             ]);
         } 
         else {
-            echo json_encode(['message' => 'Error signing up admin']);
+            echo json_encode(['status' => 'error', 'message' => 'Error signing up admin']);
         }
     }
     
@@ -50,7 +51,7 @@ class AdminController {
         $admin = $this->adminModel->getAdminByEmail($email);
 
         if (!$admin) {
-            echo json_encode(['message' => 'Invalid Email or Password']);
+            echo json_encode(['status' => 'error', 'message' => 'Invalid Email or Password']);
             return;
         }
 
@@ -66,12 +67,12 @@ class AdminController {
             echo json_encode([
                 'message' => 'Login successful!',
                 'admin' => $admin,
-                'token' => $token
-                
+                'token' => $token,
+                'status' => 'success'
             ]); 
         } 
         else {
-            echo json_encode(['message' => 'Invalid email or password']);
+            echo json_encode(['status' => 'error', 'message' => 'Invalid email or password']);
         }
     }
     
@@ -82,7 +83,7 @@ class AdminController {
             echo json_encode(['admin' => $admin]);
         } 
         else {
-            echo json_encode(['message' => 'Admin not found']);
+            echo json_encode(['status' => 'error', 'message' => 'Admin not found']);
         }
     }
 
@@ -98,7 +99,7 @@ class AdminController {
             echo json_encode(['All Users' => $allUsers]);
         } 
         else {
-            echo json_encode(['message' => 'No users or admins found']);
+            echo json_encode(['status' => 'error', 'message' => 'No users or admins found']);
         }
     }
     
@@ -107,13 +108,13 @@ class AdminController {
         $admin = $this->adminModel->getAdminById($id);
 
         if (!$admin) {
-            echo json_encode(['message' => 'Admin not found']);
+            echo json_encode(['status' => 'error', 'message' => 'Admin not found']);
             return;
         }
         $username = isset($input['username']) ? $input['username'] : $admin['username'];
         $email = isset($input['email']) ? $input['email'] : $admin['email'];
         $this->adminModel->updateAdmin($id, $username, $email);
-        echo json_encode(['message' => 'Admin updated successfully']);
+        echo json_encode(['status' => 'success', 'message' => 'Admin updated successfully']);
     }
 
     // change pass
@@ -122,25 +123,25 @@ class AdminController {
         
         // check if admin exist
         if (!$admin) {
-            echo json_encode(['message' => 'User not found']);
+            echo json_encode(['status' => 'error', 'message' => 'User not found']);
             return;
         }
 
         // check if old pass value does not match the account pass
         if (!password_verify($oldPassword, $admin['password'])) {
-            echo json_encode(['message' => 'Old password is incorrect']);
+            echo json_encode(['status' => 'error', 'message' => 'Old password is incorrect']);
             return;
         }
 
         // check new pass same as old
         if ($oldPassword === $newPassword) {
-            echo json_encode(['message' => 'Your new password cannot be the same as the old password']);
+            echo json_encode(['status' => 'error', 'message' => 'Your new password cannot be the same as the old password']);
             return;
         }
 
         // check if new pass and confirm pass matched
         if ($newPassword !== $confirmPassword) {
-            echo json_encode(['message' => 'New password and confirm password do not match']);
+            echo json_encode(['status' => 'error', 'message' => 'New password and confirm password do not match']);
             return;
         }
 
@@ -148,7 +149,7 @@ class AdminController {
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         $this->adminModel->updateAdminPassword($adminId, $hashedPassword);
     
-        echo json_encode(['message' => 'Password changed successfully']);
+        echo json_encode(['status' => 'success', 'message' => 'Password changed successfully']);
     }
 
     // delete admin by id
@@ -156,9 +157,9 @@ class AdminController {
         $result = $this->adminModel->deleteAdmin($id);
 
         if (!$result) {
-            echo json_encode(['message' => 'Admin does not exist']);
+            echo json_encode(['status' => 'error', 'message' => 'Admin does not exist']);
         } else {
-            echo json_encode(['message' => 'Admin deleted successfully']);
+            echo json_encode(['status' => 'success', 'message' => 'Admin deleted successfully']);
         }
     }
 
@@ -168,33 +169,24 @@ class AdminController {
             // remove 'Bearer ' from the token string to compare in adminjwtoken
             $token = str_replace("Bearer ", "", $token);
 
-             // Log the token to confirm it's being received correctly
-        error_log('Received token: ' . $token);
-
             $decodedToken = JwtHelper::decode($token);
 
-             // Log the decoded token to confirm it's being decoded properly
-        error_log('Decoded token: ' . print_r($decodedToken, true));
-            
             // check token user id
             if (isset($decodedToken['id'])) {
                 $adminId = $decodedToken['id'];
 
                 $result = $this->adminModel->deleteAdminToken($adminId, $token);
 
-                 // Log the result of deleting the token
-            error_log('Delete result: ' . $result);
-    
                 if ($result === true) {
-                    echo json_encode(['message' => 'User logged out successfully']);
+                    echo json_encode(['status' => 'success', 'message' => 'User logged out successfully']);
                 } else if ($result === false) {
-                    echo json_encode(['message' => 'Token does not exist']);
+                    echo json_encode(['status' => 'error', 'message' => 'Token does not exist']);
                 }
             } else {
-                echo json_encode(['message' => 'Invalid token or missing ID']);
+                echo json_encode(['status' => 'error', 'message' => 'Invalid token or missing ID']);
             }
         } catch (Exception $e) {
-            echo json_encode(['message' => 'An error occurred during admin logout']);
+            echo json_encode(['status' => 'error', 'message' => 'An error occurred during admin logout']);
         }
     }
 }

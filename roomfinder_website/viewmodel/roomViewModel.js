@@ -1,5 +1,6 @@
 
 import RoomModel from '../model/roomModel.js';
+import { showToast } from '../viewjs/toast.js';
 
 export default class RoomViewModel {
 
@@ -15,16 +16,18 @@ export default class RoomViewModel {
             }
         } catch (error) {
             console.error('Error fetching rooms:', error);
+            showToast('Error fetching rooms', 'error');
             return { success: false, message: 'Error fetching rooms' };
         }
     }
 
+
     // get room by id 
     static async getRoomById(roomId) {
         try {
-            const room = await RoomModel.getRoomById(roomId);  // Call API to get room data
-            if (room && room.success) {   // Check if the room data is returned successfully
-                return { success: true, room: room.room };  // Ensure you're returning room data in the right format
+            const room = await RoomModel.getRoomById(roomId);  
+            if (room && room.success) {   
+                return { success: true, room: room.room };  
             }
             return { success: false, message: 'Room not found or invalid' };
         } catch (error) {
@@ -33,20 +36,22 @@ export default class RoomViewModel {
         }
     }
 
-    // create room
-    static async createRoom(roomData) {
+      // create room
+      static async createRoom(roomData) {
         try {
-            // Call the Model to create the room
             const response = await RoomModel.createRoom(roomData);
 
             if (response.success) {
-                return { success: true, room: response.room }; // Return success and room data
+                showToast('Room added successfully!', 'success');
+                return { success: true, room: response.room }; 
             } else {
-                return { success: false, message: 'Error creating room' }; // Return error if something goes wrong
+                showToast(response.message || 'Error creating room', 'error');
+                return { success: false, message: 'Error creating room' };
             }
         } catch (error) {
             console.error('Error in ViewModel during room creation:', error);
-            return { success: false, message: 'Error creating room' }; // Handle unexpected errors
+            showToast('Error creating room', 'error');
+            return { success: false, message: 'Error creating room' };
         }
     }
 
@@ -66,18 +71,21 @@ export default class RoomViewModel {
         }
     }    
     
-    // delete room by id 
+    
+    // delete room by id
     static async deleteRoom(roomId) {
         try {
             const response = await RoomModel.deleteRoomById(roomId); 
             if (response.success) {
-                console.log('Room deleted successfully');
+                showToast('Room deleted successfully', 'success');
                 return { success: true, message: 'Room deleted successfully' }; 
             } else {
+                showToast('Error deleting room', 'error');
                 return { success: false, message: 'Error deleting room' };
             }
         } catch (error) {
             console.error('Error deleting room:', error);
+            showToast('Error deleting room', 'error');
             return { success: false, message: 'Error deleting room' };
         }
     }

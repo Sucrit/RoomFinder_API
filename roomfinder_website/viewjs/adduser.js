@@ -3,20 +3,19 @@ import AdminViewModel from '../viewmodel/adminViewModel.js';
 
 export function InitAddUserSection() {
 
-    // btn element
     const addBtn = document.querySelector('.addBtn');
     const backBtn = document.querySelector('.backBtn');
     const roleSelector = document.getElementById('role');
     const teacherIdContainer = document.getElementById('teacher-id-container');
     const teacherIdInput = document.getElementById('teacherID');
 
+    // hide teacher id input field bif role != teacher
     if (roleSelector.value === 'Teacher') {
         teacherIdContainer.style.display = 'block'; 
     } else {
         teacherIdContainer.style.display = 'none'; 
     }
 
-    // show teacher id input field
     roleSelector.addEventListener('change', function() {
         const role = roleSelector.value;
         if (role === 'Teacher') {
@@ -25,7 +24,6 @@ export function InitAddUserSection() {
             teacherIdContainer.style.display = 'none'; 
         }
     });
-
 
     addBtn.addEventListener('click', async function(event) {
         event.preventDefault();
@@ -38,45 +36,39 @@ export function InitAddUserSection() {
         const teacherId = teacherIdInput ? teacherIdInput.value : ''; 
 
         if (role === 'Teacher' && !teacherId) {
-            alert('Teacher ID is required!');
+            showToast('Teacher ID is required!', 'error');
             return;
         }
 
-        // check password match
         if (password !== confirmPassword) {
-            alert("Passwords do not match!");
+            showToast("Passwords do not match!", 'error');
             return;
         }
 
         try {
+            // Call the handleSignUp method to add the user
             const result = await AdminViewModel.handleSignUp(role, username, email, password, teacherId);
-            console.log('User with data in view:', result);
 
             if (result.success) {
-                alert(result.message);
-
-                // reset input field
+                // Reset input fields on success
                 document.getElementById('username').value = '';
                 document.getElementById('email').value = '';
                 document.getElementById('password').value = '';
                 document.getElementById('ConfirmPassword').value = '';
 
-                // reset teacher id input fld
+                // Reset teacher ID field if the role is 'Teacher'
                 if (role === 'Teacher') {
                     teacherIdInput.value = '';
                 }
+                // Reset the role selection
                 roleSelector.dispatchEvent(new Event('change'));
-
-            } else {
-                alert(result.message || "Cannot get message response from API");
             }
         } catch (error) {
             console.error("Error during sign-up:", error);
-            alert("An error occurred while signing up. Please try again.");
+            showToast("An error occurred while signing up. Please try again.", 'error');
         }
-    }); 
+    });
 
-    // back button
     backBtn.addEventListener('click', function(event) {
         event.preventDefault();
         showSection('dashboard');

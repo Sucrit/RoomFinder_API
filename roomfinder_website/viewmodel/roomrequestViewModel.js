@@ -38,21 +38,24 @@ export default class RoomRequestViewModel {
     static async updateRequestStatus(requestId, status) {
         try {
             const response = await RoomRequestModel.updateRequestStatus(requestId, status);
-    
+
             if (!response || !response.message) {
                 throw new Error(`Invalid response format for request ID ${requestId}`);
             }
-            if (response.message === "Room request updated successfully") {
-                console.log(`${status} request ID: ${requestId} successfully.`);
+
+            if (response.status === "success" && response.message) {
+                return response; 
+            }else if (response.status === "error" && response.message) {
                 return response; 
             } else {
                 throw new Error(`Failed to update status: ${status}`);
             }
         } catch (error) {
             console.error(`Error updating request status for ID ${requestId}:`, error);
-            throw error; 
+            throw error;
         }
     }
+
     
     
 

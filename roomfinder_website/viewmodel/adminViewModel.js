@@ -1,5 +1,6 @@
 
 import AdminModel from '../model/adminModel.js';  
+import { showToast } from '../viewjs/toast.js';  
 
 export default class AdminViewModel {
 
@@ -42,18 +43,29 @@ export default class AdminViewModel {
     // add web users form (auth section)
     static async handleSignUp(role, username, email, password, teacher_id) {
         try {
+            // Call the model method to add the user
             const result = await AdminModel.addUser(role, username, email, password, teacher_id);
- 
-            if (result && result.message) {
+    
+            if (!result || !result.message) {   
+                throw new Error('Invalid response format from the server');
+            }
+    
+            if (result.status === "success" && result.message) {
+                showToast(result.message, 'success');
                 return { success: true, message: result.message };
+            } else if (result.status === "error" && result.message) {
+                showToast(result.message, 'error');
+                return { success: false, message: result.message };
             } else {
-                return { success: false, message: 'An error occurred while adding the user' };
+                throw new Error(`Unexpected response status: ${result.status}`);
             }
         } catch (error) {
-            console.error('Error adding user:', error);
-            return { success: false, message: 'Error adding user' };
+            console.error("Error during sign-up:", error);
+            showToast("An error occurred while signing up. Please try again.", 'error');
+            return { success: false, message: error.message || 'Error during sign-up' };
         }
-    } 
+    }
+    
 
     
     // get all authenticated users (auth section)
@@ -77,7 +89,7 @@ export default class AdminViewModel {
     static async deleteAdmin(adminId) {
         try {
             const response = await AdminModel.deleteAdmins(adminId); 
-            if (response && response.message === 'Admin deleted successfully') {
+            if (response && response.status === 'success') {
                 return { success: true, message: 'Admin deleted successfully' };
             } else {
                 return { success: false, message: 'Failed to delete admin' };
@@ -108,31 +120,35 @@ export default class AdminViewModel {
     static async updatePassword(adminId, oldPassword, newPassword, confirmPassword) {
         try {
             const response = await AdminModel.updatePasswordById(adminId, oldPassword, newPassword, confirmPassword);
-    
-            if (response && response.success) {
+            
+            if (response && response.status === 'success') {
+                showToast('Password updated successfully', 'success');
                 return { status: 'success', message: 'Password updated successfully' };
             } else {
+                showToast(response.message || 'Failed to update password', 'error');
                 return { status: 'error', message: response.message || 'Failed to update password' };
             }
         } catch (error) {
             console.error('Error updating password:', error);
+            showToast('Error updating password', 'error');
             return { status: 'error', message: 'Error updating password' };
         }
     }
+    
 
 
     // logout
     static async logoutUser() {
         try {
-            const authToken = localStorage.getItem('authToken');  // Get the token first
+            const authToken = localStorage.getItem('authToken');  
             console.log('Auth Token:', authToken);
             if (!authToken) {
-                throw new Error('No authentication token found');  // Ensure token is available
+                throw new Error('No authentication token found');  
             }
     
-            const response = await AdminModel.logout(authToken); // Pass token explicitly if necessary
+            const response = await AdminModel.logout(authToken); 
     
-            // Remove the local storage items only after the request is successful
+            // remove data to local
             localStorage.removeItem('authToken');
             localStorage.removeItem('username');
             localStorage.removeItem('role');
@@ -144,7 +160,7 @@ export default class AdminViewModel {
             }
             return { status: 'success', message: 'Logged out successfully' };
         } catch (error) {
-            // Remove items even in case of error to ensure proper cleanup
+            //still remove if error
             localStorage.removeItem('authToken');
             localStorage.removeItem('username');
             localStorage.removeItem('role');

@@ -64,7 +64,6 @@
             });
         }
 
-
         // update pending request status
         static updateRequestStatus(requestId, status) {
 

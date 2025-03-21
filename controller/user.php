@@ -32,10 +32,10 @@ class UserController {
 
         $user = $this->userModel->createUser($teacher_id,$username, $email, $password, $role);
         if ($user) {
-            echo json_encode(['message' => 'User added successfully']);
+            echo json_encode(['status' => 'success','message' => 'User added successfully']);
         } 
         else {
-            echo json_encode(['message' => 'Error signing up user']);
+            echo json_encode(['status' => 'success', 'message' => 'Error signing up user']);
         }
     }
     
@@ -135,10 +135,10 @@ class UserController {
         $result = $this->userModel->deleteUser($id);
         
         if ($result) {
-            echo json_encode(['message' => 'User deleted successfully']);
+            echo json_encode(['status' => 'success','message' => 'User deleted successfully']);
         }
         else {
-            echo json_encode(['message' => 'Failed to delete user']);
+            echo json_encode(['status' => 'error', 'message' => 'Failed to delete user']);
         }
     } 
     

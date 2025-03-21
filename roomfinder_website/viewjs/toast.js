@@ -1,10 +1,8 @@
-
-
 // toast message handler
 export function showToast(message, type = 'info', options = {}) {
     const toastContainer = document.getElementById('toast-container');
 
-    // check multiple toast
+    // check for existing toast of the same type (avoid duplicates)
     const existingToast = toastContainer.querySelector(`.toast.${type}`);
     if (existingToast) {
         return;  
@@ -12,7 +10,7 @@ export function showToast(message, type = 'info', options = {}) {
 
     const toast = document.createElement('div');
     toast.classList.add('toast');
-    toast.classList.add(type);  
+    toast.classList.add(type); 
 
     // confirmation msg
     const messageContainer = document.createElement('div');
@@ -48,19 +46,32 @@ export function showToast(message, type = 'info', options = {}) {
         toast.appendChild(buttonContainer);
     }
 
-    // create toast element
+    // create toast element and append to container
     toastContainer.appendChild(toast);
 
-    // toast intro
+    // toast intro animation
     setTimeout(() => {
         toast.classList.add('show');
     }, 100);
 
-    // toast outro
+    // toast outro animation and remove after fading out
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => {
             toast.remove();
-        }, 250); 
-    }, 2500); 
+        }, 250); // remove after fade out
+    }, 2500);  // duration of the toast
+
+    // You could add an option to modify the duration based on type
+    if (type === 'error') {
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.remove();
+        }, 4000); // for errors, show it for longer
+    } else if (type === 'success') {
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.remove();
+        }, 1200); // success toast stays a bit longer than info
+    }
 }

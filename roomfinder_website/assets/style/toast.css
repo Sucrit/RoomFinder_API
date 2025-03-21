@@ -1,6 +1,6 @@
 #toast-container {
     position: fixed;
-    top: 50%; /* Center the container vertically */
+    top: 85%; /* Center the container vertically */
     left: 50%; /* Center the container horizontally */
     transform: translate(-50%, -50%); /* Adjust by half of the container's size to truly center */
     z-index: 9999; /* Ensure it stays on top of other elements */
@@ -71,14 +71,14 @@
 }
 
 /* Success toast */
-/* .toast.success {
-    background-color: #4CAF50; /* Green background for success */
-/* } */
+.toast.success {
+    background-color: #4CAF50;
+} 
 
 /* Error toast */
-/* .toast.error {
-    background-color: #f44336; Red background for error */
-/* } */
+.toast.error {
+    background-color: #f44336; 
+} 
 
 /* When the toast is shown, it will fade in and move up */
 .toast.show {

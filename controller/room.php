@@ -17,7 +17,7 @@ class RoomController {
         $room = $this->roomModel->getRoomById($id);
         
         if (empty($room)) {
-            echo json_encode(['message' => 'Room not found']);
+            echo json_encode(['status' => 'error', 'message' => 'Room not found']);
         } else {
             $schedules = $this->roomScheduleModel->getSchedulesByRoomId($id);
             $room['schedule'] = $schedules; 
@@ -41,14 +41,16 @@ class RoomController {
         $ongoingSchedules = $this->roomScheduleModel->getAllOngoingSchedules();
     
         foreach ($rooms as &$room) {
+
+            $room['ongoing_schedule'] = (object) [];  
+            $room['schedules'] = []; 
+
             // check if room status is close
             if ($room['status'] == 'Closed') {
                 continue;
             }
     
-            // Initialize room status to available
             $room['status'] = 'Available';
-            $room['ongoing_schedule'] = (object) [];  
     
             // check for ongoing schedule of and set the status to occupied
             $isOccupied = false;
@@ -64,7 +66,6 @@ class RoomController {
             // if no ongoing schedule get room schedules
             if (!$isOccupied) {
                 $schedules = $this->roomScheduleModel->getSchedulesByRoomId($room['id']);
-                $room['schedules'] = (object) []; 
     
                 if (!empty($schedules)) {
                     foreach ($schedules as $schedule) {
@@ -99,7 +100,7 @@ class RoomController {
             echo json_encode($room);
         } 
         else {
-            echo json_encode(['message' => 'Room creation failed']);
+            echo json_encode(['status' => 'error', 'message' => 'Room creation failed']);
         }
     }
  
@@ -107,7 +108,7 @@ class RoomController {
     public function updateRoom($id, $input) {
         $room = $this->roomModel->getRoomById($id);
         if (!$room) {
-            echo json_encode(['message' => 'Room not found']);
+            echo json_encode(['status' => 'error', 'message' => 'Room not found']);
             return;
         }
 
@@ -142,7 +143,7 @@ class RoomController {
     // delete room
     public function deleteRoomById($id) {
         $this->roomModel->deleteRoom($id);
-        echo json_encode(['message' => 'Room has been deleted']);
+        echo json_encode(['status' => 'success','message' => 'Room has been deleted']);
     }    
 }
 ?>

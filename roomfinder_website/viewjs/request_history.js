@@ -1,64 +1,81 @@
-
-// request history dom/M
 import RoomRequestViewModel from '../viewmodel/roomrequestViewModel.js';
-import { showToast } from '../viewjs/toast.js';  
+import { showToast } from '../viewjs/toast.js';
 
 export function InitRequestHistorySection() {
     const requestHistorySection = document.getElementById('request_history');
     const requestHistoryBody = requestHistorySection.querySelector('tbody');
 
-    // load request history 
-    function loadRequestHistory() {
-        RoomRequestViewModel.getRoomRequestHistory()
-            .then(response => {
-                const requestHistory = response.history; 
-                if (Array.isArray(requestHistory)) {
-                    requestHistoryBody.innerHTML = ''; 
-
-                    requestHistory.forEach(request => {
-                        const row = document.createElement('tr');
-                        row.classList.add('request-item');
-
-                        row.innerHTML = `  
-                            <td>${request.username || 'N/A'}</td>
-                            <td>${request.room_building || 'N/A'}</td>
-                            <td>${request.room_number || 'N/A'}</td>
-                            <td>${request.block || 'N/A'}</td>
-                            <td>${request.date || 'N/A'}</td>
-                            <td>${request.starting_time || 'N/A'}</td>
-                            <td>${request.ending_time || 'N/A'}</td>
-                            <td>${request.status || 'N/A'}</td>
-                            <td>
-                                <button class="delete-btn" data-id="${request.id}">Delete</button>  
-                            </td>
-                        `;
-                        requestHistoryBody.appendChild(row);
-
-                        // delete button event listener
-                        const deleteBtn = row.querySelector('.delete-btn');
-                        deleteBtn.addEventListener('click', () => {
-                            const requestId = deleteBtn.getAttribute('data-id');
-                            row.classList.add('ud-button-animation');
-
-                            setTimeout(() => {
-                                
-                                row.remove();
-                                showToast('Request has been deleted in the history');
-
-                                RoomRequestViewModel.deleteRoomRequestHistory(requestId)
-                                    .catch((error) => {
-                                        console.error('Failed to delete request:', error.message);
-                                    });
-                            }, 250);
-                        });
-                    });
-                } else {
-                    console.error('Expected "Room Request History" array but got:', response);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching request history:', error);
-            });
+    // Initialize the section
+    function init() {
+        loadRequestHistory();
     }
-    loadRequestHistory();
+
+    // Load request history from the API and render the rows
+    async function loadRequestHistory() {
+        try {
+            const response = await RoomRequestViewModel.getRoomRequestHistory();
+            if (Array.isArray(response.history)) {
+                renderRequestHistory(response.history);
+            } else {
+                console.error('Unexpected response format:', response);
+                showToast('Failed to load request history', 'error');
+            }
+        } catch (error) {
+            console.error('Error fetching request history:', error);
+            showToast('Error fetching request history', 'error');
+        }
+    }
+
+    // Render each row for request history
+    function renderRequestHistory(requestHistory) {
+        requestHistoryBody.innerHTML = ''; 
+
+        requestHistory.forEach(request => {
+            const row = createRequestRow(request);
+            requestHistoryBody.appendChild(row);
+        });
+    }
+
+    // Create and return a table row for a given request
+    function createRequestRow(request) {
+        const row = document.createElement('tr');
+        row.classList.add('request-item');
+
+        row.innerHTML = `
+            <td>${request.username || 'N/A'}</td>
+            <td>${request.room_building || 'N/A'}</td>
+            <td>${request.room_number || 'N/A'}</td>
+            <td>${request.block || 'N/A'}</td>
+            <td>${request.date || 'N/A'}</td>
+            <td>${request.starting_time || 'N/A'}</td>
+            <td>${request.ending_time || 'N/A'}</td>
+            <td>${request.status || 'N/A'}</td>
+            <td>
+                <button class="delete-btn" data-id="${request.id}">Delete</button>
+            </td>
+        `;
+
+        const deleteBtn = row.querySelector('.delete-btn');
+        deleteBtn.addEventListener('click', () => handleDelete(request.id, row));
+
+        return row;
+    }
+
+    // Handle the deletion of a request
+    function handleDelete(requestId, row) {
+        row.classList.add('ud-button-animation');
+
+        setTimeout(async () => {
+            try {
+                await RoomRequestViewModel.deleteRoomRequestHistory(requestId);
+                row.remove();
+                showToast('Request has been deleted from the history', 'success');
+            } catch (error) {
+                console.error('Failed to delete request:', error.message);
+                showToast('Failed to delete request', 'error');
+            }
+        }, 250);
+    }
+
+    init();
 }

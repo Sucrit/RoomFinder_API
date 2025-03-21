@@ -204,11 +204,11 @@ export default class AdminModel {
     static logout() {
 
         const authToken = localStorage.getItem('authToken');
-        console.log('Auth Token:', authToken);
 
         if (!authToken) {
             throw new Error("No authentication token found");
         }
+
         return fetch('http://localhost/RoomFinder_API/api/index.php/admin/logout', {
             method: 'POST',
             headers: {

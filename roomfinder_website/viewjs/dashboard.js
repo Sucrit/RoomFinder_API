@@ -33,6 +33,20 @@ export async function InitDashboard() {
             const occupiedPercentage = totalRoom ? ((occupiedCount / totalRoom) * 100).toFixed(2) : '0.00';
             const closedPercentage = totalRoom ? ((closedCount / totalRoom) * 100).toFixed(2) : '0.00';
 
+            const pendingRequestBox = document.getElementById('pendingRequestBox');
+            const approvedRequestBox = document.getElementById('approvedRequestBox');
+            const rejectedRequestBox = document.getElementById('rejectedRequestBox');
+            // box bg
+            if (pendingRequestBox) {
+                pendingRequestBox.style.background = `linear-gradient(to right,rgb(251, 201, 126) ${pendingPercentage}%, #fff ${pendingPercentage}%)`;
+            }
+            if (approvedRequestBox) {
+                approvedRequestBox.style.background = `linear-gradient(to right,rgb(151, 248, 151) ${approvedPercentage}%, #fff ${approvedPercentage}%)`;
+            }
+            if (rejectedRequestBox) {
+                rejectedRequestBox.style.background = `linear-gradient(to right,rgb(252, 152, 152) ${rejectedPercentage}%, #fff ${rejectedPercentage}%)`;
+            }
+
             // dom dashboard stats
             updateTextContent('totalRequests', totalRequests);
             updateTextContent('pendingRequests', data["pending count"] || 0);
@@ -76,7 +90,34 @@ export async function InitDashboard() {
     // finally {
     //     hideLoading();
     // }
+
+    // Update progress bar width based on percentage
+function updateProgressBar(requestBoxId, percentage) {
+    const requestBox = document.getElementById(requestBoxId);
+    const progressBar = requestBox.querySelector('.progress-bar');  // Assuming you have the actual progress bar div inside your box
+    if (progressBar) {
+        // Initially set the width to 0% (to make the animation work)
+        progressBar.style.width = '0%';  
+        
+        // Trigger animation by setting the width to the calculated percentage
+        setTimeout(() => {
+            progressBar.style.width = `${percentage}%`;  // This will trigger the CSS animation
+            progressBar.classList.add('animate-progress-bar');  // Add animation class
+        }, 100); // Delay to ensure width change triggers the animation
+    }
 }
+
+}
+
+// update progress bar width base on percentage
+function updateProgressBar(requestBoxId, percentage) {
+    const requestBox = document.getElementById(requestBoxId);
+    const progress = requestBox.querySelector('div'); 
+    if (progress) {
+        progress.style.width = `${percentage}%`;
+    }
+}
+
 
 // utility update innertext with null check
 function updateTextContent(id, text) {
@@ -133,6 +174,8 @@ function updateTable(tableId, data) {
     }
 }
 
+
+
 // see all buttonn
 function InitSeeAllButton() {
     const seeRequestHistoryBtn = document.querySelector('.seerequesthistory-btn');
@@ -148,10 +191,10 @@ function InitSeeAllButton() {
             showSection('ongoing_schedule');
         });
     }
-}
+}   
 
 
-// hide sec in dashboard
+// initial hide sec in dashboard
 document.addEventListener('DOMContentLoaded', function() {
 
     const ongoingScheduleSection = document.getElementById('ongoing_schedule');

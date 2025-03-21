@@ -38,12 +38,11 @@ export function InitAccountSection() {
         
         const result = await AdminViewModel.updatePassword(adminId, oldPassword, newPassword, confirmPassword);
         
-        if (result.status === 'error') {
+        if (result.status === 'success') {
             showToast(result.message, 'success');
-            form.reset();
+            form.reset(); 
         } else {
             showToast(result.message, 'error');
         }
-        
     });
 }

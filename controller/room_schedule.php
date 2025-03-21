@@ -30,7 +30,7 @@ class RoomScheduleController {
         $ongoingSchedules = $this->roomScheduleModel->getAllOngoingSchedules();
     
         if (empty($ongoingSchedules)) {
-            echo json_encode(['message' => 'No ongoing schedules found']);
+            echo json_encode(['status' => 'error', 'message' => 'No ongoing schedules found']);
             return;
         }
         echo json_encode($ongoingSchedules);
@@ -43,7 +43,7 @@ class RoomScheduleController {
             echo json_encode($roomSchedule);
         } 
         else {
-            echo json_encode(['message' => 'Room schedule not found']);
+            echo json_encode(['status' => 'error', 'message' => 'Room schedule not found']);
         }
     }
 
@@ -52,14 +52,14 @@ class RoomScheduleController {
         if ($roomId) {
             $roomSchedules = $this->roomScheduleModel->getSchedulesByRoomId($roomId);
             if (empty($roomSchedules)) {
-                echo json_encode(['message' => 'Empty room schedules']);
+                echo json_encode(['status' => 'error', 'message' => 'Empty room schedules']);
             } 
             else {
                 echo json_encode(['Room Schedules' => $roomSchedules]);
             }
         } 
         else {
-            echo json_encode(['message' => 'Room ID is required']);
+            echo json_encode(['status' => 'error', 'message' => 'Room ID is required']);
         }
     }
 
@@ -74,7 +74,7 @@ class RoomScheduleController {
             
             // check closed status
             if ($room['status'] == 'Closed') {
-                echo json_encode(['message' => 'This room is closed']);
+                echo json_encode(['status' => 'error', 'message' => 'This room is closed']);
                 return;
             }
     
@@ -91,7 +91,7 @@ class RoomScheduleController {
     
             // check time conflict
             if ($requestedStartTimestamp < $currentTimestamp || $endingTimeStamp < $currentTimestamp) {
-                echo json_encode(['message' => 'The requested time is invalid, Try again']);
+                echo json_encode(['status' => 'error', 'message' => 'The requested time is invalid, Try again']);
                 return;
             }
     
@@ -99,19 +99,19 @@ class RoomScheduleController {
             $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($room_id, $date, $starting_time, $adjustedEndingTime);
             
             if ($scheduleConflict) {
-                echo json_encode(['message' => 'The room is already occupied for your requested time slot']);
+                echo json_encode(['status' => 'error', 'message' => 'The room is already occupied for your requested time slot']);
             } 
             else {
                 $roomschedule = $this->roomScheduleModel->createRoomSchedule($room_id, $block, $date, $starting_time, $adjustedEndingTime);
                 if ($roomschedule) {
-                    echo json_encode(['message' => 'Room schedule created successfully']); 
+                    echo json_encode(['status' => 'success', 'message' => 'Room schedule created successfully']); 
                 } 
                 else {
-                    echo json_encode(['message' => 'Error creating room schedule']);
+                    echo json_encode(['status' => 'error', 'message' => 'Error creating room schedule']);
                 }
             }
         } else {
-            echo json_encode(['message' => 'Room not found']);
+            echo json_encode(['status' => 'error', 'message' => 'Room not found']);
         }
     }
     
@@ -121,7 +121,7 @@ class RoomScheduleController {
         $schedule = $this->roomScheduleModel->getRoomScheduleById($id);
     
         if (!$schedule) {
-            echo json_encode(['message' => 'Schedule not found']);
+            echo json_encode(['status' => 'error', 'message' => 'Schedule not found']);
             return;
         }
         $room_id = isset($input['room_id']) ? $input['room_id'] : $schedule['room_id'];
@@ -133,11 +133,11 @@ class RoomScheduleController {
         // check room schedule conflict before updating
         $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($room_id, $date, $starting_time, $ending_time, $id);
         if ($scheduleConflict) {
-            echo json_encode(['message' => 'The room is already occupied for the requested time slot']);
+            echo json_encode(['status' => 'error', 'message' => 'The room is already occupied for the requested time slot']);
             return;
         }
         $this->roomScheduleModel->updateRoomSchedule($id, $room_id, $block, $date, $starting_time, $ending_time);
-        echo json_encode(['message' => 'Room updated successfully']);
+        echo json_encode(['status' => 'success', 'message' => 'Room updated successfully']);
     }
 
     // delete room schedule
