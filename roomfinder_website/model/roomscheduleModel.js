@@ -90,9 +90,12 @@ export default class RoomScheduleModel {
 
         if (data.status === 'success') {
             return { success: true, message: data.message };
+        } else if (data.status === 'error') {
+            return { success: false, message: data.message };
         } else {
-            throw new Error('Failed to create room schedule');
+            throw new Error('Unexpected response from the server');
         }
+
     }
 
     // update room schedule route

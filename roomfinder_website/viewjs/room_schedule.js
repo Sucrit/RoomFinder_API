@@ -154,9 +154,7 @@ export function InitRoomScheduleSection() {
         console.log(`Viewing schedule with ID: ${scheduleId}`);
     }
 
-    // Initialize everything
     function init() {
-        // Hide modal initially
         if (addModal) {
             addModal.style.display = 'none';
         }

@@ -65,12 +65,11 @@ export default class RoomModel {
     // create room route
     static async createRoom(roomData) {
         try {
-
-            const authToken = localStorage.getItem('authToken'); 
+            const authToken = localStorage.getItem('authToken');
             if (!authToken) {
                 throw new Error("You are not authorized");
             }
-
+    
             const response = await fetch('http://localhost/RoomFinder_API/api/index.php/room', {
                 method: 'POST',
                 headers: {
@@ -79,28 +78,30 @@ export default class RoomModel {
                 },
                 body: JSON.stringify(roomData),
             });
-
+    
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
+    
             const data = await response.json();
-
-            if (data.status === "success") {
-                console.log('Room created successfully. Room ID:', data.id);
-                return { success: true, room: { id: data.id, message: data.message }};
+            if (data.status === 'success') {
+                // Handle the room creation success, return room ID instead of 'room' object
+                return { status: 'success', message: data.message, roomId: data.id };  // Changed 'room' to 'roomId'
+            } else if (data.status === 'error') {
+                return { status: 'error', message: data.message };
             } else {
-                throw new Error('Failed to create room');
+                throw new Error('Unexpected response status');
             }
         } catch (error) {
             console.error('Error creating room:', error.message);
-            throw error;
+            throw new Error('Error creating room: ' + error.message);  
         }
     }
-
+    
+    
     // update room data route
     static updateRoom(id, updatedData) {
-
-        const authToken = localStorage.getItem('authToken'); 
+        const authToken = localStorage.getItem('authToken');
         if (!authToken) {
             throw new Error("You are not authorized");
         }
@@ -119,11 +120,15 @@ export default class RoomModel {
             }
             return response.json();  
         })
+        .then(data => {
+            return data; 
+        })
         .catch(error => {
             console.error('Error updating room:', error.message);
-            throw error; 
+            throw error;
         });
     }
+
 
     // delete room route 
     static deleteRoomById(id) {

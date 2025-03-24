@@ -396,15 +396,11 @@ if (preg_match('/\/admin/', $uri)) {
     handleAdmin($requestMethod, $uri, $input, $adminController, $userController);
 } 
 elseif (preg_match('/\/room_request/', $uri)) {
-    if ($requestMethod !== 'GET') {
-        AuthMiddleware::verifyToken(); 
-    }
+    AuthMiddleware::verifyToken(); 
     handleRoomRequest($requestMethod, $uri, $input, $roomRequestController);
 } 
 elseif (preg_match('/\/room_schedule/', $uri)) {
-    if ($requestMethod !== 'GET') {
-        AuthMiddleware::verifyToken();
-    }
+    AuthMiddleware::verifyToken();
     handleRoomSchedule($requestMethod, $uri, $input, $roomScheduleController);
 } 
 elseif (preg_match('/\/user/', $uri)) {

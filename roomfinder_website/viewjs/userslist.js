@@ -88,7 +88,7 @@ export function InitUsersListSection() {
         }
     }
 
-    // delete logged in user (helper method)
+    // delete logged in user 
     function deleteUserAccount(userId) {
         AdminViewModel.deleteAdmin(userId)
             .then(response => {

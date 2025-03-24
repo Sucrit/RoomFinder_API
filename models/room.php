@@ -11,7 +11,7 @@ class RoomModel {
 
     // get all rooms
     public function getAllRoom() {
-        $sql = "SELECT * FROM room";
+        $sql = "SELECT * FROM room ORDER BY room.created_at DESC";
         $result = $this->conn->query($sql);
 
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];

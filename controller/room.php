@@ -94,7 +94,6 @@ class RoomController {
         echo json_encode($rooms);
     }
     
-    
     // create room
     public function createRoom($room_building, $room_number, $status, $equipment, $capacity, $roomType) {
 
@@ -119,7 +118,7 @@ class RoomController {
             echo json_encode(['status' => 'error', 'message' => 'Room not found']);
             return;
         }
-
+    
         $room_building = isset($input['room_building']) ? $input['room_building'] : $room['room_building'];
         $room_number = isset($input['room_number']) ? $input['room_number'] : $room['room_number'];
         $roomType = isset($input['room_type']) ? $input['room_type'] : $room['room_type'];
@@ -127,9 +126,22 @@ class RoomController {
         $status = isset($input['status']) ? $input['status'] : $room['status'];
         $equipment = isset($input['equipment']) ? $input['equipment'] : $room['equipment'];
 
+        // check if no value channgd
+        if ($room_building == $room['room_building'] && 
+            $room_number == $room['room_number'] && 
+            $roomType == $room['room_type'] && 
+            $capacity == $room['capacity'] && 
+            $status == $room['status'] && 
+            $equipment == $room['equipment']) {
+            
+            echo json_encode(['status' => 'error', 'message' => 'You need to change a value before updating a room']);
+            return;
+        }
         $this->roomModel->updateRoom($id, $room_building, $room_number, $roomType, $capacity, $status, $equipment);
-        echo json_encode(['status' => 'success','message' => 'Room updated sucessfully']);
+        echo json_encode(['status' => 'success', 'message' => 'Room updated successfully']);
     }
+    
+    
 
     // search room
     public function searchRooms($input) {

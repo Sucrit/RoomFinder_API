@@ -24,7 +24,7 @@
             </div>
     
             <div class="table-wrapper">
-                <table  class="room-sched">
+                <table class="room-sched">
                     <thead>
                         <tr>
                             <th>Room Building</th>
@@ -105,6 +105,9 @@
                             </select><br />
                         </div>
                         
+
+                        <input type="hidden" id="roomIdField" name="roomId" value="" />
+                        
                         <!-- Submit buttons -->
                         <button type="submit" class="createbtn">Create</button>
                         <button type="button" class="backbtn">Back</button>
@@ -113,6 +116,7 @@
             </div>
         </div>
 
+        
         <!-- Confirmation Modal After Room Creation -->
         <div id="roomCreatedModal" class="modal">
             <div class="modal-content">
@@ -123,8 +127,6 @@
                 <button id="cancelAddSchedule">No, Later</button>
             </div>
         </div>
-
-
 
 
         <!-- Add Schedule Modal -->

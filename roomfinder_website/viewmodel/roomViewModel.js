@@ -26,8 +26,8 @@ export default class RoomViewModel {
     static async getRoomById(roomId) {
         try {
             const room = await RoomModel.getRoomById(roomId);  
-            if (room && room.success) {   
-                return { success: true, room: room.room };  
+            if (room) {
+                return { success: true, room: room };  
             }
             return { success: false, message: 'Room not found or invalid' };
         } catch (error) {
@@ -35,20 +35,22 @@ export default class RoomViewModel {
             return { success: false, message: 'Error fetching room details' };
         }
     }
+    
 
     // create room
     static async createRoom(roomData) {
         try {
-            console.log('Room Data Being Sent:', roomData);  
             const response = await RoomModel.createRoom(roomData);
-
-            console.log('Response from RoomModel:', response); 
     
-            if (response.success) {
-                showToast('Room added successfully!', 'success');
-                console.log('Room created successfully. Room ID:', response.room.id);  
-                return { success: true, room: response.room };
-            } else {
+            if (response.status === 'success') { 
+                showToast(response.message, 'success');
+                return { success: true, message: response.message, roomId: response.roomId }; 
+            } 
+            else if (response.status === 'error') {
+                showToast(response.message, 'error');
+                return { success: false, message: response.message }; 
+            } 
+            else {
                 showToast(response.message || 'Error creating room', 'error');
                 return { success: false, message: 'Error creating room' };
             }
@@ -59,23 +61,31 @@ export default class RoomViewModel {
         }
     }
     
-
-
-    // update room
+    
+    // update room view
     static async updateRoom(roomId, updatedData) {
         try {
             const response = await RoomModel.updateRoom(roomId, updatedData);
-            if (response.success) {
-                return { success: true, room: response.room };
-            } else {
-                return { success: false, message: 'Error updating room' };
+
+            if (response.status === 'success') { 
+                showToast(response.message, 'success');
+                return { success: true, message: response.message };  
+            } 
+            else if (response.status === 'error') {
+                showToast(response.message, 'error');
+                return { success: false, message: response.message }; 
+            } 
+            else {
+                showToast('Unexpected error occurred during room update', 'error');
+                return { success: false, message: 'Error updating room' }; 
             }
         } catch (error) {
             console.error('Error updating room:', error);
+            showToast('Failed to update room', 'error');
             return { success: false, message: 'Error updating room' };
         }
-    }    
-    
+    }
+
     
     // delete room by id
     static async deleteRoom(roomId) {
