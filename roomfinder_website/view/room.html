@@ -11,18 +11,18 @@
 
         <div class="room-list">
             <div class="room-header">
-                <select class="filter">
+                <select class="filter" id="custom-filter">
                     <option value="all">All</option>
                     <option value="Available">Available</option>
                     <option value="Occupied">Occupied</option>
                     <option value="Closed">Closed</option>
                 </select>
                 <div class="search-container">
-                    <img src="../roomfinder_website/assets/images/web-svg-icons/search-icon.svg" alt="">
+                    <i class="fa fa-search"></i>
                     <input type="text" class="search-bar" placeholder="Search here..." id="roomSearch">
                 </div>
             </div>
-    
+            <br>
             <div class="table-wrapper">
                 <table  class="room-sched">
                     <thead>
@@ -46,68 +46,54 @@
         <button class="floating-btn">+</button>
 
 
-
-
         <!-- Add Room Modal -->
         <div id="modal" class="modal">
-            <div class="modal-content">
-                <span class="closemodal"></span>
-
-                <form id="roomForm" method="POST" class="roomdetails_form">
-                    <div>
-                        <h2>Room Details</h2>
-                    </div>
-
-                    <div class="roomform_container">
-                        <div class="form-group">
-                            <label>Room Number</label>
-                            <input type="number" name="roomNumber" min="1" required /><br />
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Room Bldg.</label>
-                            <select name="roomBuilding">
+            <div class="modals">
+                <div class="modal-header">
+                    <h2>Room Details</h2>
+                    <span class="closemodal">&times;</span>
+                </div>
+                <form id="roomForm" method="POST" class="modal-contents">
+                            <label>Room Number :</label>
+                            <select class="custom-dropdown" name="roomNumber" id="addRoomNumberSelect" style="padding-right: 10px;"></select>
+                            <label>Room Bldg. :</label>
+                            <select name="roomBuilding" id="addRoomBuildingSelect" class="custom-dropdown">
                                 <option value="PTC">PTC</option>
                                 <option value="ITS">ITS</option>
-                            </select><br />
-                        </div>
+                            </select>
 
-                        <div class="form-group">
-                            <label>Capacity</label>
-                            <input type="number" name="capacity" min="1" max="70" value="50" required ><br />
-                        </div>
+                            <label>Capacity: </label>
+                            <input type="number" name="capacity" min="1" max="70" value="50" required >
 
-                        <div class="form-group">
-                            <label>Room Type</label>
-                            <select name="roomType" required >
+                            <label>Room Type :</label>
+                            <select name="roomType" required class="custom-dropdown">
                                 <option value="Lecture Room">Lecture Room</option>
                                 <option value="Laboratory Room">Laboratory Room</option>
-                            </select><br />
-                        </div>
-
-                        <div class="form-group">
-                            <label>Equipment</label>
-                            <div class="equipment">
-                                <label><input type="checkbox" value="Air Conditioner">Air Conditioner</label>
-                                <label><input type="checkbox" value="Monitor">Monitor</label>
-                                <label><input type="checkbox" value="Computer">Computer</label>
-                                <label><input type="checkbox" value="Whiteboard">Whiteboard</label>
-                                <label><input type="checkbox" value="Wi-Fi"> Wi-Fi</label>
-                            </div>
-                        </div>
+                            </select>
                         
-
-                        <div class="form-group">
-                            <label>Availability</label>
-                            <select name="availability">
+                            <label>Availability :</label>
+                            <select name="availability" class="custom-dropdown">
                                 <option value="Available">Available</option>
                                 <option value="Closed">Closed</option>
-                            </select><br />
-                        </div>
+                            </select>
                         
-                        <!-- Submit buttons -->
+                            <label>Equipment :</label>
+                            <div class="equipment">
+                                <input type="checkbox" value="Air Conditioner">
+                                <label>Air Conditioner</label>
+                                <input type="checkbox" value="Monitor">
+                                <label>Monitor</label>
+                                <input type="checkbox" value="Computer">
+                                <label>Computer</label><br>
+                                <input type="checkbox" value="Whiteboard">
+                                <label>Whiteboard</label>
+                                <input type="checkbox" value="Wi-Fi">
+                                <label>Wi-Fi</label>
+                            </div>
+                    <div class="modal-actions">
+                            <!-- Submit buttons -->
+                            <button type="button" class="backbtn">Back</button>
                         <button type="submit" class="createbtn">Create</button>
-                        <button type="button" class="backbtn">Back</button>
                     </div>
                 </form>
             </div>

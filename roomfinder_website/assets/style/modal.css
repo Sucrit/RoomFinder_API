@@ -1,4 +1,5 @@
 .modal {
+    background-color: rgba(0, 0, 0, 0.5);
     display: none;
     position: fixed;
     z-index: 1000;
@@ -6,35 +7,52 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
-    display: flex;
 }
 
 .modal-content {
+    position: relative;
     background-color: #fefefe;
-    margin-top: 6%; 
-    margin-left: 30%;
-    padding: 20px; 
+    margin: auto;
+    margin-top: 10%;
+    padding: 20px;
     border: 1px solid #888;
-    width: 50%; 
+    width: 65%;
     border-radius: 13px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     display: flex;
-    flex-direction: column;  
+    flex-direction: column;
+}
+
+#modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    margin-top: 10%;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 65%;
+    border-radius: 13px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+#modal-content label {
+    margin-bottom: 5px;
 }
 
 .roomform_container {
-    border: 1px solid #ccc;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
     margin-top: -20px;
     display: flex;
-    flex-wrap: wrap; /* Allows wrapping of form groups */
-    gap: 20px;  /* Adds space between form groups */
+    flex-wrap: wrap;
+    /* Allows wrapping of form groups */
+    gap: 20px;
+    /* Adds space between form groups */
 }
 
 /* Style for form groups */
@@ -42,13 +60,13 @@
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-    flex: 1 1 45%; /* Flexbox: allows each form group to take 45% of the width */
+    flex: 1 1 45%;
 }
 
 .form-group label {
-    width: 120px;
+    width: 130px;
     font-weight: bold;
-    margin-right: 10px; /* Adds space between label and input */
+    margin-right: 10px;
 }
 
 .form-group select,
@@ -57,17 +75,17 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #c6f6d5;
-    width: 100%; /* Makes the input fields take the full width available */
+    width: 100%;
     text-align: left;
 }
 
 /* Center form fields if it's small on mobile */
 @media (max-width: 600px) {
     .modal-content {
-        width: 90%; 
+        width: 90%;
         padding: 10px;
     }
-    
+
     /* On smaller screens, form groups should take full width */
     .form-group {
         flex: 1 1 100%;
@@ -89,7 +107,8 @@ button {
     align-items: center;
     border: none;
     cursor: pointer;
-    margin-top: 15px; /* Space from the form elements above */
+    margin-top: 15px;
+    /* Space from the form elements above */
     width: auto;
 }
 
@@ -104,7 +123,6 @@ button {
 
 .createbtn {
     background-color: #4CAF50;
-    margin-left: 40%;
 }
 
 .createbtn:hover {
@@ -113,60 +131,84 @@ button {
 
 /* For horizontal layout of select elements */
 .form-group-horizontal {
-    margin-top: 30px;
     display: flex;
     justify-content: space-evenly;
     border: solid 1px #ccc;
-    padding: 10px;
     border-radius: 5px;
     width: 100%;
 }
 
 
 
-
-
 /* Container for checkboxes */
-.equipment {
-    display: flex; /* Use flexbox to align items horizontally */
-    flex-direction: row; /* Align items in a row */
-    flex-wrap: wrap; /* Allow items to wrap if they overflow */
-    gap: 15px; /* Adds space between the checkboxes */
-    padding: 0; /* Removes padding */
-    margin-top: 5px; /* Adds margin between label and checkboxes */
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #c6f6d5;
-    width: 100%; /* Make it take full width */
-    max-width: 500px; /* Restrict the container width */
-    justify-content: flex-start; /* Align checkboxes to the left */
-    text-align: left; /* Ensure text is aligned left */
-}
+
 
 /* Ensure each label and checkbox align horizontally */
 .equipment label {
-    display: inline-flex; /* Make sure the checkbox and text are inline */
-    align-items: center; /* Align checkbox and text vertically */
-    font-size: 14px; /* Font size for checkbox label */
-    white-space: nowrap; /* Prevent text from wrapping within the label */
-    margin-right: 15px; /* Adds space between checkboxes */
+    align-items: center;
+    font-size: 14px;
+    white-space: nowrap;
+    margin-right: 15px;
 }
 
 /* Adjust checkbox size and add space between checkbox and text */
 .equipment input[type="checkbox"] {
-    margin-right: 5px; /* Adds space between checkbox and label text */
+    margin-right: 5px;
+    width: 20px;
 }
 
 /* Ensure the checkboxes are horizontally aligned */
 .equipment input[type="checkbox"]:first-child {
-    margin-left: 0; /* Remove the extra left margin on the first checkbox */
+    margin-left: 0;
 }
 
 /* For mobile devices, stack checkboxes vertically */
 @media (max-width: 600px) {
     .equipment {
-        flex-direction: column; /* Stack checkboxes vertically on small screens */
-        gap: 10px; /* Reduced gap between checkboxes */
+        flex-direction: column;
+        /* Stack checkboxes vertically on small screens */
+        gap: 10px;
+        /* Reduced gap between checkboxes */
     }
 }
 
+.custom-dropdown {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url('../images/web-svg-icons/dropdown-arrow-black.svg');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 15px;
+    padding-right: 40px;
+}
+
+.time {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.time label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+/* 
+.roomdetails_form {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.roomdetails_form h2,
+.roomdetails_form h1 {
+    text-align: center;
+    margin-bottom: 20px;
+} */

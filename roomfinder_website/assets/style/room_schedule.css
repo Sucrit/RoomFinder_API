@@ -1,24 +1,5 @@
 /* ROOM SCHEDULE */
 
-.search-container {
-    background: white;
-    padding: 8px 15px;
-    border-radius: 10px;
-    width: 250px;
-    box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);
-    display: flex;
-}
-
-.search-container input {
-    border: none;
-    outline: none;
-    padding: 8px;
-    font-size: 14px;
-    width: 150px;
-    border-radius: 10px;
-    text-align: left;
-}
-
 .schedule-content {
     display: flex;
     flex-direction: column;
@@ -81,8 +62,3 @@
 .table-data td {
     text-align: center;
 }
-
-/* 
-.room-sched {
-    padding: 20px;
-} */
