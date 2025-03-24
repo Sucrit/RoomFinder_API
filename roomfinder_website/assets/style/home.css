@@ -4,16 +4,6 @@
     padding: 0;
 }
 
-/* body {
-    height: 100%;
-    background-color: rgba(225, 255, 226, 1);
-    margin: 0;
-    font-family: Arial, sans-serif;
-    display: flex;
-    overflow-y: auto;
-} */
-
-
 body {
     display: flex;
     height: 100%;
@@ -32,28 +22,6 @@ body {
     position: relative;
 }
 
-
-
-/* .mainpage {
-    display: flex;
-    align-items: center;
-    width: 80%;
-    background-color: rgb(56, 112, 56); 
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: bold;
-    margin: 5px 0;  
-}
-
-.mainpage img {
-    margin-right:10px;
-    filter: brightness(0) invert(1);
-} */
-
-
 a.hover {
     color: white;
     background-color: rgba(0, 101, 3, 1);
@@ -67,12 +35,6 @@ a.hover {
     display: none;
 }
 
-/* .input_ad{
-    outline: none;
-    border:none;
-    height: 20px;
-} */
-
 /* js */
 .status {
     border-radius: 15px;
@@ -82,18 +44,6 @@ a.hover {
     font-size: 16px;
     font-weight: bold;
 }
-
-/* .status.available {
-    color: #28a745;
-}
-
-.status.occupied {
-    color: #f0ad4e;
-}
-
-.status.closed {
-    color: #d9534f;
-} */
 
 .edit-btn {
     background: #5cb85c;
@@ -113,23 +63,6 @@ a.hover {
     cursor: pointer;
     border-radius: 4px;
 }
-
-/* .add-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-}
-
-.add-button button {
-    background: #007bff;
-    color: white;
-    border: none;
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-    border-radius: 50%;
-    cursor: pointer;
-} */
 
 /* Add and Edit Room */
 .floating-btn {
@@ -157,20 +90,6 @@ a.hover {
     background-color: #052a58;
 }
 
-.roomdetails_form {
-    width: 90%;
-    margin: 0 auto;
-    padding: 20px;
-    border-radius: 10px;
-    height: auto;
-
-}
-
-.roomdetails_form h2,
-.roomdetails_form h1 {
-    text-align: center;
-    margin-bottom: 20px;
-}
 
 .equipment label {
     display: inline-flex;
@@ -179,12 +98,7 @@ a.hover {
     margin-right: 20px;
 }
 
-.time {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    margin-left: 25px;
-}
+
 
 .addanotherbtn {
     border-radius: 50%;
@@ -195,7 +109,7 @@ a.hover {
 
 
 .closemodal {
-    color: #f01111;
+    color: #847e7e;
     float: right;
     font-size: 28px;
     font-weight: bold;
