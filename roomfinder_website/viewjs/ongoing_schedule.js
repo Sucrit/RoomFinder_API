@@ -1,27 +1,121 @@
-export function InitOngoingScheduleSection() {
-    const tableData = document.querySelector('.table-data');
+import RoomScheduleViewModel from '../viewmodel/roomscheduleViewModel.js';
+import { showToast } from '../viewjs/toast.js';
+import { dateTimeFormat } from '../viewjs/timeformat.js';
 
-    const fakeRooms = [
-        {name: "PTC 206", block: "1", teacher: "Mr. Smith", time: "08:00 AM - 10:00 AM"},
-        {name: "PTC 207", block: "2", teacher: "Ms. Johnson", time: "10:00 AM - 12:00 PM"},
-        {name: "PTC 211", block: "3", teacher: "Dr. Brown", time: "01:00 AM - 03:00 PM"},
-        {name: "PTC 265", block: "4", teacher: "Prof. Wilson", time: "03:00 AM - 05:00 PM"},
-        {name: "PTC 326", block: "5", teacher: "Mrs. Taylor", time: "08:00 AM - 10:00 AM"},
-        {name: "PTC 398", block: "6", teacher: "Mr. Anderson", time: "10:00 AM - 12:00 PM"},
-        {name: "PTC 423", block: "7", teacher: "Dr. Martinez", time: "01:00 AM - 03:00 PM"},
-        {name: "PTC 445", block: "8", teacher: "Ms. Garcia", time: "03:00 AM - 05:00 PM"},
-        {name: "PTC 561", block: "8", teacher: "Mr. Lee", time: "08:00 AM - 10:00 AM"},
-        {name: "PTC 574", block: "10", teacher: "Prof. White", time: "10:00 AM - 12:00 PM"}
-    ];
-    
-    fakeRooms.forEach(room => {
+export function InitOngoingScheduleSection() {
+    const ongoingScheduleSection = document.getElementById('ongoing_schedule');
+    const ongoingScheduleBody = ongoingScheduleSection.querySelector('.table-data');
+
+    async function init() {
+        await loadOngoingSchedules();
+    }
+
+    // get ongoing schedules
+    async function loadOngoingSchedules() {
+        try {
+            const result = await RoomScheduleViewModel.getOngoingSchedules();
+            if (result.success) {
+                const ongoingSchedules = result.ongoingSchedules;
+                if (ongoingSchedules.length > 0) {
+                    renderOngoingSchedules(ongoingSchedules);
+                } else {
+                    ongoingScheduleBody.innerHTML = `<tr><td colspan="5">No ongoing schedules available</td></tr>`;
+                }
+            } else {
+                ongoingScheduleBody.innerHTML = `<tr><td colspan="5">Error: ${result.message}</td></tr>`;
+            }
+        } catch (error) {
+            console.error('Error loading ongoing schedules:', error);
+            ongoingScheduleBody.innerHTML = `<tr><td colspan="5">Failed to load ongoing schedules.</td></tr>`;
+        }
+    }
+
+    // render ongoing schedules list
+    function renderOngoingSchedules(ongoingSchedules) {
+        ongoingScheduleBody.innerHTML = ''; 
+
+        ongoingSchedules.forEach(schedule => {
+            const row = OngoingScheduleRow(schedule);
+            ongoingScheduleBody.appendChild(row);
+        });
+    }
+
+    // Ongoing schedule row
+    function OngoingScheduleRow(schedule) {
         const row = document.createElement('tr');
+        row.classList.add('ongoing-schedule-item');
+
+        const startTime = dateTimeFormat(schedule.starting_time);
+        const endTime = dateTimeFormat(schedule.ending_time);
+
         row.innerHTML = `
-            <td>${room.name}</td>
-            <td>${room.block}</td>
-            <td>${room.teacher}</td>
-            <td>${room.time}</td>
-        `;
-        tableData.appendChild(row);
-    });
+        <td>${schedule.room_building || 'N/A'}</td>
+        <td>${schedule.room_number || 'N/A'}</td>
+        <td>${schedule.date + '<br/>' + startTime  + ' - ' + endTime  || 'N/A'}</td>
+        <td>${schedule.block || 'N/A'}</td>
+        <td>
+            <button class="delete-btn" data-id="${schedule.id}">Delete</button>
+        </td>
+    `;
+
+        // dlete event listener
+        row.querySelector('.delete-btn').addEventListener('click', () => handleDelete(schedule, row));
+
+        return row;
+    }
+
+    // delete ongoing schedule
+    function handleDelete(schedule, row) {
+        showToast('Are you sure you want to delete this schedule?', 'info', {
+            showButtons: true,
+            onConfirm: async () => {
+                try {
+                    const response = await RoomScheduleViewModel.deleteRoomSchedule(schedule.id);
+                    if (response.success) {
+                        showToast(response.message, 'success');
+                        row.remove();
+                    } else {
+                        showToast(response.message, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting schedule:', error);
+                    showToast('Failed to delete room schedule', 'error');
+                }
+            },
+            onCancel: () => console.log('Schedule deletion canceled')
+        });
+    }
+
+    // search text
+    function searchTable() {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toUpperCase();
+        const rows = ongoingScheduleBody.getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName("td");
+            let match = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                const cell = cells[j];
+                if (cell) {
+                    const textValue = cell.textContent || cell.innerText;
+                    if (textValue.toUpperCase().indexOf(filter) > -1) {
+                        match = true;
+                    }
+                }
+            }
+
+            if (match) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+
+    // search event
+    document.getElementById("searchInput").addEventListener("keyup", searchTable);
+
+    init();
 }

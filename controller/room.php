@@ -26,7 +26,7 @@ class RoomController {
         }
     }
 
-    // get all rooms and schedules or room
+    // get all rooms and schedules 
     public function getRooms() {
         $currentTime = date('H:i:s');  
         $currentDate = date('Y-m-d');   
@@ -54,14 +54,16 @@ class RoomController {
     
             // check for ongoing schedule of and set the status to occupied
             $isOccupied = false;
-            foreach ($ongoingSchedules as $schedule) {
-                if ($schedule['room_id'] == $room['id']) {
-                    $room['ongoing_schedule'] = $schedule;  
+            foreach ($ongoingSchedules as $ongoingschedule) {
+                if ($ongoingschedule['room_id'] == $room['id']) {
+                    $room['ongoing_schedule'] = $ongoingschedule;  
                     $room['status'] = 'Occupied';  
                     $isOccupied = true;
-                    break;  
+                    break;
                 }
             }
+            
+            
     
             // if no ongoing schedule get room schedules
             if (!$isOccupied) {
@@ -95,9 +97,15 @@ class RoomController {
     
     // create room
     public function createRoom($room_building, $room_number, $status, $equipment, $capacity, $roomType) {
+
+        if ($this->roomModel->roomExistsByDetails($room_building, $room_number)) {
+            echo json_encode(['status' => 'error', 'message' => 'Room already exists']);
+            return;
+        }
+
         $room = $this->roomModel->createRoom($room_building, $room_number, $status, $equipment, $capacity, $roomType);
         if ($room) {
-            echo json_encode($room);
+            echo json_encode(['status' => 'success', 'message' => 'Room created successfully', 'id' => $room ['id']]);
         } 
         else {
             echo json_encode(['status' => 'error', 'message' => 'Room creation failed']);
@@ -120,7 +128,7 @@ class RoomController {
         $equipment = isset($input['equipment']) ? $input['equipment'] : $room['equipment'];
 
         $this->roomModel->updateRoom($id, $room_building, $room_number, $roomType, $capacity, $status, $equipment);
-        echo json_encode(['message' => 'Room updated sucessfully']);
+        echo json_encode(['status' => 'success','message' => 'Room updated sucessfully']);
     }
 
     // search room

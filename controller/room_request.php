@@ -40,13 +40,73 @@ class RoomRequestController {
 
     // get dashboard details (web)
     public function getRoomRequests() {
-
-        $requeststatusCounts = $this->roomRequestModel->getRoomRequestsCountByStatus();
-        $roomstatusCounts = $this->roomModel->getRoomCountByStatus();
-
-        $getAllRoomRequestsHistory = $this->roomRequestModel->getAllPendingRoomRequests();
+        $currentTime = date('H:i:s');
+        $currentDate = date('Y-m-d');
+        
+        $rooms = $this->roomModel->getAllRoom();
+        
+        if (empty($rooms)) {
+            echo json_encode(['message' => 'No rooms found']);
+            return;
+        }
+    
+        // get ongoing schedule
         $getOngoingSchedules = $this->roomScheduleModel->getAllOngoingSchedules();
-
+        
+        foreach ($rooms as &$room) {
+            $room['ongoing_schedule'] = (object) [];
+            $room['schedules'] = [];
+    
+            // check closed room
+            if ($room['status'] == 'Closed') {
+                continue;
+            }
+            $room['status'] = 'Available';  
+    
+            // check ongoing schedule
+            $isOccupied = false;
+            foreach ($getOngoingSchedules as $schedule) {
+                if ($schedule['room_id'] == $room['id']) {
+                    $room['ongoing_schedule'] = $schedule;
+                    $room['status'] = 'Occupied';
+                    $isOccupied = true;
+                    break;
+                }
+            }
+    
+            // check schedules
+            if (!$isOccupied) {
+                $schedules = $this->roomScheduleModel->getSchedulesByRoomId($room['id']);
+                
+                if (!empty($schedules)) {
+                    foreach ($schedules as $schedule) {
+                        $scheduleDate = $schedule['date'];
+                        $startingTime = $schedule['starting_time'];
+                        $endingTime = $schedule['ending_time'];
+    
+                        // set status to occupied if matched to current time
+                        if ($currentDate === $scheduleDate && $currentTime >= $startingTime && $currentTime < $endingTime) {
+                            $room['status'] = 'Occupied';
+                        }
+                    }
+                    $room['schedules'] = $schedules;
+                }
+            }
+    
+            // update status
+            if ($room['status'] == 'Occupied') {
+                $this->roomModel->updateRoomStatus($room['id'], 'Occupied');
+            } else {
+                $this->roomModel->updateRoomStatus($room['id'], 'Available');
+            }
+        }
+    
+        // get count by status
+        $roomstatusCounts = $this->roomModel->getRoomCountByStatus();
+        
+        $requeststatusCounts = $this->roomRequestModel->getRoomRequestsCountByStatus();
+        $getAllRoomRequestsHistory = $this->roomRequestModel->getAllPendingRoomRequests();
+    
         echo json_encode([
             'pending count' => (string)$requeststatusCounts['Pending'],
             'approved count' => (string)$requeststatusCounts['Approved'],
@@ -58,6 +118,8 @@ class RoomRequestController {
             'Request history' => $getAllRoomRequestsHistory
         ]);
     }
+    
+    
 
     // get room request by id
     public function getRoomRequest($id) {
@@ -72,6 +134,8 @@ class RoomRequestController {
 
     // create room request
     public function createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time) {
+
+        date_default_timezone_set('Asia/Singapore');
 
         // get current time
         $currentTimestamp = time();

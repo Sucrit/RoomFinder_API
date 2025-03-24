@@ -61,7 +61,7 @@ class AdminController {
                 'id' => $admin['id'],
                 'username' => $admin['username'],
                 'role' => $admin['role'],
-                'exp' => time() + 3600 // 1 hour
+                'exp' => time() + 3600 // token expiration
             ));
             $this->adminModel->storeAdminToken($admin['id'], $token);
             echo json_encode([
@@ -144,6 +144,11 @@ class AdminController {
             echo json_encode(['status' => 'error', 'message' => 'New password and confirm password do not match']);
             return;
         }
+
+        // if (strlen($confirmPassword) < 8) {
+        //     echo json_encode(['status' => 'error', 'message' => 'Password is too short. It must be at least 8 characters long']);
+        //     return;
+        // }
 
         // change pass
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);

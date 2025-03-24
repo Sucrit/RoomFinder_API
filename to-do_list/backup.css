@@ -2,11 +2,11 @@
 .userslist-container {
     padding: 20px;
     margin-top:3%;
+    height: 400px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 0%; 
 
 }
 

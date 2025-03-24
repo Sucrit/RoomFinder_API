@@ -10,7 +10,7 @@ export function InitUsersListSection() {
     let selectedRole = 'all';
     let searchText = '';
 
-    // event listeners
+    // event listener
     function initEventListeners() {
         filter.addEventListener('change', handleFilterChange);
         searchBar.addEventListener('input', handleSearchInput);
@@ -162,12 +162,10 @@ export function InitUsersListSection() {
         });
     }
 
-    // init section methods
+    // init 
     function init() {
         initEventListeners();
         fetchUsers();
     }
-
-    // iinit all
     init();
 }

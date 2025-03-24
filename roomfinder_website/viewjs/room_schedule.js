@@ -1,5 +1,7 @@
+// room schedule dom/M
 import RoomScheduleViewModel from '../viewmodel/roomscheduleViewModel.js';
 import { showToast } from '../viewjs/toast.js';
+import { dateTimeFormat } from '../viewjs/timeformat.js';
 
 export function InitRoomScheduleSection() {
     const scheduleSection = document.getElementById('room_schedule');
@@ -35,8 +37,7 @@ export function InitRoomScheduleSection() {
 
     // Fetch schedules and render them
     async function fetchSchedules() {
-        scheduleBody.innerHTML = ''; // Clear existing schedule data
-
+        scheduleBody.innerHTML = ''; 
         try {
             const response = await RoomScheduleViewModel.getAllRoomSchedules();
             if (response.success && response.schedules.length > 0) {
@@ -61,10 +62,13 @@ export function InitRoomScheduleSection() {
         const row = document.createElement('tr');
         row.classList.add('room-schedule-item');
 
+        const startTime = dateTimeFormat(schedule.starting_time);
+        const endTime = dateTimeFormat(schedule.ending_time);
+
         row.innerHTML = `
             <td>${schedule.room_building || 'N/A'}</td>
             <td>${schedule.room_number || 'N/A'}</td>
-            <td>${schedule.date + '<br/>' + schedule.starting_time + ' - ' + schedule.ending_time || 'N/A'}</td>
+            <td>${schedule.date + '<br/>' + startTime + ' - ' + endTime || 'N/A'}</td>
             <td>${schedule.block || 'N/A'}</td>
             <td>
                 <button class="update-btn" data-id="${schedule.id}">Update</button>
@@ -145,13 +149,17 @@ export function InitRoomScheduleSection() {
         };
     }
 
-    // Handle view schedule (can be expanded for detailed views)
+    // view room schedule
     function handleView(scheduleId) {
         console.log(`Viewing schedule with ID: ${scheduleId}`);
     }
 
     // Initialize everything
     function init() {
+        // Hide modal initially
+        if (addModal) {
+            addModal.style.display = 'none';
+        }
         initEventListeners();
         fetchSchedules();
     }

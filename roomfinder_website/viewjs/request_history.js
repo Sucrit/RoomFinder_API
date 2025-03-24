@@ -15,7 +15,11 @@ export function InitRequestHistorySection() {
         try {
             const response = await RoomRequestViewModel.getRoomRequestHistory();
             if (Array.isArray(response.history)) {
-                renderRequestHistory(response.history);
+                if (response.history.length > 0) {
+                    renderRequestHistory(response.history);
+                } else {
+                    requestHistoryBody.innerHTML = `<tr><td colspan="9">No request history available.</td></tr>`;
+                }
             } else {
                 console.error('Unexpected response format:', response);
                 showToast('Failed to load request history', 'error');
@@ -36,7 +40,7 @@ export function InitRequestHistorySection() {
         });
     }
 
-    // Create and return a table row for a given request
+    // td row
     function createRequestRow(request) {
         const row = document.createElement('tr');
         row.classList.add('request-item');

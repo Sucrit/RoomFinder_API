@@ -26,7 +26,7 @@ class UserController {
         }
 
         // if (strlen($password) < 8) {
-        //     echo json_encode(['message' => 'Password is too short. It must be at least 8 characters long']);
+        //     echo json_encode(['status' => 'error','message' => 'Password is too short. It must be at least 8 characters long']);
         //     return;
         // }
 
@@ -54,7 +54,7 @@ class UserController {
                 'id' => $user['id'],
                 'username' => $user['username'],
                 'role' => $user['role'],
-                'exp' => time() + 3600 // 1 hour expiry
+                'exp' => time() + 3600 // token expiration
             ));
             $this->userModel->storeUserToken($user['id'], $token);
             echo json_encode([
@@ -124,6 +124,12 @@ class UserController {
             echo json_encode(['message' => 'New password and confirm password do not match']);
             return;
         }
+
+        // if (strlen($confirmPassword) < 8) {
+        //     echo json_encode(['status' => 'error', 'message' => 'Password is too short. It must be at least 8 characters long']);
+        //     return;
+        // }
+
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         $this->userModel->updateUserPassword($userId, $hashedPassword);
     

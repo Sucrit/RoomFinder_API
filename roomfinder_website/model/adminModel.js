@@ -31,7 +31,6 @@ export default class AdminModel {
         });
     }
 
-
     // add users route (auth page)
     static addUser (role, username, email, password, teacher_id) {
 
@@ -70,7 +69,6 @@ export default class AdminModel {
             throw error;
         });
     }    
-
     
     // get auth uses list route (auth page)
     static getUsers() {
@@ -102,17 +100,52 @@ export default class AdminModel {
             throw error;
         });
     }
-
-
-    // delete admin route (userlist page)
-    static deleteAdmins(requestId) {
+    
+    // change password route
+    static updatePasswordById(id, oldPassword, newPassword, confirmPassword) {
 
         const authToken = localStorage.getItem('authToken'); 
         if (!authToken) {
             throw new Error("You are not authorized");
         }
 
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/admin/${requestId}`, {
+        const passwordData = {
+            old_password: oldPassword,
+            new_password: newPassword,
+            confirm_password: confirmPassword
+        };
+        return fetch(`http://localhost/RoomFinder_API/api/index.php/admin/${id}`, {
+            method: 'PATCH', 
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify(passwordData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data; 
+        })
+        .catch(error => {
+            console.error('Error updating password:', error);
+            throw error;
+        });
+    }
+
+    // delete admin route (userlist page)
+    static deleteAdmins(id) {
+
+        const authToken = localStorage.getItem('authToken'); 
+        if (!authToken) {
+            throw new Error("You are not authorized");
+        }
+
+        return fetch(`http://localhost/RoomFinder_API/api/index.php/admin/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -135,14 +168,14 @@ export default class AdminModel {
     }
 
     // delete user route (userlist page)
-    static deleteUsers(requestId) {
+    static deleteUsers(id) {
 
         const authToken = localStorage.getItem('authToken'); 
         if (!authToken) {
             throw new Error("You are not authorized");
         }
 
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/user/${requestId}`, {
+        return fetch(`http://localhost/RoomFinder_API/api/index.php/user/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -161,42 +194,6 @@ export default class AdminModel {
         })
         .catch(error => {
             console.error('Error deleting user:', error.message);
-        });
-    }
-
-    // change password route
-    static updatePasswordById(requestId, oldPassword, newPassword, confirmPassword) {
-
-        const authToken = localStorage.getItem('authToken'); 
-        if (!authToken) {
-            throw new Error("You are not authorized");
-        }
-
-        const passwordData = {
-            old_password: oldPassword,
-            new_password: newPassword,
-            confirm_password: confirmPassword
-        };
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/admin/${requestId}`, {
-            method: 'PATCH', 
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`
-            },
-            body: JSON.stringify(passwordData)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            return data; 
-        })
-        .catch(error => {
-            console.error('Error updating password:', error);
-            throw error;
         });
     }
 

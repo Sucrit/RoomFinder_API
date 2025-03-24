@@ -48,3 +48,7 @@ table td {
 .room-list {
     height: auto;
 }
+
+#addScheduleModal {
+    display: none;
+}

@@ -50,7 +50,7 @@
     vertical-align: middle;
   }
 
-  .table-container thead tr:nth-child(2) th {
+  .table-container tr:nth-child(2) th {
     text-align: center;
     padding-top: 10px;
   }
@@ -174,10 +174,11 @@
     border-spacing: 0 10px;
   }
 
-  /* table tr {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  table tr {
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
-  } */
+    
+  } 
 
   table th {
     background: #ffffff;

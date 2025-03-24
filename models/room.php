@@ -97,6 +97,7 @@ class RoomModel {
         }
     }
     
+    // update room details
     public function updateRoom($id, $room_building, $room_number, $roomType, $capacity, $status, $equipment) {
         $sql = "UPDATE room 
                 SET room_building = ?, room_number = ?, room_type = ?, capacity = ?, status = ?, equipment = ? 
@@ -110,8 +111,13 @@ class RoomModel {
         }
     }
 
-    // update room status (available or occupied) applicable for available room only (not maintainance nor closed room)
+    // update room status (available or occupied)
     public function updateRoomStatus($roomId, $status) {
+        // Only allow "Available" or "Occupied" statuses, prevent "Closed"
+        if ($status !== 'Available' && $status !== 'Occupied') {
+            return false;  // Prevent updating the status if it's neither Available nor Occupied
+        }
+    
         $query = "UPDATE room SET status = ? WHERE id = ?";
         if ($stmt = $this->conn->prepare($query)) {
             $stmt->bind_param('si', $status, $roomId);
@@ -123,7 +129,8 @@ class RoomModel {
         } else {
             return false;
         }
-    }    
+    }
+    
 
     // search room by keyword
     public function searchRooms($keyword) {
@@ -206,5 +213,22 @@ class RoomModel {
             return false;
         }
     }
+
+    // room exist by building and number
+    public function roomExistsByDetails($room_building, $room_number) {
+        $sql = "SELECT id FROM room WHERE room_building = ? AND room_number = ?";
+        
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param('si', $room_building, $room_number);  
+            $stmt->execute();
+            $stmt->store_result();
+            
+            return $stmt->num_rows > 0;
+        } else {
+            echo json_encode(['message' => 'Error executing query: ' . $this->conn->error]);
+            return false;
+        }
+    }
+
 }
 ?>

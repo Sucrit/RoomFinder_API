@@ -79,6 +79,7 @@
     align-items: center;
     width: 100%;
     margin-bottom: 15px;
+    
 }
 
 .roomStats-ongoingroom h1 {
@@ -106,12 +107,8 @@
 
 .roomStats-ongoingroom th, .roomStats td {
     padding: 10px;
-    border-bottom: 1px solid #ffffff;
-    text-align: left;
-}
-
-.roomStats-ongoingroom tr {
-    font-size: 16px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
 }
 
 
@@ -163,13 +160,13 @@
 .roomStats-recent th, .roomStats td {
     padding: 10px;
     border-bottom: 1px solid #ddd;
-    text-align: left;
+    text-align: center;
+    box-shadow: #4caf50;
 }
 
-.roomStats-recent tr {
-    font-size: 16px;
-}
-
+/* .roomStats-recent tr {
+    font-size: 160px;
+} */
 
 /* Dashboard */
 #grid-container {
@@ -197,7 +194,15 @@
     justify-content: center;
     align-items: flex-start;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* transition: transform 0.3s ease-in-out; 
+    transform-origin: center; */
 }
+
+/* Hover effect  */
+/* .statContainer:hover {
+    transform: scale(1.02); 
+} */
+
 
 .stats-box {
     display: flex;
@@ -222,20 +227,6 @@
     width: 40px;
     height: 40px;
 
-}
-
-.requestforms {
-    grid-column: span 2;
-    background-color: white;
-    height: 120px;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    
 }
 
 
@@ -281,38 +272,116 @@
     display: inline-block;
 }
 
-
-
-
-/* Default Gradient Backgrounds */
-/* .pending-gradient {
-    background-image: linear-gradient(to right, rgb(251, 201, 126) 0%, #fff 0%);
-    transition: background-image 10s ease-out;  Add smooth transition for background-image */
-/* }
-
-.approved-gradient {
-    background-image: linear-gradient(to right, rgb(151, 248, 151) 0%, #fff 0%);
-    transition: background-image 10s ease-out;
+.requestforms {
+    grid-column: span 2;
+    background-color: white;
+    height: 120px;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* transition: transform 0.3s ease-in-out; 
+    transform-origin: center;  */
 }
 
-.rejected-gradient {
-    background-image: linear-gradient(to right, rgb(252, 152, 152) 0%, #fff 0%);
-    transition: background-image 10s ease-out;
+/* Hover effect */
+/* .requestforms:hover {
+    transform: scale(1.009); 
 } */
 
-/* Progress Bar Width */
-/* .pending-progress-bar {
-    width: 0%;
-    transition: width 10s ease-out; Smooth width transition */
-/* }
 
-.approved-progress-bar {
-    width: 0%;
-    transition: width 10s ease-out;
+
+
+
+
+
+/* Base style for request boxes */
+.requestforms {
+    padding: 20px; /* Adjust padding for some space inside the container */
+    border-radius: 10px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align content at the top */
+    height: 120px; /* Fixed height for the container */
 }
 
-.rejected-progress-bar {
-    width: 0%;
-    transition: width 10s ease-out;
-} */
+/* Style for the request box to position elements properly */
+.request-box {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Ensure text stays at the top */
+    margin-top: 10px; /* Adjust top margin to add space at the top */
+    padding-bottom: 10px; /* Space between text and progress bar */
+    overflow: hidden; /* Prevents overflow */
+}
+
+/* Wrapper around the progress bar to handle padding */
+.progress-bar-wrapper {
+    width: 60%; /* Defines the width of the progress bar wrapper */
+    padding: 0; /* Add padding here (if needed) */
+    margin: 0 auto; /* Center the wrapper horizontally */
+    box-sizing: border-box; /* Ensures padding does not affect the width */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 1px solid #cdcdcd;
+    border-radius: 5px;
+}
+
+/* Progress bar style */
+.progress-bar {
+    width: 0%; 
+    height: 5px; 
+    background-color: #ddd; 
+    transition: width 1s ease-in-out; 
+    border-radius: 3px;
+}
+
+
+/* progress bar colors */
+#pendingRequestBox .progress-bar {
+    background-color: #ffeb3b;
+}
+
+#approvedRequestBox .progress-bar {
+    background-color: #4caf50;
+}
+
+#rejectedRequestBox .progress-bar {
+    background-color: #f44336;
+}
+
+#occupiedRoomBox .progress-bar {
+    background-color: #ffeb3b;
+}
+
+#availableRoomBox .progress-bar {
+    background-color: #4caf50;
+}
+
+#closedRoomBox .progress-bar {
+    background-color: #f44336;
+}
+
+
+
+/* text styling/ positioning */
+.request-box h2, .request-box p, .request-box h3 {
+    z-index: 2;
+    margin: 0; 
+}
+
+.request-box h3 {
+    margin-top: 1px;
+    margin-left: 3px;
+}
 

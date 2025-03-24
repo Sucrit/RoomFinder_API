@@ -77,8 +77,9 @@ class RoomScheduleController {
                 echo json_encode(['status' => 'error', 'message' => 'This room is closed']);
                 return;
             }
+
+            date_default_timezone_set('Asia/Singapore');
     
-            // current time!
             $currentTimestamp = time();
     
             // combine date to starting time & ending time

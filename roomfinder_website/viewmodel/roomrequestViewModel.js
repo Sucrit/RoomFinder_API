@@ -54,10 +54,7 @@ export default class RoomRequestViewModel {
             console.error(`Error updating request status for ID ${requestId}:`, error);
             throw error;
         }
-    }
-
-    
-    
+    }    
 
     // get all room request history (request history section)
     static async getRoomRequestHistory() {

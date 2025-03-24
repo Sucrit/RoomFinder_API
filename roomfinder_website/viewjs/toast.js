@@ -62,7 +62,8 @@ export function showToast(message, type = 'info', options = {}) {
         }, 250); // remove after fade out
     }, 2500);  // duration of the toast
 
-    // You could add an option to modify the duration based on type
+
+    // toast types
     if (type === 'error') {
         setTimeout(() => {
             toast.classList.remove('show');

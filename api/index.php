@@ -23,9 +23,6 @@ $uri = $_SERVER['REQUEST_URI'];
 $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
 $input = json_decode(file_get_contents('php://input'), true);
 
-
-
-
 if (strpos($contentType, 'application/json') === false) {
     echo json_encode(['message' => 'Invalid json content type.']);
     exit;
@@ -37,6 +34,8 @@ $userController = new UserController();
 $roomController = new RoomController();
 $roomRequestController = new RoomRequestController();
 $roomScheduleController = new RoomScheduleController();
+
+
 
 // user method handler
 function handleUser($requestMethod, $uri, $input, $userController) {

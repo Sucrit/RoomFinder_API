@@ -32,14 +32,14 @@ export default class RoomModel {
     }
 
     // get room by id route
-    static getRoomById(roomId) {
+    static getRoomById(id) {
 
         const authToken = localStorage.getItem('authToken'); 
         if (!authToken) {
             throw new Error("You are not authorized");
         }
 
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/room/${roomId}`, {
+        return fetch(`http://localhost/RoomFinder_API/api/index.php/room/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -62,6 +62,7 @@ export default class RoomModel {
         });
     }
 
+    // create room route
     static async createRoom(roomData) {
         try {
 
@@ -84,27 +85,27 @@ export default class RoomModel {
             }
             const data = await response.json();
 
-            if (data.room_number && data.room_building) {
-                return { success: true, room: data }; 
+            if (data.status === "success") {
+                console.log('Room created successfully. Room ID:', data.id);
+                return { success: true, room: { id: data.id, message: data.message }};
             } else {
-                throw new Error('Invalid room data returned');
+                throw new Error('Failed to create room');
             }
         } catch (error) {
             console.error('Error creating room:', error.message);
             throw error;
         }
     }
-    
 
     // update room data route
-    static updateRoom(roomId, updatedData) {
+    static updateRoom(id, updatedData) {
 
         const authToken = localStorage.getItem('authToken'); 
         if (!authToken) {
             throw new Error("You are not authorized");
         }
 
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/room/${roomId}`, {
+        return fetch(`http://localhost/RoomFinder_API/api/index.php/room/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -125,14 +126,14 @@ export default class RoomModel {
     }
 
     // delete room route 
-    static deleteRoomById(requestId) {
-
+    static deleteRoomById(id) {
         const authToken = localStorage.getItem('authToken'); 
+
         if (!authToken) {
             throw new Error("You are not authorized");
         }
         
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/room/${requestId}`, {
+        return fetch(`http://localhost/RoomFinder_API/api/index.php/room/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

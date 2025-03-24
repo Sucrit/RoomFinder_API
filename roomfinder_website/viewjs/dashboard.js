@@ -1,7 +1,7 @@
 
 // dashboard section dom/M
 import RoomRequestViewModel from "../viewmodel/roomrequestViewModel.js";
-// import { showLoading, hideLoading } from "../viewjs/loading.js";
+import { dateTimeFormat } from '../viewjs/timeformat.js';
 
 export async function InitDashboard() {
 
@@ -19,9 +19,9 @@ export async function InitDashboard() {
             const rejectedCount = parseInt(data["rejected count"]) || 0;
 
             const totalRequests = pendingCount + approvedCount + rejectedCount;
-            const pendingPercentage = totalRequests ? ((pendingCount / totalRequests) * 100).toFixed(2) : '0.00';
-            const approvedPercentage = totalRequests ? ((approvedCount / totalRequests) * 100).toFixed(2) : '0.00';
-            const rejectedPercentage = totalRequests ? ((rejectedCount / totalRequests) * 100).toFixed(2) : '0.00';
+            const pendingPercentage = totalRequests ? Math.round((pendingCount / totalRequests) * 100) : 0;
+            const approvedPercentage = totalRequests ? Math.round((approvedCount / totalRequests) * 100) : 0;
+            const rejectedPercentage = totalRequests ? Math.round((rejectedCount / totalRequests) * 100) : 0;
 
             // room details stats fallback
             const availableCount = parseInt(data["available count"]) || 0;
@@ -29,23 +29,9 @@ export async function InitDashboard() {
             const closedCount = parseInt(data["closed count"]) || 0;
 
             const totalRoom = availableCount + occupiedCount + closedCount;
-            const availablePercentage = totalRoom ? ((availableCount / totalRoom) * 100).toFixed(2) : '0.00';
-            const occupiedPercentage = totalRoom ? ((occupiedCount / totalRoom) * 100).toFixed(2) : '0.00';
-            const closedPercentage = totalRoom ? ((closedCount / totalRoom) * 100).toFixed(2) : '0.00';
-
-            const pendingRequestBox = document.getElementById('pendingRequestBox');
-            const approvedRequestBox = document.getElementById('approvedRequestBox');
-            const rejectedRequestBox = document.getElementById('rejectedRequestBox');
-            // box bg
-            if (pendingRequestBox) {
-                pendingRequestBox.style.background = `linear-gradient(to right,rgb(251, 201, 126) ${pendingPercentage}%, #fff ${pendingPercentage}%)`;
-            }
-            if (approvedRequestBox) {
-                approvedRequestBox.style.background = `linear-gradient(to right,rgb(151, 248, 151) ${approvedPercentage}%, #fff ${approvedPercentage}%)`;
-            }
-            if (rejectedRequestBox) {
-                rejectedRequestBox.style.background = `linear-gradient(to right,rgb(252, 152, 152) ${rejectedPercentage}%, #fff ${rejectedPercentage}%)`;
-            }
+            const availablePercentage = totalRoom ? Math.round((availableCount / totalRoom) * 100) : 0;
+            const occupiedPercentage = totalRoom ? Math.round((occupiedCount / totalRoom) * 100) : 0;
+            const closedPercentage = totalRoom ? Math.round((closedCount / totalRoom) * 100) : 0;
 
             // dom dashboard stats
             updateTextContent('totalRequests', totalRequests);
@@ -63,7 +49,15 @@ export async function InitDashboard() {
             updateTextContent('occupiedPercentage', occupiedPercentage + '%');
             updateTextContent('closedRooms', data["closed count"] || 0);
             updateTextContent('closedPercentage', closedPercentage + '%');
-
+            
+            // dom progress bar
+            progressbarAnimation('pendingRequestBox', pendingPercentage);
+            progressbarAnimation('approvedRequestBox', approvedPercentage);
+            progressbarAnimation('rejectedRequestBox', rejectedPercentage);
+            progressbarAnimation('availableRoomBox', availablePercentage);
+            progressbarAnimation('occupiedRoomBox', occupiedPercentage);
+            progressbarAnimation('closedRoomBox', closedPercentage);
+ 
             // ongoing schedules table 
             const ongoingScheduleData = data["Ongoing schedule"] || [];
             updateTable('ongoingSchedule', ongoingScheduleData);
@@ -91,35 +85,24 @@ export async function InitDashboard() {
     //     hideLoading();
     // }
 
-    // Update progress bar width based on percentage
-function updateProgressBar(requestBoxId, percentage) {
-    const requestBox = document.getElementById(requestBoxId);
-    const progressBar = requestBox.querySelector('.progress-bar');  // Assuming you have the actual progress bar div inside your box
-    if (progressBar) {
-        // Initially set the width to 0% (to make the animation work)
-        progressBar.style.width = '0%';  
-        
-        // Trigger animation by setting the width to the calculated percentage
-        setTimeout(() => {
-            progressBar.style.width = `${percentage}%`;  // This will trigger the CSS animation
-            progressBar.classList.add('animate-progress-bar');  // Add animation class
-        }, 100); // Delay to ensure width change triggers the animation
-    }
 }
 
-}
 
-// update progress bar width base on percentage
-function updateProgressBar(requestBoxId, percentage) {
-    const requestBox = document.getElementById(requestBoxId);
-    const progress = requestBox.querySelector('div'); 
-    if (progress) {
-        progress.style.width = `${percentage}%`;
+
+
+// progress bar animation
+function progressbarAnimation(boxId, percentage) {
+    const box = document.getElementById(boxId);
+    if (box) {
+        const progressBar = box.querySelector('.progress-bar');
+        if (progressBar) {
+            progressBar.style.width = `${percentage}%`;
+        }
     }
 }
 
 
-// utility update innertext with null check
+// utility update text content
 function updateTextContent(id, text) {
     const element = document.getElementById(id);
     if (element) {
@@ -127,7 +110,7 @@ function updateTextContent(id, text) {
     }
 }
 
-// utility update
+// utility update table row data
 function updateTable(tableId, data) {
     const tableBody = document.getElementById(tableId).querySelector('tbody');
     tableBody.innerHTML = '';
@@ -141,23 +124,26 @@ function updateTable(tableId, data) {
 
             // ongoing schedule (dashboard)
             if (tableId === 'ongoingSchedule') {
+
+                const startTime = dateTimeFormat(item.starting_time);
+                const endTime = dateTimeFormat(item.ending_time);
+
                 row.innerHTML = `
-                    <td>${item.room_building || 'N/A'}</td> 
-                    <td>${item.room_number || 'N/A'}</td>   
+                    <td>${item.room_building + ' ' +item.room_number || 'N/A'}</td> 
+                    <td>${item.date + '<br/>' + startTime + ' - ' + endTime || 'N/A'}</td>
                     <td>${item.block || 'N/A'}</td>        
-                    <td>${item.date || 'N/A'}</td>     
-                    <td>${item.starting_time || 'N/A'}</td>
-                    <td>${item.ending_time || 'N/A'}</td>   
                 `;
             } 
             // request history (dashboard)
             else if (tableId === 'requestHistory') {
+
+                const startTime = dateTimeFormat(item.starting_time);
+                const endTime = dateTimeFormat(item.ending_time);
+
                 row.innerHTML = `
                     <td>${item.username || 'N/A'}</td>  
+                    <td>${item.date + '<br/>' + startTime + ' - ' + endTime || 'N/A'}</td>
                     <td>${item.block || 'N/A'}</td>     
-                    <td>${item.date || 'N/A'}</td>       
-                    <td>${item.starting_time || 'N/A'}</td> 
-                    <td>${item.ending_time || 'N/A'}</td>  
                 `;
             }
 
@@ -173,8 +159,6 @@ function updateTable(tableId, data) {
         tableBody.appendChild(row);
     }
 }
-
-
 
 // see all buttonn
 function InitSeeAllButton() {

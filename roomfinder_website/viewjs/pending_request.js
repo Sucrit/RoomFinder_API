@@ -71,16 +71,22 @@ export function InitPendingRequestSection() {
     // update status
     async function updateStatus(requestId, status, row) {
         row.classList.add('ud-button-animation');
-
+    
         try {
-            await RoomRequestViewModel.updateRequestStatus(requestId, status);
-            row.remove();
-            const message = status === 'Approved' ? 'Request has been approved' : 'Request has been rejected';
-            showToast(message, status === 'Approved' ? 'success' : 'error');
+            const response = await RoomRequestViewModel.updateRequestStatus(requestId, status);
+            if (response.status === 'success') {
+                row.remove();
+                showToast(response.message, 'success');
+            } else if (response.status === 'error') {
+                row.remove();
+                showToast(response.message , 'error');
+            }
+    
         } catch (error) {
             console.error(`Error changing request status to ${status}:`, error);
             showToast(`Failed to ${status.toLowerCase()} request`, 'error');
         }
     }
+    
     init();
 }

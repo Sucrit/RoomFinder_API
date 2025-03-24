@@ -1,12 +1,13 @@
+
+
 export default class RoomScheduleModel {
 
-    // get room schedules (roomschedule section)
+    // get room schedules (room schedule section)
     static getRoomSchedules() {
-
         const authToken = localStorage.getItem('authToken');
 
         if (!authToken) {
-            throw new Error("No authentication token found");
+            throw new Error("You are not authorized");
         }
 
         return fetch('http://localhost/RoomFinder_API/api/index.php/room_schedule', {
@@ -33,13 +34,103 @@ export default class RoomScheduleModel {
         });
     }
 
-    // delete a room schedule by id
-    static deleteRoomSchedule(id) {
-
+    // get all ongoing schedule route
+    static getOngoingSchedules() {
         const authToken = localStorage.getItem('authToken');
 
         if (!authToken) {
-            throw new Error("No authentication token found");
+            throw new Error("You are not authorized");
+        }
+
+        return fetch('http://localhost/RoomFinder_API/api/index.php/room_schedule/ongoing_schedule', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            }
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (!response.ok) {
+                console.error('Error response:', response);
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data;
+        })
+        .catch(error => {
+            console.error('Error fetching ongoing schedules:', error.message);
+            return [];
+        });
+    }
+
+    // create room schedule route
+    static async createRoomSchedule(scheduleData) {
+        const authToken = localStorage.getItem('authToken'); 
+
+        if (!authToken) {
+            throw new Error("You are not authorized");
+        }
+
+        const response = await fetch('http://localhost/RoomFinder_API/api/index.php/room_schedule', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify(scheduleData),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            return { success: true, message: data.message };
+        } else {
+            throw new Error('Failed to create room schedule');
+        }
+    }
+
+    // update room schedule route
+    static async updateRoomSchedule(id, scheduleData) {
+        const authToken = localStorage.getItem('authToken');
+        
+        if (!authToken) {
+            throw new Error("You are not authorized");
+        }
+
+        const response = await fetch(`http://localhost/RoomFinder_API/api/index.php/room_schedule/${id}`, {
+            method: 'PATCH', 
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify(scheduleData), 
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            return { success: true, message: data.message };
+        } else {
+            throw new Error('Failed to update room schedule');
+        }
+    }
+    
+    // delete room schedule route
+    static deleteRoomSchedule(id) {
+        const authToken = localStorage.getItem('authToken');
+
+        if (!authToken) {
+            throw new Error("You are not authorized");
         }
 
         return fetch(`http://localhost/RoomFinder_API/api/index.php/room_schedule/${id}`, {
@@ -62,5 +153,4 @@ export default class RoomScheduleModel {
             return 'Failed to delete room schedule';
         });
     }
-
 }

@@ -36,14 +36,18 @@ export default class RoomViewModel {
         }
     }
 
-      // create room
-      static async createRoom(roomData) {
+    // create room
+    static async createRoom(roomData) {
         try {
+            console.log('Room Data Being Sent:', roomData);  
             const response = await RoomModel.createRoom(roomData);
 
+            console.log('Response from RoomModel:', response); 
+    
             if (response.success) {
                 showToast('Room added successfully!', 'success');
-                return { success: true, room: response.room }; 
+                console.log('Room created successfully. Room ID:', response.room.id);  
+                return { success: true, room: response.room };
             } else {
                 showToast(response.message || 'Error creating room', 'error');
                 return { success: false, message: 'Error creating room' };
@@ -54,6 +58,7 @@ export default class RoomViewModel {
             return { success: false, message: 'Error creating room' };
         }
     }
+    
 
 
     // update room

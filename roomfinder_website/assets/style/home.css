@@ -21,7 +21,8 @@ body {
     font-family: Arial, sans-serif;
     overflow-y: auto;
     position: relative;
-    background: linear-gradient(rgba(111, 206, 137, 0.5), rgb(34, 97, 36)), url('../images/upangbg.png') no-repeat center center / cover;
+    background-color:rgba(25, 216, 54, 0.2);
+    /* background: linear-gradient(rgba(111, 206, 137, 0.5), rgb(255, 255, 255)), url('../images/upangbg.png') no-repeat center center / cover; */
 }
 
 .main_content {
@@ -82,7 +83,7 @@ a.hover {
     font-weight: bold;
 }
 
-.status.available {
+/* .status.available {
     color: #28a745;
 }
 
@@ -92,7 +93,7 @@ a.hover {
 
 .status.closed {
     color: #d9534f;
-}
+} */
 
 .edit-btn {
     background: #5cb85c;
@@ -159,7 +160,6 @@ a.hover {
 .roomdetails_form {
     width: 90%;
     margin: 0 auto;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
     border-radius: 10px;
     height: auto;
@@ -172,40 +172,11 @@ a.hover {
     margin-bottom: 20px;
 }
 
-.form-group {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.form-group label {
-    width: 100px;
-    font-weight: bold;
-}
-
-.form-group select,
-.form-group span,
-.form-group input,
-.equipment {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #c6f6d5;
-}
-
 .equipment label {
     display: inline-flex;
     align-items: center;
     margin-right: 20px;
     margin-right: 20px;
-}
-
-.roomform_container {
-    border: 1px solid #ccc;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
 }
 
 .time {
@@ -215,43 +186,13 @@ a.hover {
     margin-left: 25px;
 }
 
-.form-group-horizontal {
-    margin-top: 30px;
-    display: flex;
-    justify-content: space-evenly;
-    border: solid 1px #ccc;
-    padding: 10px;
-    border-radius: 5px;
-    width: 100%;
-}
-
 .addanotherbtn {
     border-radius: 50%;
     background-color: #180a58;
     color: white;
 }
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
-}
 
-.modal-content {
-    background-color: #fefefe;
-    margin: 10% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 70%;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
 
 .closemodal {
     color: #f01111;

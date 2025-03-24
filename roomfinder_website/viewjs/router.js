@@ -1,6 +1,6 @@
 // SECTION ROUTE HANDLER AND VIEW SECTION JS   
 
-import { updateProfile, getProfile } from '../viewjs/profile.js';
+import { updateProfile } from '../viewjs/profile.js';
 import { InitDashboard } from '../viewjs/dashboard.js'
 import { InitPendingRequestSection } from '../viewjs/pending_request.js'
 import { InitUsersListSection } from '../viewjs/userslist.js'; 
@@ -183,7 +183,6 @@ window.handleLogout = async function(event) {
             }
         },
         onCancel: () => {
-            console.log('logout cancelled');
         }
     });
 };

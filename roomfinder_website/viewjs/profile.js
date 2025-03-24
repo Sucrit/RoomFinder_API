@@ -10,7 +10,6 @@ export function updateProfile() {
     const profileNameElement = document.getElementsByClassName('profileName')[0];
     const profileRoleElement = document.getElementsByClassName('profileRole')[0];
     const profilePicElement = document.getElementsByClassName('profilePic')[0];
-    // const profileEmailElement = document.getElementsByClassName('profileEmail');
 
     if (profilePicElement) {
         profilePicElement.src = profilepic;
@@ -22,22 +21,7 @@ export function updateProfile() {
     if (profileRoleElement) {
         profileRoleElement.textContent = role;
     }
-    // if (profileEmailElement) {
-    //     profileEmailElement.textContent = email;
-    // }
     else {
         console.error('element not found');
     }
-}
-
-export function getProfile() {
-        // get from local storage
-        const username = localStorage.getItem('username') || 'Unknown User'; 
-    
-        const profileNameElement = document.getElementsByClassName('profileName')[0];
-    
-        // set text content to profile dom
-        if (profileNameElement) {
-            profileNameElement.textContent = username;
-        }
 }
