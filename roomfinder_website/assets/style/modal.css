@@ -49,10 +49,8 @@
     text-align: center;
     margin-top: -20px;
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
-    /* Allows wrapping of form groups */
-    gap: 20px;
-    /* Adds space between form groups */
 }
 
 /* Style for form groups */
@@ -113,7 +111,7 @@ button {
 }
 
 /* Style for back button */
-.backbtn {
+.backbtn, .closeModalBtn {
     background-color: #f44336;
 }
 
@@ -194,21 +192,15 @@ button {
     font-size: 14px;
 }
 
-/* 
-.roomdetails_form {
-    width: 90%;
-    margin: 0 auto;
-    padding: 20px;
-    border-radius: 10px;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
 
+.roomdetails_form input,
+.roomdetails_form select {
+    margin-bottom: 15px;
+}
+/* 
 .roomdetails_form h2,
 .roomdetails_form h1 {
     text-align: center;
     margin-bottom: 20px;
-} */
+}
+  */

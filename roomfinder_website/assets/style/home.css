@@ -126,7 +126,6 @@ a.hover {
 
 h2 {
     color: #003366;
-    margin-bottom: 15px;
 }
 
 /* User Requests Container */
@@ -233,8 +232,7 @@ button {
 }
 
 
-.createbtn,
-.update-btn {
+.createbtn{
     /* background-color: #4CAF50;
     color: white;
     cursor: pointer; */
@@ -246,4 +244,13 @@ button {
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s ease;
+}
+
+.update-btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
 }

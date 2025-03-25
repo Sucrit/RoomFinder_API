@@ -20,13 +20,11 @@ export function InitRoomsSection() {
 
     let selectedStatus = 'all';
     let searchText = '';
-
-
+ 
     const buildingRoomsMap = {
         "PTC": ["302", "403", "404", "405", "406"],
         "ITS": ["201", "202"]
     };
-
 
     function updateRoomNumberOptions(building) {
         roomNumberSelect.innerHTML = ""; // Clear previous options
@@ -40,7 +38,6 @@ export function InitRoomsSection() {
             });
         }
     }
-
 
     addRoomBldgSelect.addEventListener('change', () => {
         const selectedBuilding = addRoomBldgSelect.value;
@@ -148,7 +145,6 @@ export function InitRoomsSection() {
             console.error('Add schedule modal not found');
         }
     }
-
 
     // close add schedule modal
     function closeAddScheduleModal() {

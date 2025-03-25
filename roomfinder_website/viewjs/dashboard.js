@@ -33,6 +33,16 @@ export async function InitDashboard() {
             const occupiedPercentage = totalRoom ? Math.round((occupiedCount / totalRoom) * 100) : 0;
             const closedPercentage = totalRoom ? Math.round((closedCount / totalRoom) * 100) : 0;
 
+            const menu = document.querySelector('#mobile-menu');
+            const menuLinks = document.querySelector('.navbar__menu');
+            const menuBars = document.getElementsByClassName('.navbar');
+
+            menu.addEventListener('click', function () {
+                menu.classList.toggle('is-active');
+                menuLinks.classList.toggle('active');
+            });
+
+
             // dom dashboard stats
             updateTextContent('totalRequests', totalRequests);
             updateTextContent('pendingRequests', data["pending count"] || 0);
@@ -49,7 +59,7 @@ export async function InitDashboard() {
             updateTextContent('occupiedPercentage', occupiedPercentage + '%');
             updateTextContent('closedRooms', data["closed count"] || 0);
             updateTextContent('closedPercentage', closedPercentage + '%');
-            
+
             // dom progress bar
             progressbarAnimation('pendingRequestBox', pendingPercentage);
             progressbarAnimation('approvedRequestBox', approvedPercentage);
@@ -57,7 +67,7 @@ export async function InitDashboard() {
             progressbarAnimation('availableRoomBox', availablePercentage);
             progressbarAnimation('occupiedRoomBox', occupiedPercentage);
             progressbarAnimation('closedRoomBox', closedPercentage);
- 
+
             // ongoing schedules table 
             const ongoingScheduleData = data["Ongoing schedule"] || [];
             updateTable('ongoingSchedule', ongoingScheduleData);
@@ -68,12 +78,12 @@ export async function InitDashboard() {
 
             // init btns in dashboard
             InitSeeAllButton();
-        } 
+        }
         else {
             console.error('Error:', response.message);
             showError(response.message);
         }
-    } 
+    }
     catch (error) {
         // if (loadingSpinner) {
         //     loadingSpinner.style.display = 'none';  
@@ -116,7 +126,7 @@ function updateTable(tableId, data) {
     tableBody.innerHTML = '';
 
     // limit to 5 items
-    const limitedData = data.slice(0, 5); 
+    const limitedData = data.slice(0, 5);
 
     if (Array.isArray(limitedData) && limitedData.length > 0) {
         limitedData.forEach(item => {
@@ -129,11 +139,11 @@ function updateTable(tableId, data) {
                 const endTime = dateTimeFormat(item.ending_time);
 
                 row.innerHTML = `
-                    <td>${item.room_building + ' ' +item.room_number || 'N/A'}</td> 
+                    <td>${item.room_building + ' ' + item.room_number || 'N/A'}</td> 
                     <td>${item.date + '<br/>' + startTime + ' - ' + endTime || 'N/A'}</td>
                     <td>${item.block || 'N/A'}</td>        
                 `;
-            } 
+            }
             // request history (dashboard)
             else if (tableId === 'requestHistory') {
 
@@ -147,9 +157,9 @@ function updateTable(tableId, data) {
                 `;
             }
 
-            tableBody.appendChild(row);  
+            tableBody.appendChild(row);
         });
-    } 
+    }
     else {
         let noDataMessage = '<td colspan="6">No data available</td>';
 
@@ -164,22 +174,22 @@ function updateTable(tableId, data) {
 function InitSeeAllButton() {
     const seeRequestHistoryBtn = document.querySelector('.seerequesthistory-btn');
     if (seeRequestHistoryBtn) {
-        seeRequestHistoryBtn.addEventListener('click', function() {
+        seeRequestHistoryBtn.addEventListener('click', function () {
             showSection('pending_request');
         });
     }
 
     const seeOngoingSchedule = document.querySelector('.seeongoingschedule-btn');
     if (seeOngoingSchedule) {
-        seeOngoingSchedule.addEventListener('click', function(){
+        seeOngoingSchedule.addEventListener('click', function () {
             showSection('ongoing_schedule');
         });
     }
-}   
+}
 
 
 // initial hide sec in dashboard
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 
     const ongoingScheduleSection = document.getElementById('ongoing_schedule');
     const requestHistorySection = document.getElementById('request_history');
