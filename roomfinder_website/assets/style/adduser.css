@@ -6,9 +6,7 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     width:700px;
     margin-top: 3%;
-    margin-left: 10%;
     text-align: center;
-    
 }
 
 .roleform input {
@@ -23,9 +21,15 @@
     margin: 5px;
     padding: 10px;
     border-radius: 5px; 
-    border: 1px solid #ccc;
-    background-color: aquamarine;
-    
+    background-color: #DAFFEA;
+    appearance: none;   /* Remove default dropdown arrow */
+    -webkit-appearance: none;  /* For Safari */
+    background-image: url('../images/web-svg-icons/dropdown-arrow-black.svg'); /* Custom arrow image */
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 15px;
+    padding-right: 30px;  /* Add space for the custom arrow */
+    font-weight: bold;
 }
 
 /* AUTHENTICATION */
@@ -47,4 +51,30 @@
     border: 1px solid #ccc;
     background-color: rgb(28, 15, 73);
     color: white;
+}
+
+#role {
+    width: auto;
+}
+
+.addUserButtons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.addUserButtons button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#adduser {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

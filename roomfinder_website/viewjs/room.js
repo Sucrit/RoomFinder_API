@@ -6,6 +6,7 @@ import { dateTimeFormat } from '../viewjs/timeformat.js';
 export function InitRoomsSection() {
     const roomListBody = document.getElementById('roomListBody');
     const searchBar = document.querySelector('.search-bar');
+
     const modal = document.getElementById('modal');
     const roomForm = document.getElementById('roomForm');
     const roomNumberSelect = document.querySelector('#addRoomNumberSelect');
@@ -18,6 +19,39 @@ export function InitRoomsSection() {
     const addScheduleModal = document.getElementById('addScheduleModal'); 
 
     let searchText = '';
+ 
+    const buildingRoomsMap = {
+        "PTC": ["302", "403", "404", "405", "406"],
+        "ITS": ["201", "202"]
+    };
+
+    function updateRoomNumberOptions(building) {
+        roomNumberSelect.innerHTML = ""; // Clear previous options
+
+        if (buildingRoomsMap[building]) {
+            buildingRoomsMap[building].forEach(roomNumber => {
+                const option = document.createElement("option");
+                option.value = roomNumber;
+                option.textContent = roomNumber;
+                roomNumberSelect.appendChild(option);
+            });
+        }
+    }
+
+    addRoomBldgSelect.addEventListener('change', () => {
+        const selectedBuilding = addRoomBldgSelect.value;
+        updateRoomNumberOptions(selectedBuilding); // Update room numbers based on the selected building
+    });
+
+    // Event listener for building selection change
+    addRoomBldgSelect.addEventListener('change', () => {
+        const selectedBuilding = addRoomBldgSelect.value;
+        updateRoomNumberOptions(selectedBuilding);
+    });
+
+    // Initial setup (optional) to load rooms for the default building selection
+    updateRoomNumberOptions(addRoomBldgSelect.value);
+
 
     const buildingRoomsMap = {
         "PTC": ["302", "303", "304", "305", "306", "403", "404", "405", "406"],
@@ -33,11 +67,11 @@ export function InitRoomsSection() {
         // Building select change handler
         addRoomBldgSelect.addEventListener('change', () => {
             updateRoomNumberOptions(addRoomBldgSelect.value);
+
         });
 
         // Initialize room numbers
         updateRoomNumberOptions(addRoomBldgSelect.value);
-
         roomForm.addEventListener('submit', handleRoomFormSubmit);
 
         addScheduleBtn.addEventListener('click', () => {
@@ -66,6 +100,7 @@ export function InitRoomsSection() {
             submitButton.textContent = 'Create'; 
         }
     }
+
 
     function closeModal() {
         console.log('Closing modal...');
@@ -250,7 +285,6 @@ export function InitRoomsSection() {
         });
         document.querySelector('.createbtn').textContent = 'Update';
     }
-
 
     // clear create room form 
     function clearForm() {

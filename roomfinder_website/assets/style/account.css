@@ -101,3 +101,20 @@
 hr {
     margin-bottom: 10px;
 }
+
+
+.btn-container{
+    display: flex;
+    justify-content: center;
+}
+.confirm_btn {
+    display: block;
+    width: auto;
+    padding: 10px;
+    background-color: #3A9155;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
