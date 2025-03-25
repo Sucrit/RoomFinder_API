@@ -99,6 +99,7 @@ class RoomModel {
     
     // update room details
     public function updateRoom($id, $room_building, $room_number, $roomType, $capacity, $status, $equipment) {
+
         $sql = "UPDATE room 
                 SET room_building = ?, room_number = ?, room_type = ?, capacity = ?, status = ?, equipment = ? 
                 WHERE id = ?";

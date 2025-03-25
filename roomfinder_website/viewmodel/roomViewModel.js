@@ -35,22 +35,20 @@ export default class RoomViewModel {
             return { success: false, message: 'Error fetching room details' };
         }
     }
-    
 
-    // create room
+    // create room 
     static async createRoom(roomData) {
         try {
             const response = await RoomModel.createRoom(roomData);
+            console.log('Response from RoomModel.createRoom:', response);
     
-            if (response.status === 'success') { 
+            if (response.status === 'success') {
                 showToast(response.message, 'success');
-                return { success: true, message: response.message, roomId: response.roomId }; 
-            } 
-            else if (response.status === 'error') {
+                return { success: true, message: response.message, roomId: response.roomId, status: response.status };
+            } else if (response.status === 'error') {
                 showToast(response.message, 'error');
-                return { success: false, message: response.message }; 
-            } 
-            else {
+                return { success: false, message: response.message };
+            } else {
                 showToast(response.message || 'Error creating room', 'error');
                 return { success: false, message: 'Error creating room' };
             }
@@ -61,21 +59,23 @@ export default class RoomViewModel {
         }
     }
     
-    
-    // update room view
+
+
+    // update room
     static async updateRoom(roomId, updatedData) {
         try {
             const response = await RoomModel.updateRoom(roomId, updatedData);
 
             if (response.status === 'success') { 
                 showToast(response.message, 'success');
-                return { success: true, message: response.message };  
-            } 
-            else if (response.status === 'error') {
+                return { success: true, message: response.message, status: response.status};  
+            } else if (response.status === 'error') {
                 showToast(response.message, 'error');
                 return { success: false, message: response.message }; 
-            } 
-            else {
+            } else if (response.success === false) {
+                showToast(response.message, 'error');
+                return { success: false, message: response.message }; 
+            } else {
                 showToast('Unexpected error occurred during room update', 'error');
                 return { success: false, message: 'Error updating room' }; 
             }
@@ -86,17 +86,18 @@ export default class RoomViewModel {
         }
     }
 
-    
-    // delete room by id
+
+    // Delete room method
     static async deleteRoom(roomId) {
         try {
             const response = await RoomModel.deleteRoomById(roomId); 
+
             if (response.success) {
                 showToast('Room deleted successfully', 'success');
                 return { success: true, message: 'Room deleted successfully' }; 
             } else {
-                showToast('Error deleting room', 'error');
-                return { success: false, message: 'Error deleting room' };
+                showToast(response.message, 'error');
+                return { success: false, message: response.message };
             }
         } catch (error) {
             console.error('Error deleting room:', error);
@@ -104,4 +105,5 @@ export default class RoomViewModel {
             return { success: false, message: 'Error deleting room' };
         }
     }
+
 }

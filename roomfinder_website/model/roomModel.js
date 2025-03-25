@@ -1,4 +1,4 @@
-
+import { authorizationRole } from './2auth.js';
 
 export default class RoomModel {
 
@@ -64,49 +64,57 @@ export default class RoomModel {
 
     // create room route
     static async createRoom(roomData) {
-        try {
-            const authToken = localStorage.getItem('authToken');
-            if (!authToken) {
-                throw new Error("You are not authorized");
-            }
-    
-            const response = await fetch('http://localhost/RoomFinder_API/api/index.php/room', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${authToken}`
-                },
-                body: JSON.stringify(roomData),
-            });
-    
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-    
-            const data = await response.json();
-            if (data.status === 'success') {
-                // Handle the room creation success, return room ID instead of 'room' object
-                return { status: 'success', message: data.message, roomId: data.id };  // Changed 'room' to 'roomId'
-            } else if (data.status === 'error') {
-                return { status: 'error', message: data.message };
-            } else {
-                throw new Error('Unexpected response status');
-            }
-        } catch (error) {
-            console.error('Error creating room:', error.message);
-            throw new Error('Error creating room: ' + error.message);  
-        }
-    }
-    
-    
-    // update room data route
-    static updateRoom(id, updatedData) {
         const authToken = localStorage.getItem('authToken');
         if (!authToken) {
             throw new Error("You are not authorized");
         }
 
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/room/${id}`, {
+        // check user role
+        const userRole = authorizationRole(); 
+        if (userRole !== 'Administrator') { 
+            return { success: false, message: 'Only Administrator can perform this action' }; 
+        }
+
+        const response = await fetch('http://localhost/RoomFinder_API/api/index.php/room', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify(roomData),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json(); 
+
+        console.log('Response from API:', data);
+
+        if (data.status === 'success') {
+            return { status: 'success', message: data.message, roomId: data.id };
+        } else if (data.status === 'error') {
+            return { status: 'error', message: data.message };
+        } else {
+            throw new Error('Unexpected response status');
+        }
+    }
+
+        
+    // update room data route
+    static updateRoom(roomId, updatedData) {
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+            throw new Error("You are not authorized");
+        }
+
+        // check user role
+        const userRole = authorizationRole(); 
+        if (userRole !== 'Administrator') { 
+            return { success: false, message: 'Only Administrator can perform this action' }; 
+        }
+
+        return fetch(`http://localhost/RoomFinder_API/api/index.php/room/${roomId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -121,14 +129,14 @@ export default class RoomModel {
             return response.json();  
         })
         .then(data => {
-            return data; 
+            console.log('Parsed response:', data);
+            return data;
         })
         .catch(error => {
-            console.error('Error updating room:', error.message);
+            console.error('Error updating room:', error);
             throw error;
         });
     }
-
 
     // delete room route 
     static deleteRoomById(id) {
@@ -136,6 +144,12 @@ export default class RoomModel {
 
         if (!authToken) {
             throw new Error("You are not authorized");
+        }
+
+        // check user role
+        const userRole = authorizationRole(); 
+        if (userRole !== 'Administrator') { 
+            return { success: false, message: 'Only Administrator can perform this action' }; 
         }
         
         return fetch(`http://localhost/RoomFinder_API/api/index.php/room/${id}`, {

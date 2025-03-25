@@ -1,7 +1,4 @@
 <?php
-
-// VIEW
-
 // website access controls
 header("Access-Control-Allow-Origin: *");  
 header("Access-Control-Allow-Headers: Content-Type, Authorization");  
@@ -34,8 +31,6 @@ $userController = new UserController();
 $roomController = new RoomController();
 $roomRequestController = new RoomRequestController();
 $roomScheduleController = new RoomScheduleController();
-
-
 
 // user method handler
 function handleUser($requestMethod, $uri, $input, $userController) {
@@ -395,14 +390,17 @@ if (preg_match('/\/admin/', $uri)) {
     }
     handleAdmin($requestMethod, $uri, $input, $adminController, $userController);
 } 
+
 elseif (preg_match('/\/room_request/', $uri)) {
     AuthMiddleware::verifyToken(); 
     handleRoomRequest($requestMethod, $uri, $input, $roomRequestController);
 } 
+
 elseif (preg_match('/\/room_schedule/', $uri)) {
     AuthMiddleware::verifyToken();
     handleRoomSchedule($requestMethod, $uri, $input, $roomScheduleController);
 } 
+
 elseif (preg_match('/\/user/', $uri)) {
     if (!preg_match('/\/user\/login/', $uri) && !preg_match('/\/user\/logout/', $uri)) {
         AuthMiddleware::verifyToken(); 

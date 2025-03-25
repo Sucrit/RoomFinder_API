@@ -43,21 +43,18 @@ export default class AdminViewModel {
     // add web users form (auth section)
     static async handleSignUp(role, username, email, password, teacher_id) {
         try {
-            // Call the model method to add the user
-            const result = await AdminModel.addUser(role, username, email, password, teacher_id);
+            const response = await AdminModel.addUser(role, username, email, password, teacher_id);
     
-            if (!result || !result.message) {   
+            if (!response || !response.message) {   
                 throw new Error('Invalid response format from the server');
             }
     
-            if (result.status === "success" && result.message) {
-                showToast(result.message, 'success');
-                return { success: true, message: result.message };
-            } else if (result.status === "error" && result.message) {
-                showToast(result.message, 'error');
-                return { success: false, message: result.message };
+            if (response.status === "success" && response.message) {
+                showToast(response.message, 'success');
+                return { success: true, message: response.message };
             } else {
-                throw new Error(`Unexpected response status: ${result.status}`);
+                showToast(response.message, 'error');
+                return { success: false, message: response.message };
             }
         } catch (error) {
             console.error("Error during sign-up:", error);
@@ -92,7 +89,8 @@ export default class AdminViewModel {
             if (response && response.status === 'success') {
                 return { success: true, message: 'Admin deleted successfully' };
             } else {
-                return { success: false, message: 'Failed to delete admin' };
+                showToast(response.message);
+                return { success: false, message: response.message };
             }
         } catch (error) {
             console.error('Error deleting admin:', error);
@@ -108,6 +106,7 @@ export default class AdminViewModel {
             if (response && response.message === 'User deleted successfully') {
                 return { success: true, message: 'User deleted successfully' };
             } else {
+                showToast(response.message, 'error');
                 return { success: false, message: 'Failed to delete user' };
             }
         } catch (error) {
@@ -115,6 +114,7 @@ export default class AdminViewModel {
             return { success: false, message: 'Error deleting user' };
         }
     }  
+
 
     // update password
     static async updatePassword(adminId, oldPassword, newPassword, confirmPassword) {
@@ -134,7 +134,6 @@ export default class AdminViewModel {
             return { status: 'error', message: 'Error updating password' };
         }
     }
-    
 
 
     // logout

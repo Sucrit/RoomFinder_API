@@ -120,26 +120,30 @@ export function InitUsersListSection() {
 
     // delete user
     function deleteUser(userId, userRole, row) {
-        row.classList.add('ud-button-animation');
         setTimeout(() => {
-            row.remove();
-            if (userRole === 'Administrator' || userRole === 'Staff') {
-                AdminViewModel.deleteAdmin(userId)
-                    .then(response => showToast(response.message, response.success ? 'success' : 'error'))
-                    .catch(error => {
-                        console.error('Error deleting admin:', error);
-                        showToast('Failed to delete admin', 'error');
-                    });
-            } else {
-                AdminViewModel.deleteUser(userId)
-                    .then(response => showToast(response.message, response.success ? 'success' : 'error'))
-                    .catch(error => {
-                        console.error('Error deleting user:', error);
-                        showToast('Failed to delete user', 'error');
-                    });
-            }
+
+            // delete methods based on role
+            const deleteMethod = (userRole === 'Administrator' || userRole === 'Staff') 
+                ? AdminViewModel.deleteAdmin 
+                : AdminViewModel.deleteUser;
+
+            deleteMethod(userId)
+                .then(response => {
+                    if (response.success) {
+                        row.classList.add('ud-button-animation');
+                        row.remove();
+                        showToast(response.message, 'success');
+                    } else {
+                        showToast(response.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error(`Error deleting ${userRole.toLowerCase()}:`, error);
+                    showToast(`Failed to delete ${userRole.toLowerCase()}`, 'error');
+                });
         }, 250);
     }
+
 
     // based on selected role and search text
     function filterTable() {

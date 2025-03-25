@@ -1,4 +1,4 @@
-
+import { authorizationRole } from './2auth.js';
 
 export default class RoomScheduleModel {
 
@@ -69,11 +69,17 @@ export default class RoomScheduleModel {
     // create room schedule route
     static async createRoomSchedule(scheduleData) {
         const authToken = localStorage.getItem('authToken'); 
-
+    
         if (!authToken) {
             throw new Error("You are not authorized");
         }
 
+        // check user role
+        const userRole = authorizationRole(); 
+        if (userRole !== 'Administrator') { 
+            return { success: false, message: 'Only Administrator can perform this action' }; 
+        }
+    
         const response = await fetch('http://localhost/RoomFinder_API/api/index.php/room_schedule', {
             method: 'POST',
             headers: {
@@ -82,20 +88,19 @@ export default class RoomScheduleModel {
             },
             body: JSON.stringify(scheduleData),
         });
-
+    
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-
+    
         if (data.status === 'success') {
-            return { success: true, message: data.message };
+            return { success: true, message: data.message, status: data.status }; 
         } else if (data.status === 'error') {
-            return { success: false, message: data.message };
+            return { success: false, message: data.message, status: data.status };
         } else {
             throw new Error('Unexpected response from the server');
         }
-
     }
 
     // update room schedule route
@@ -104,6 +109,12 @@ export default class RoomScheduleModel {
         
         if (!authToken) {
             throw new Error("You are not authorized");
+        }
+
+        // check user role
+        const userRole = authorizationRole(); 
+        if (userRole !== 'Administrator') { 
+            return { success: false, message: 'Only Administrator can perform this action' }; 
         }
 
         const response = await fetch(`http://localhost/RoomFinder_API/api/index.php/room_schedule/${id}`, {
@@ -134,6 +145,12 @@ export default class RoomScheduleModel {
 
         if (!authToken) {
             throw new Error("You are not authorized");
+        }
+
+        // check user role
+        const userRole = authorizationRole(); 
+        if (userRole !== 'Administrator') { 
+            return { success: false, message: 'Only Administrator can perform this action' }; 
         }
 
         return fetch(`http://localhost/RoomFinder_API/api/index.php/room_schedule/${id}`, {

@@ -1,4 +1,6 @@
+
 import RoomScheduleModel from "../model/roomscheduleModel.js";
+import { showToast } from '../viewjs/toast.js';
 
 export default class RoomScheduleViewModel {
 
@@ -19,6 +21,7 @@ export default class RoomScheduleViewModel {
         }
     }
 
+
     // get all ongoing room schedules
     static async getOngoingSchedules() {
         try {
@@ -36,50 +39,45 @@ export default class RoomScheduleViewModel {
         }
     }
 
+
     // create room schedule
     static async createRoomSchedule(scheduleData) {
-        try {
-            const response = await RoomScheduleModel.createRoomSchedule(scheduleData);
+        const response = await RoomScheduleModel.createRoomSchedule(scheduleData);
 
-            if (response.success) {
-                return { success: true, message: response.message };
-            } else {
-                return { success: false, message: response.message };
-            }
-        } catch (error) {
-            console.error('Error creating room schedule:', error);
-            return { success: false, message: 'Error creating room schedule' };
-        }
+        if (response.success) {
+            showToast(response.message, 'success');
+            return { success: true, message: response.message, status: response.status };
+        } else {
+            showToast(response.message, 'error');
+            return { success: false, message: response.message, status: response.status };
+        }     
     }
+
 
     // update room schedule
     static async updateRoomSchedule(id, scheduleData) {
-        try {
-            const response = await RoomScheduleModel.updateRoomSchedule(id, scheduleData);
+        const response = await RoomScheduleModel.updateRoomSchedule(id, scheduleData);
 
-            if (response.success) {
-                return { success: true, message: response.message };
-            } else {
-                return { success: false, message: response.message };
-            }
-        } catch (error) {
-            console.error('Error updating room schedule:', error);
-            return { success: false, message: 'Error updating room schedule' };
+        if (response.success) {
+            showToast(response.message, 'success');
+            return { success: true, message: response.message };
+        } else {
+            showToast(response.message, 'error');
+            return { success: false, message: response.message };
         }
     }
+    
 
     // delete a room schedule
     static async deleteRoomSchedule(id) {
-        try {
-            const message = await RoomScheduleModel.deleteRoomSchedule(id);
-            if (message) {
-                return { success: true, message };
-            } else {
-                return { success: false, message: 'Failed to delete room schedule' };
-            }
-        } catch (error) {
-            console.error('Error deleting room schedule:', error);
-            return { success: false, message: 'Failed to delete room schedule' };
+        const response = await RoomScheduleModel.deleteRoomSchedule(id);
+
+        if (response.success) {
+            showToast('Room schedule deleted successfully', 'success');
+            return { success: true, message: response.message };
+        } else {
+            showToast(response.message, 'error');
+            return { success: false, message: response.message };
         }
     }
 }

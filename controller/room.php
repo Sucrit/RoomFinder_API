@@ -63,8 +63,6 @@ class RoomController {
                 }
             }
             
-            
-    
             // if no ongoing schedule get room schedules
             if (!$isOccupied) {
                 $schedules = $this->roomScheduleModel->getSchedulesByRoomId($room['id']);
@@ -126,23 +124,28 @@ class RoomController {
         $status = isset($input['status']) ? $input['status'] : $room['status'];
         $equipment = isset($input['equipment']) ? $input['equipment'] : $room['equipment'];
 
-        // check if no value channgd
-        if ($room_building == $room['room_building'] && 
-            $room_number == $room['room_number'] && 
-            $roomType == $room['room_type'] && 
-            $capacity == $room['capacity'] && 
-            $status == $room['status'] && 
-            $equipment == $room['equipment']) {
-            
-            echo json_encode(['status' => 'error', 'message' => 'You need to change a value before updating a room']);
-            return;
+        // check if no value change
+        if ($room_building == $room['room_building'] && $room_number == $room['room_number'] && 
+        $roomType == $room['room_type'] && $capacity == $room['capacity'] && 
+        $status == $room['status'] && $equipment == $room['equipment']) {
+        echo json_encode(['status' => 'error', 'message' => 'You need to change a value before updating a room']);
+        return;
         }
+
+        // check if room number & building is = to old value
+        if ($room_building != $room['room_building'] || $room_number != $room['room_number']) {
+            $roomExist = $this->roomModel->roomExistsByDetails($room_building, $room_number);
+            if ($roomExist) {
+                echo json_encode(['status' => 'error', 'message' => 'A room with this building and number already exists']);
+                return;
+            }
+        }
+
         $this->roomModel->updateRoom($id, $room_building, $room_number, $roomType, $capacity, $status, $equipment);
         echo json_encode(['status' => 'success', 'message' => 'Room updated successfully']);
     }
     
     
-
     // search room
     public function searchRooms($input) {
         if (isset($_GET['keyword'])) {

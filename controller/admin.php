@@ -16,6 +16,11 @@ class AdminController {
 
     // create administrator, staff, teacher
     public function createAdmin($username, $email, $password, $role) {
+
+        if (empty($username) || empty($email) || empty($password) || empty($role)) {
+            echo json_encode(['status' => 'error', 'message' => 'Please fill all the required fields']);
+            return;
+        }
         
         // filtrer valid email
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {

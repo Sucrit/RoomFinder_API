@@ -174,12 +174,6 @@
     border-spacing: 0 10px;
   }
 
-  table tr {
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-    
-  } 
-
   table th {
     background: #ffffff;
     font-weight: bold;
