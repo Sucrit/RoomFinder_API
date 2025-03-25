@@ -53,11 +53,6 @@ export function InitRoomsSection() {
     updateRoomNumberOptions(addRoomBldgSelect.value);
 
 
-    const buildingRoomsMap = {
-        "PTC": ["302", "303", "304", "305", "306", "403", "404", "405", "406"],
-        "ITS": ["201", "202"]
-    };
-
     // Initialize modal functionality
     function initModal() {
         // Close modal handlers
@@ -320,7 +315,7 @@ export function InitRoomsSection() {
             return; 
         }
 
-        // Prepare the data for schedule creation
+        // schedule data from form
         const scheduleData = {
             room_id: roomId,
             block: formData.get('block'),          
