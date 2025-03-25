@@ -1,4 +1,6 @@
-import RoomRequestModel from '../model/roomRequestModel.js';
+
+import RoomRequestModel from '../model/roomrequestModel.js';
+import { showToast } from '../viewjs/toast.js';  
 
 export default class RoomRequestViewModel {
 
@@ -7,7 +9,7 @@ export default class RoomRequestViewModel {
         try {
             const response = await RoomRequestModel.getDashboardDetails();
             if (response) {
-                return { success: true, history: response }; // Return the full response
+                return { success: true, history: response }; 
             } else {
                 return { success: false, message: 'No data found' };
             }
@@ -45,7 +47,7 @@ export default class RoomRequestViewModel {
 
             if (response.status === "success" && response.message) {
                 return response; 
-            }else if (response.status === "error" && response.message) {
+            } else if (response.status === "error" && response.message) {
                 return response; 
             } else {
                 throw new Error(`Failed to update status: ${status}`);
@@ -72,15 +74,16 @@ export default class RoomRequestViewModel {
         }
     }
 
-    // delete room (request history section)
+    // delete room request history (viewmodel section)
     static async deleteRoomRequestHistory(requestId) {
         try {
             const response = await RoomRequestModel.deleteRequestHistory(requestId);
 
-            if (response && response.message === 'Request deleted successfully') {
+            if (response && response.success) {
                 return { success: true, message: 'Room request history deleted successfully' };
             } else {
-                return { success: false, message: 'Failed to delete room request history' };
+                showToast(response.message, 'error');
+                return { success: false, message: response.message };
             }
         } catch (error) {
             console.error('Error deleting room request history:', error);

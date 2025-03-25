@@ -392,9 +392,7 @@ if (preg_match('/\/admin/', $uri)) {
 } 
 
 elseif (preg_match('/\/room_request/', $uri)) {
-    if ($requestMethod !== 'GET') {
-        AuthMiddleware::verifyToken(); 
-    }
+    AuthMiddleware::verifyToken(); 
     handleRoomRequest($requestMethod, $uri, $input, $roomRequestController);
 } 
 

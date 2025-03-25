@@ -5,7 +5,7 @@ import AdminViewModel from '../viewmodel/adminViewModel.js';
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('loginForm');
     
-    //listener
+    // event listener
     loginForm.addEventListener('submit', function (e) {
         e.preventDefault();  
         

@@ -14,6 +14,11 @@ class UserController {
     // create teacher
     public function createUser($teacher_id, $username, $email, $password, $role) {
 
+        if (empty($username) || empty($email) || empty($password) || empty($role)) {
+            echo json_encode(['status' => 'error', 'message' => 'Please fill all the required fields']);
+            return;
+        }
+
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             echo json_encode(['message' => 'Please enter a valid email address']);
             return;

@@ -1,4 +1,4 @@
-
+import { authorizationRole } from './2auth.js';
 
 export default class RoomRequestModel {
 
@@ -121,7 +121,6 @@ export default class RoomRequestModel {
             console.error('Error fetching request history:', error.message);
         });
     }
-
     
     // update pending request status
     static updateRequestStatus(id, status) {
@@ -160,32 +159,37 @@ export default class RoomRequestModel {
     }
 
     // delete request history route
-    static deleteRequestHistory(id) {
-
+    static async deleteRequestHistory(id) {
         const authToken = localStorage.getItem('authToken'); 
         if (!authToken) {
             throw new Error("You are not authorized");
         }
 
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/room_request/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`
-            }
-        })
-        .then(response => { 
+        // check user role
+        const userRole = authorizationRole(); 
+        if (userRole !== 'Administrator') { 
+            return { success: false, message: 'Only Administrator can perform this action' }; 
+        }
+
+        try {
+            const response = await fetch(`http://localhost/RoomFinder_API/api/index.php/room_request/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                }
+            });
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Request deleted:', data);
-            return data;
-        })
-        .catch(error => {
+
+            const data = await response.json();
+            return { success: true, message: 'Request deleted successfully' };
+        } catch (error) {
             console.error('Error deleting request:', error.message);
-        });
+            return { success: false, message: `Error deleting request: ${error.message}` };
+        }
     }
+
 }    

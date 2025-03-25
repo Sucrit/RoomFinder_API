@@ -5,20 +5,19 @@ import { dateTimeFormat } from '../viewjs/timeformat.js';
 
 export function InitRoomsSection() {
     const roomListBody = document.getElementById('roomListBody');
-    const filter = document.querySelector('.filter');
     const searchBar = document.querySelector('.search-bar');
-    const addModal = document.getElementById('modal');
-    const floatingBtn = document.querySelector('.floating-btn');
-    const addCloseBtn = document.querySelector('#modal .closemodal');
-    const addRoomForm = document.querySelector('#roomForm');
 
-    const addScheduleModal = document.getElementById('addScheduleModal');
-    const addScheduleForm = addScheduleModal ? addScheduleModal.querySelector('.roomdetails_form') : null; // Form inside Add Schedule modal
-
+    const modal = document.getElementById('modal');
+    const roomForm = document.getElementById('roomForm');
     const roomNumberSelect = document.querySelector('#addRoomNumberSelect');
     const addRoomBldgSelect = document.querySelector('#addRoomBuildingSelect');
+    const floatingBtn = document.querySelector('.floating-btn'); 
+    
+    const roomCreatedModal = document.getElementById('roomCreatedModal');
+    const addScheduleBtn = document.getElementById('addScheduletoRoom');
+    const cancelAddScheduleBtn = document.getElementById('cancelAddSchedule');
+    const addScheduleModal = document.getElementById('addScheduleModal'); 
 
-    let selectedStatus = 'all';
     let searchText = '';
  
     const buildingRoomsMap = {
@@ -54,118 +53,93 @@ export function InitRoomsSection() {
     updateRoomNumberOptions(addRoomBldgSelect.value);
 
 
-    // event listeners
-    function initEventListeners() {
-        filter.addEventListener('change', () => { selectedStatus = filter.value; filterTable(); });
-        searchBar.addEventListener('input', () => { searchText = searchBar.value.toLowerCase(); filterTable(); });
+    const buildingRoomsMap = {
+        "PTC": ["302", "303", "304", "305", "306", "403", "404", "405", "406"],
+        "ITS": ["201", "202"]
+    };
 
-        if (floatingBtn) {
-            floatingBtn.addEventListener('click', openAddRoomModal);
-        } else {
-            console.error("Floating button not found!");
-        }
+    // Initialize modal functionality
+    function initModal() {
+        // Close modal handlers
+        document.querySelector('.closemodal').addEventListener('click', closeModal);
+        document.querySelector('.backbtn').addEventListener('click', closeModal);
 
-        if (addCloseBtn) {
-            addCloseBtn.addEventListener('click', closeAddRoomModal);
-        }
+        // Building select change handler
+        addRoomBldgSelect.addEventListener('change', () => {
+            updateRoomNumberOptions(addRoomBldgSelect.value);
 
-        window.addEventListener('click', (event) => {
-            if (event.target === addModal) closeAddRoomModal();
         });
 
-        if (addRoomForm) {
-            addRoomForm.addEventListener('submit', AddRoom);
-        } else {
-            console.error('Room form not found');
-        }
+        // Initialize room numbers
+        updateRoomNumberOptions(addRoomBldgSelect.value);
+        roomForm.addEventListener('submit', handleRoomFormSubmit);
 
-        // create and back btn
-        const createBtn = document.querySelector('.createbtn');
-        if (createBtn) {
-            createBtn.addEventListener('click', AddRoom);
-        }
-        const backBtn = document.querySelector('.backbtn');
-        if (backBtn) {
-            backBtn.addEventListener('click', closeAddRoomModal);
-        }
-
-        // create schedule
-        const addScheduleBtn = document.getElementById('addScheduletoRoom');
-        if (addScheduleBtn) {
-            addScheduleBtn.addEventListener('click', () => {
-            });
-        } else {
-            console.error('Add Schedule button not found');
-        }
-
-        const cancelAddScheduleBtn = document.getElementById('cancelAddSchedule');
-        if (cancelAddScheduleBtn) {
-            cancelAddScheduleBtn.addEventListener('click', closeRoomCreatedModal);
-        } else {
-            console.error('Cancel Add Schedule button not found');
-        }
-        if (addScheduleForm) {
-            addScheduleForm.addEventListener('submit', AddSchedule);
-        }
-    }
-    function openAddRoomModal() {
-        addModal.style.display = 'block';
-    }
-    function closeAddRoomModal() {
-        addModal.style.display = 'none';
+        addScheduleBtn.addEventListener('click', () => {
+            closeRoomCreatedModal(); 
+            openAddScheduleModal(addScheduleBtn.getAttribute('data-room-id'));
+        });
+        cancelAddScheduleBtn.addEventListener('click', closeRoomCreatedModal);
     }
 
-    // show confirmation modal msg
-    function openRoomCreatedModal() {
-        const modal = document.getElementById('roomCreatedModal');
-        if (modal) {
-            modal.style.display = 'block';
+    function updateRoomNumberOptions(building) {
+        roomNumberSelect.innerHTML = '';
+        buildingRoomsMap[building]?.forEach(roomNumber => {
+            const option = document.createElement('option');
+            option.value = roomNumber;
+            option.textContent = roomNumber;
+            roomNumberSelect.appendChild(option);
+        });
+    }
+
+    function openModal(isUpdate = false) {
+        modal.style.display = 'block';
+        const submitButton = document.querySelector('.createbtn');
+        if (isUpdate) {
+            submitButton.textContent = 'Update'; 
         } else {
-            console.error('Room created modal not found');
+            submitButton.textContent = 'Create'; 
         }
+    }
+
+
+    function closeModal() {
+        console.log('Closing modal...');
+        modal.style.display = 'none';
+    }
+
+     // confirmation modal
+     function openRoomCreatedModal(roomId) {
+        roomCreatedModal.style.display = 'block';
+        addScheduleBtn.setAttribute('data-room-id', roomId); 
+        console.log('Room Created Modal Opened for Room ID:', roomId); 
     }
 
     // close confirmation modal
     function closeRoomCreatedModal() {
-        const modal = document.getElementById('roomCreatedModal');
-        if (modal) {
-            modal.style.display = 'none';
-        } else {
-            console.error('Room created modal not found');
-        }
+        roomCreatedModal.style.display = 'none';
     }
 
-    // add schedule to created room modal
+    // add schedule modal with room id 
     function openAddScheduleModal(roomId) {
-        const addScheduleModal = document.getElementById('addScheduleModal');
-        if (addScheduleModal) {
-            addScheduleModal.style.display = 'block';
-            addScheduleModal.setAttribute('data-room-id', roomId);
-        } else {
-            console.error('Add schedule modal not found');
-        }
+        addScheduleModal.setAttribute('data-room-id', roomId);
+        addScheduleModal.style.display = 'block';
     }
 
-    // close add schedule modal
     function closeAddScheduleModal() {
-        if (addScheduleModal) {
-            addScheduleModal.style.display = 'none';
-        } else {
-            console.error('Add schedule modal not found');
-        }
+        addScheduleModal.style.display = 'none'; 
     }
 
-    function resetAddScheduleForm() {
-        const addScheduleForm = document.querySelector('.roomdetails_form');
-        if (addScheduleForm) {
-            addScheduleForm.reset();
-        } else {
-            console.error('Add Schedule Form not found');
-        }
-    }
+    // Close the add schedule modal
+    document.querySelector('.closeModalBtn').addEventListener('click', () => {
+        addScheduleModal.style.display = 'none';
+    });
 
+    floatingBtn.addEventListener('click', () => {
+        clearForm(); 
+        openModal(); 
+    });
 
-    // get rooms
+    // Fetch and display rooms
     function fetchRooms() {
         roomListBody.innerHTML = '';
         RoomViewModel.getAllRooms()
@@ -173,7 +147,7 @@ export function InitRoomsSection() {
                 if (result.success && result.rooms.length > 0) {
                     renderRoomRows(result.rooms);
                 } else {
-                    roomListBody.innerHTML = `<tr><td colspan="5">${result.message || 'No rooms available'}</td></tr>`;
+                     roomListBody.innerHTML = `<tr><td colspan="5">No rooms available</td></tr>`;
                 }
             })
             .catch(error => {
@@ -182,24 +156,22 @@ export function InitRoomsSection() {
             });
     }
 
-    // render rooms
+    // Render room rows
     function renderRoomRows(rooms) {
         rooms.forEach(room => {
-            const row = document.createElement('tr');
-            row.classList.add('room-item');
+            const row = createRoomRow(room);
+            roomListBody.appendChild(row);
+        });
+    }
 
-            // Debugging: Log the ongoing_schedule data to ensure it exists
-            console.log('Ongoing schedule for room:', room.id, room.ongoing_schedule);
+    // Create room row with buttons
+    function createRoomRow(room) {
+        const row = document.createElement('tr');
+        row.classList.add('room-item');
 
-            let ongoingSchedule = 'N/A';
-            if (room.ongoing_schedule && room.ongoing_schedule.starting_time && room.ongoing_schedule.ending_time) {
-                const startTime = dateTimeFormat(room.ongoing_schedule.starting_time);
-                const endTime = dateTimeFormat(room.ongoing_schedule.ending_time);
-                ongoingSchedule = `${startTime} - ${endTime}`;
-            }
+        const ongoingSchedule = formatOngoingSchedule(room);
 
-            // Create the row HTML
-            row.innerHTML = `
+        row.innerHTML = `
             <td>${room.room_building}</td>
             <td>${room.room_number}</td>
             <td>${ongoingSchedule}</td>
@@ -210,190 +182,212 @@ export function InitRoomsSection() {
             </td>
         `;
 
+        row.querySelector('.remove-btn').addEventListener('click', () => handleRemoveRoom(room.id, row));
+        row.querySelector('.update-btn').addEventListener('click', () => handleUpdateRoom(room.id));
 
-            roomListBody.appendChild(row);
+        return row;
+    }
 
-            // btn event listeners
-            row.querySelector('.remove-btn').addEventListener('click', () => handleRemoveRoom(room.id, row));
-            row.querySelector('.update-btn').addEventListener('click', () => handleUpdateRoom(room.id));
+    // format ongoing schedule
+    function formatOngoingSchedule(room) {
+        if (room.ongoing_schedule && room.ongoing_schedule.starting_time && room.ongoing_schedule.ending_time) {
+            const startTime = dateTimeFormat(room.ongoing_schedule.starting_time);
+            const endTime = dateTimeFormat(room.ongoing_schedule.ending_time);
+            return `${startTime} - ${endTime}`;
+        }
+        return 'N/A';
+    }
+
+    // update button click
+    async function handleUpdateRoom(roomId) {
+        try {
+            const response = await RoomViewModel.getRoomById(roomId);
+            if (response.success) {
+                populateModalForm(response.room);
+                openModal();
+            } else {
+                showToast(response.message || 'Room not found', 'error');
+            }
+        } catch (error) {
+            console.error('Error fetching room:', error);
+            showToast('Error loading room details', 'error');
+        }
+    }
+
+    // room form submission (create/update)
+    async function handleRoomFormSubmit(event) {
+        event.preventDefault(); 
+
+        const roomId = document.getElementById('roomIdField').value; 
+        const formData = new FormData(event.target);
+        
+        // form data
+        const updatedData = {
+            room_id: roomId || undefined, 
+            room_number: formData.get('roomNumber'),
+            room_building: formData.get('roomBuilding'),
+            capacity: formData.get('capacity'),
+            room_type: formData.get('roomType'),
+            status: formData.get('availability'),
+            equipment: [],
+        };
+
+        // equipment values
+        document.querySelectorAll('.equipment input[type="checkbox"]:checked').forEach(checkbox => {
+            updatedData.equipment.push(checkbox.value);
+        });
+        
+        // join equipments
+        updatedData.equipment = updatedData.equipment.join(',');
+
+        try {
+            let response;
+            if (updatedData.room_id) {
+                response = await RoomViewModel.updateRoom(updatedData.room_id, updatedData);
+                if (response.status === 'success') {
+                    showToast(response.message, 'success');
+                    await fetchRooms();
+                    closeModal();
+                }
+            } else {
+                response = await RoomViewModel.createRoom(updatedData);
+                console.log('Response from ViewModel:', response);
+                if (response.status === 'success') {
+                    showToast(response.message, 'success');
+                    await fetchRooms();
+                    closeModal();
+                    openRoomCreatedModal(response.roomId); 
+                }
+            }
+        } catch (error) {
+            console.error('Error processing room form:', error);
+            showToast('Error processing room form', 'error');
+        }
+    }        
+
+    // populate datas to form
+    function populateModalForm(room) {
+        // set room number based on building
+        addRoomBldgSelect.value = room.room_building;
+        updateRoomNumberOptions(room.room_building);
+        
+        // form values
+        document.getElementById('roomIdField').value = room.id;
+        roomNumberSelect.value = room.room_number;
+        document.querySelector('input[name="capacity"]').value = room.capacity;
+        document.querySelector('select[name="roomType"]').value = room.room_type;
+        document.querySelector('select[name="availability"]').value = room.status;
+    
+        // equipment values
+        const equipment = room.equipment?.split(',') || [];
+        document.querySelectorAll('.equipment input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = equipment.includes(checkbox.value.trim());
+        });
+        document.querySelector('.createbtn').textContent = 'Update';
+    }
+
+    // clear create room form 
+    function clearForm() {
+        document.getElementById('roomIdField').value = '';
+        roomForm.reset(); 
+        document.querySelectorAll('.equipment input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
         });
     }
 
-    // delete room confirmation
+    // add schedule form 
+    const scheduleForm = document.getElementById('addscheduletoroomform');  
+    scheduleForm.addEventListener('submit', handleScheduleFormSubmit);
+
+    async function handleScheduleFormSubmit(event) {
+        event.preventDefault(); 
+
+        const roomId = addScheduleModal.getAttribute('data-room-id'); 
+        if (!roomId) {
+            console.error('Room ID is missing');
+            return;
+        }
+
+        const formData = new FormData(event.target);
+        let startTime = formData.get('timeStart'); 
+        let endTime = formData.get('timeEnd');
+    
+        startTime = startTime + ":00";
+        endTime = endTime + ":00";
+
+        if (startTime >= endTime) {
+            showToast('Starting time must be before ending time', 'error');
+            return; 
+        }
+
+        // Prepare the data for schedule creation
+        const scheduleData = {
+            room_id: roomId,
+            block: formData.get('block'),          
+            date: formData.get('date'),  
+            starting_time: startTime,
+            ending_time: endTime      
+        };
+
+        console.log('Schedule Data:', scheduleData);
+
+        try {
+            const response = await RoomScheduleViewModel.createRoomSchedule(scheduleData); 
+
+            if (response.status === 'success') {
+                showToast(response.message, 'success');
+                closeAddScheduleModal();  
+                fetchRooms(); 
+            } else if (response.status === 'error') {
+                showToast(response.message, 'error');
+            }
+        } catch (error) {
+            console.error('Error creating schedule:', error);
+            showToast('Error creating schedule', 'error');
+        }
+    }
+
+    // remove room confirmation msg
     function handleRemoveRoom(roomId, row) {
         showToast('Are you sure you want to remove this room?', 'info', {
             showButtons: true,
-            onConfirm: () => {
-                row.classList.add('ud-button-animation');
-                setTimeout(() => {
-                    row.remove();
-                    removeRoom(roomId);
-                }, 250);
-            },
-            onCancel: () => { showToast('Room removal canceled', 'info'); }
+            onConfirm: () => removeRoom(roomId, row),
+            onCancel: () => showToast('Room removal canceled', 'info')
         });
     }
 
-    // delete room
-    function removeRoom(roomId) {
-        RoomViewModel.deleteRoom(roomId)
-            .then(response => {
-                if (response.success) {
-                    showToast(response.message, 'success');
-                } else {
-                    showToast('Failed to remove room', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error deleting room:', error);
-                showToast('Failed to delete room', 'error');
-            });
+    // remove room 
+    async function removeRoom(roomId, row) {
+        try {
+            const response = await RoomViewModel.deleteRoom(roomId);
+            if (response.success) {
+                row.remove();
+                showToast(response.message, 'success');
+            } else {
+                showToast(response.message || 'Failed to remove room', 'error');
+            }
+        } catch (error) {
+            console.error('Error removing room:', error);
+            showToast('Error removing room', 'error');
+        }
     }
 
-    // filter rooms by status and search txt
+    // Search filter
     function filterTable() {
-        const rows = roomListBody.querySelectorAll('tr');
+        const rows = document.querySelectorAll('.room-item');
         rows.forEach(row => {
-            const statusCell = row.cells[3];
-            const buildingCell = row.cells[0];
-            const roomNumberCell = row.cells[1];
-
-            const roomStatus = statusCell ? statusCell.textContent.toLowerCase() : '';
-            const roomBuilding = buildingCell ? buildingCell.textContent.toLowerCase() : '';
-            const roomNumber = roomNumberCell ? roomNumberCell.textContent.toLowerCase() : '';
-
-            const statusMatches = selectedStatus === 'all' || roomStatus === selectedStatus.toLowerCase();
-            const searchMatches = roomBuilding.includes(searchText) || roomNumber.includes(searchText) || roomStatus.includes(searchText);
-
-            row.style.display = (statusMatches && searchMatches) ? '' : 'none';
+            const building = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+            const number = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            const matchesSearch = building.includes(searchText) || number.includes(searchText);
+            row.style.display = matchesSearch ? '' : 'none';
         });
     }
 
-    // add room
-    async function AddRoom(event) {
-        event.preventDefault();
-
-        const roomForm = addRoomForm;
-        if (!roomForm.checkValidity()) {
-            showToast('Please fill out all the required fields', 'error');
-            return;
-        }
-
-        const roomData = getRoomDataFromForm();
-        try {
-            const result = await RoomViewModel.createRoom(roomData);
-            if (result.success) {
-
-                // get id from create room response
-                const roomId = result.room.id;
-
-                fetchRooms();
-                closeAddRoomModal();
-
-                openRoomCreatedModal(); // confirmation modal
-
-                const addScheduleBtn = document.querySelector('#roomCreatedModal #addScheduletoRoom');
-                const cancelScheduleBtn = document.querySelector('#roomCreatedModal #cancelAddSchedule')
-                if (addScheduleBtn) {
-                    addScheduleBtn.addEventListener('click', () => {
-                        openAddScheduleModal(roomId);
-                    });
-                } else if (cancelScheduleBtn) {
-                    cancelScheduleBtn.addEventListener('click', () => {
-                        closeAddScheduleModal();
-                    })
-                }
-
-            } else {
-                alert(result.message || 'Error adding room');
-            }
-        } catch (error) {
-            alert('Failed to add room');
-            console.error('Error adding room:', error);
-        }
-    }
-
-
-    // room data 
-    function getRoomDataFromForm() {
-        const roomBuilding = document.querySelector('select[name="roomBuilding"]').value;
-        const roomNumber = document.querySelector('select[name="roomNumber"]').value;
-        const capacity = document.querySelector('input[name="capacity"]').value;
-        const roomType = document.querySelector('select[name="roomType"]').value;
-        const availability = document.querySelector('select[name="availability"]').value;
-        const equipment = Array.from(document.querySelectorAll('.equipment input[type="checkbox"]:checked'))
-            .map(checkbox => checkbox.value)
-            .join(', ');
-
-        return {
-            room_building: roomBuilding,
-            room_number: roomNumber,
-            status: availability,
-            equipment: equipment,
-            capacity: capacity,
-            room_type: roomType
-        };
-    }
-
-    // add schedule to the created room
-    async function AddSchedule(event) {
-        event.preventDefault();
-
-        const roomId = addScheduleModal.getAttribute('data-room-id');
-        if (!roomId) {
-            showToast('Error: Room ID is not found', 'error');
-            return;
-        }
-
-        // Check if the form is valid
-        if (!addScheduleForm.checkValidity()) {
-            showToast('Please fill out all the required fields', 'error');
-            return;
-        }
-
-        // Validate that the ending time is after the starting time
-        const startingTime = addScheduleForm.querySelector('input[name="timeStart"]').value;
-        const endingTime = addScheduleForm.querySelector('input[name="timeEnd"]').value;
-
-        if (new Date('1970-01-01T' + endingTime) <= new Date('1970-01-01T' + startingTime)) {
-            showToast('Ending time must be later than starting time.', 'error');
-            return;
-        }
-
-        const scheduleData = {
-            room_id: roomId,
-            block: addScheduleForm.querySelector('select[name="block"]').value,
-            date: addScheduleForm.querySelector('input[name="date"]').value,
-            starting_time: addScheduleForm.querySelector('input[name="timeStart"]').value + ':00',
-            ending_time: addScheduleForm.querySelector('input[name="timeEnd"]').value + ':00',
-        };
-
-        // create schedule
-        try {
-            const result = await RoomScheduleViewModel.createRoomSchedule(scheduleData);
-
-            if (result.success) {
-                resetAddScheduleForm();
-                showToast('Schedule added successfully!', 'success');
-            } else {
-                showToast(result.message || 'Error adding schedule', 'error');
-            }
-        } catch (error) {
-            showToast('Error adding schedule', 'error');
-            console.error('Error adding schedule:', error);
-        }
-    }
-
-    function init() {
-        if (addModal) {
-            addModal.style.display = 'none';
-        }
-        if (document.getElementById('roomCreatedModal')) {
-            document.getElementById('roomCreatedModal').style.display = 'none';
-        }
-        initEventListeners();
-        fetchRooms();
-    }
-
-    init();
+    // Initialize everything
+    initModal();
+    fetchRooms();
+    searchBar.addEventListener('input', () => {
+        searchText = searchBar.value.toLowerCase();
+        filterTable();
+    });
 }

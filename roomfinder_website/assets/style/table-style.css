@@ -178,6 +178,10 @@
     background: #ffffff;
     font-weight: bold;
   }
+
+
+
+
   /* ud button animation */
   .ud-button-animation {
     animation: fadeOut 0.5s ease forwards;

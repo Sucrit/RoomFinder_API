@@ -1,5 +1,6 @@
 // adduser.js
 import AdminViewModel from '../viewmodel/adminViewModel.js';    
+import { showToast } from './toast.js';
 
 export function InitAddUserSection() {
 
@@ -46,21 +47,20 @@ export function InitAddUserSection() {
         }
 
         try {
-            // Call the handleSignUp method to add the user
+            // add user
             const result = await AdminViewModel.handleSignUp(role, username, email, password, teacherId);
 
             if (result.success) {
-                // Reset input fields on success
+                // reset
                 document.getElementById('username').value = '';
                 document.getElementById('email').value = '';
                 document.getElementById('password').value = '';
                 document.getElementById('ConfirmPassword').value = '';
 
-                // Reset teacher ID field if the role is 'Teacher'
+                // reset teacher id 
                 if (role === 'Teacher') {
                     teacherIdInput.value = '';
                 }
-                // Reset the role selection
                 roleSelector.dispatchEvent(new Event('change'));
             }
         } catch (error) {

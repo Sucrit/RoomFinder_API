@@ -1,4 +1,4 @@
-
+import { authorizationRole } from './2auth.js';
 
 export default class AdminModel {
 
@@ -37,6 +37,12 @@ export default class AdminModel {
         const authToken = localStorage.getItem('authToken'); 
         if (!authToken) {
             throw new Error("You are not authorized");
+        }
+
+        // check user role
+        const userRole = authorizationRole(); 
+        if (userRole !== 'Administrator') { 
+            return { success: false, message: 'Only Administrator can perform this action' }; 
         }
 
         const userData = {
@@ -145,6 +151,12 @@ export default class AdminModel {
             throw new Error("You are not authorized");
         }
 
+        // check user role
+        const userRole = authorizationRole(); 
+        if (userRole !== 'Administrator') { 
+            return { success: false, message: 'Only Administrator can perform this action' }; 
+        }
+
         return fetch(`http://localhost/RoomFinder_API/api/index.php/admin/${id}`, {
             method: 'DELETE',
             headers: {
@@ -175,6 +187,12 @@ export default class AdminModel {
             throw new Error("You are not authorized");
         }
 
+        // check user role
+        const userRole = authorizationRole(); 
+        if (userRole !== 'Administrator') { 
+            return { success: false, message: 'Only Administrator can perform this action' }; 
+        }
+        
         return fetch(`http://localhost/RoomFinder_API/api/index.php/user/${id}`, {
             method: 'DELETE',
             headers: {
@@ -203,7 +221,7 @@ export default class AdminModel {
         const authToken = localStorage.getItem('authToken');
 
         if (!authToken) {
-            throw new Error("No authentication token found");
+            throw new Error("You are not authorized");
         }
 
         return fetch('http://localhost/RoomFinder_API/api/index.php/admin/logout', {

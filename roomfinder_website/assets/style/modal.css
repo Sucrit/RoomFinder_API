@@ -192,15 +192,8 @@ button {
     font-size: 14px;
 }
 
-
 .roomdetails_form input,
 .roomdetails_form select {
     margin-bottom: 15px;
 }
-/* 
-.roomdetails_form h2,
-.roomdetails_form h1 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-  */
+
