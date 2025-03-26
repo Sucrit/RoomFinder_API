@@ -1,171 +1,182 @@
 <section id="room" class="hidden">
-    <div class="topcontainer">
-        <h2>Room Details</h2>
-        <div class="profile-container">
-        
+	<div class="topcontainer">
+		<h2>Room Details</h2>
+		<div class="profile-container"></div>
+	</div>
 
-        </div>
-    </div>
+	<div class="room-container">
+		<div class="room-list">
+			<div class="room-header">
+				<select class="filter" id="custom-filter">
+					<option value="all">All</option>
+					<option value="Available">Available</option>
+					<option value="Occupied">Occupied</option>
+					<option value="Closed">Closed</option>
+				</select>
+				<div class="search-container">
+					<i class="fa fa-search"></i>
+					<input
+						type="text"
+						class="search-bar"
+						placeholder="Search here..."
+						id="roomSearch" />
+				</div>
+			</div>
+			<br />
+			<div class="table-wrapper">
+				<table class="room-sched">
+					<thead>
+						<tr>
+							<th>Room Building</th>
+							<th>Room Number</th>
+							<th>Ongoing Schedule</th>
+							<th>Status</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody id="roomListBody" class="table-data"></tbody>
+				</table>
+			</div>
+		</div>
 
-    <div class="room-container">
+		<!-- Add Room and Schedule Button -->
+		<button class="floating-btn">+</button>
 
-        <div class="room-list">
-            <div class="room-header">
-                <select class="filter" id="custom-filter">
-                    <option value="all">All</option>
-                    <option value="Available">Available</option>
-                    <option value="Occupied">Occupied</option>
-                    <option value="Closed">Closed</option>
-                </select>
-                <div class="search-container">
-                    <i class="fa fa-search"></i>
-                    <input type="text" class="search-bar" placeholder="Search here..." id="roomSearch">
-                </div>
-            </div>
-            <br>
-            <div class="table-wrapper">
-                <table class="room-sched">
-                    <thead>
-                        <tr>
-                            <th>Room Building</th>
-                            <th>Room Number</th>
-                            <th>Ongoing Schedule</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="roomListBody" class="table-data">
-                       
-                        
-                    </tbody>
-                </table>
-            </div>
-        </div>
+		<!-- Add Room Modal -->
+		<div id="modal" class="modal">
+			<div class="modals">
+				<div class="modal-header">
+					<h2>Room Details</h2>
+					<span class="closemodal">&times;</span>
+				</div>
+				<form id="roomForm" method="POST" class="modal-contents">
+					<label>Room Number :</label>
+					<select
+						class="custom-dropdown"
+						name="roomNumber"
+						id="addRoomNumberSelect"
+						style="padding-right: 10px"></select>
+					<label>Room Bldg. :</label>
+					<select
+						name="roomBuilding"
+						id="addRoomBuildingSelect"
+						class="custom-dropdown">
+						<option value="PTC">PTC</option>
+						<option value="ITS">ITS</option>
+					</select>
 
-        <!-- Add Room and Schedule Button -->
-        <button class="floating-btn">+</button>
+					<label>Capacity: </label>
+					<input
+						type="number"
+						name="capacity"
+						min="1"
+						max="70"
+						value="50"
+						required />
 
+					<label>Room Type :</label>
+					<select name="roomType" required class="custom-dropdown">
+						<option value="Lecture Room">Lecture Room</option>
+						<option value="Laboratory Room">Laboratory Room</option>
+					</select>
 
-        <!-- Add Room Modal -->
-        <div id="modal" class="modal">
-            <div class="modals">
-                <div class="modal-header">
-                    <h2>Room Details</h2>
-                    <span class="closemodal">&times;</span>
-                </div>
-                <form id="roomForm" method="POST" class="modal-contents">
-                            <label>Room Number :</label>
-                            <select class="custom-dropdown" name="roomNumber" id="addRoomNumberSelect" style="padding-right: 10px;"></select>
-                            <label>Room Bldg. :</label>
-                            <select name="roomBuilding" id="addRoomBuildingSelect" class="custom-dropdown">
-                                <option value="PTC">PTC</option>
-                                <option value="ITS">ITS</option>
-                            </select>
+					<label>Availability :</label>
+					<select name="availability" class="custom-dropdown">
+						<option value="Available">Available</option>
+						<option value="Closed">Closed</option>
+					</select>
 
-                            <label>Capacity: </label>
-                            <input type="number" name="capacity" min="1" max="70" value="50" required >
+					<input type="hidden" id="roomIdField" name="roomId" value="" />
 
-                            <label>Room Type :</label>
-                            <select name="roomType" required class="custom-dropdown">
-                                <option value="Lecture Room">Lecture Room</option>
-                                <option value="Laboratory Room">Laboratory Room</option>
-                            </select>
-                        
-                            <label>Availability :</label>
-                            <select name="availability" class="custom-dropdown">
-                                <option value="Available">Available</option>
-                                <option value="Closed">Closed</option>
-                            </select>
-                        
+					<!-- Submit buttons -->
+					<label>Equipment :</label>
+					<div class="equipment">
+						<input type="checkbox" value="Air Conditioner" />
+						<label>Air Conditioner</label>
+						<input type="checkbox" value="Monitor" />
+						<label>Monitor</label>
+						<input type="checkbox" value="Computer" />
+						<label>Computer</label><br />
+						<input type="checkbox" value="Whiteboard" />
+						<label>Whiteboard</label>
+						<input type="checkbox" value="Wi-Fi" />
+						<label>Wi-Fi</label>
+					</div>
+					<div class="modal-actions">
+						<!-- Submit buttons -->
+						<button type="button" class="backbtn">Back</button>
+						<button type="submit" class="createbtn">Create</button>
+					</div>
+				</form>
+			</div>
+		</div>
 
-                        <input type="hidden" id="roomIdField" name="roomId" value="" />
-                        
-                        <!-- Submit buttons -->
-                            <label>Equipment :</label>
-                            <div class="equipment">
-                                <input type="checkbox" value="Air Conditioner">
-                                <label>Air Conditioner</label>
-                                <input type="checkbox" value="Monitor">
-                                <label>Monitor</label>
-                                <input type="checkbox" value="Computer">
-                                <label>Computer</label><br>
-                                <input type="checkbox" value="Whiteboard">
-                                <label>Whiteboard</label>
-                                <input type="checkbox" value="Wi-Fi">
-                                <label>Wi-Fi</label>
-                            </div>
-                    <div class="modal-actions">
-                            <!-- Submit buttons -->
-                            <button type="button" class="backbtn">Back</button>
-                        <button type="submit" class="createbtn">Create</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+		<!-- Confirmation Modal After Room Creation -->
+		<div id="roomCreatedModal" class="modal">
+			<div class="modals">
+				<span class="closemodal"></span>
+				<h2>Room Created Successfully!</h2>
+				<p>Do you want to add a schedule to this room?</p>
+				<div class="modal-actions">
+					<button id="cancelAddSchedule">Later</button>
+					<button id="addScheduletoRoom" data-room-id="">Add</button>
+				</div>
+			</div>
+		</div>
 
-        
-        <!-- Confirmation Modal After Room Creation -->
-  
-            <div id="roomCreatedModal" class="modal">
-                <div class="modal-content">
-                    <span class="closemodal"></span>
-                    <h2>Room Created Successfully!</h2>
-                    <p>Do you want to add a schedule to this room?</p>
-                    <div class="modal-actions">
-                    <button id="addScheduletoRoom" data-room-id="">Add</button>
-                    <button id="cancelAddSchedule">Later</button>
-                </div>
-                </div>
-            </div>
+		<!-- Add Schedule Modal -->
+		<div id="addScheduleModal" class="modal" data-room-id="">
+			<div class="modals">
+				<div class="modal-header">
+					<h2>Add Schedules</h2>
+					<span class="closemodal"></span>
+				</div>
+				<form
+					action="#"
+					method="POST"
+					class="roomdetails_form"
+					id="addscheduletoroomform">
+					<label>Room Number:</label>
+					<input type="text" name="roomNumber" id="roomNumber" readonly />
 
-        <!-- Add Schedule Modal -->
-        <div id="addScheduleModal" class="modal" data-room-id="">
-            <div class="modal-content">
-                <span class="closemodal"></span>
-                <form action="#" method="POST" class="roomdetails_form" id="addscheduletoroomform">
-                    <div class="roomform_container">
-                        <h2>Add Schedules</h2>
-                        <div class="form-group">
-                            <label>Block:</label>
-                            <select name="block">
-                                <option value="Block 1">1</option>
-                                <option value="Block 2">2</option>
-                                <option value="Block 3">3</option>
-                                <option value="Block 4">4</option>
-                                <option value="Block 5">5</option>
-                                <option value="Block 6">6</option>
-                                <option value="Block 7">7</option>
-                                <option value="Block 8">8</option>
-                                <option value="Block 9">9</option>
-                                <option value="Block 10">10</option>
-                            </select><br />
-                        </div>
+					<label>Room Blgd:</label>
+					<input type="text" name="roomBldg" id="roomBldg" readonly />
 
-                        <div class="form-group">
-                            <label>Date</label><br />
-                            <input type="date" name="date" required><br />
-                        </div>
+					<label>Block:</label>
+					<select name="block">
+						<option value="Block 1">1</option>
+						<option value="Block 2">2</option>
+						<option value="Block 3">3</option>
+						<option value="Block 4">4</option>
+						<option value="Block 5">5</option>
+						<option value="Block 6">6</option>
+						<option value="Block 7">7</option>
+						<option value="Block 8">8</option>
+						<option value="Block 9">9</option>
+						<option value="Block 10">10</option></select
+					><br />
 
-                        <div class="form-group">
-                            <label>Time</label>
-                            <div class="form-group-horizontal">
-                                <div class="time">
-                                    <label>Starting Time</label><br />
-                                    <input type="time" name="timeStart" required>
-                                </div>
+					<label>Date</label><br />
+					<input type="date" name="date" required /><br />
 
-                                <div class="time">
-                                    <label>Ending Time</label><br />
-                                    <input type="time" name="timeEnd" required>
-                                </div>
-                            </div>
-                        </div>
+					<label>Time</label>
+					<div class="form-group-horizontal">
+						<div class="time">
+							<label>Starting Time</label><br />
+							<input type="time" name="timeStart" required />
+						</div>
 
-                        <button type="submit">Add Schedule</button>
-                        <button type="button" class="closeModalBtn">Close</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+						<div class="time">
+							<label>Ending Time</label><br />
+							<input type="time" name="timeEnd" required />
+						</div>
+					</div>
+					<div class="modal-actions">
+						<button type="button" class="closeModalBtn">Cancel</button>
+						<button type="submit">Add Schedule</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </section>
