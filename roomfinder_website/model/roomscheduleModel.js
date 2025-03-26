@@ -162,10 +162,10 @@ export default class RoomScheduleModel {
         })
         .then(response => response.json())
         .then(data => {
-            if (data.message) {
-                return data.message;  
-            } else {
-                throw new Error('Failed to delete schedule');
+            if (data.status === 'success') {
+                return { success: true, message: data.message, status: data.status };
+            } else if (data.status === 'error') {
+                return { success: false, message: data.message, status: data.status };
             }
         })
         .catch(error => {

@@ -96,6 +96,7 @@ export function InitRoomScheduleSection() {
                     const response = await RoomScheduleViewModel.deleteRoomSchedule(schedule.id);
                     if (response.success) {
                         showToast(response.message, 'success');
+                        console.log(response.message);
                         row.remove();
                     } else {
                         showToast(response.message, 'error');

@@ -113,9 +113,9 @@ class RoomScheduleModel {
             $stmt->bind_param('i', $id);
             if ($stmt->execute()) {
                 if ($stmt->affected_rows > 0) {
-                    echo json_encode(['message' => 'Room schedule deleted successfully']);
+                    echo json_encode(['status' => 'success', 'message' => 'Room schedule deleted successfully']);
                 } else {
-                    echo json_encode(['message' => 'Room schedule does not exist']);
+                    echo json_encode(['status' => 'success', 'message' => 'Room schedule does not exist']);
                 }
             } else {
                 echo json_encode(['message' => 'Error: ' . $this->conn->error]);

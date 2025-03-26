@@ -93,7 +93,6 @@ export function InitUsersListSection() {
         AdminViewModel.deleteAdmin(userId)
             .then(response => {
                 if (response.success) {
-                    showToast(response.message, 'success');
                     logoutAndRedirect();
                 } else {
                     showToast(response.message, 'error');

@@ -105,16 +105,18 @@
 
         
         <!-- Confirmation Modal After Room Creation -->
-        <div id="roomCreatedModal" class="modal">
-            <div class="modal-content">
-                <span class="closemodal"></span>
-                <h2>Room Created Successfully!</h2>
-                <p>Do you want to add a schedule to this room?</p>
-                <button id="addScheduletoRoom" data-room-id="">Add</button>
-                <button id="cancelAddSchedule">No, Later</button>
+  
+            <div id="roomCreatedModal" class="modal">
+                <div class="modal-content">
+                    <span class="closemodal"></span>
+                    <h2>Room Created Successfully!</h2>
+                    <p>Do you want to add a schedule to this room?</p>
+                    <div class="modal-actions">
+                    <button id="addScheduletoRoom" data-room-id="">Add</button>
+                    <button id="cancelAddSchedule">Later</button>
+                </div>
+                </div>
             </div>
-        </div>
-
 
         <!-- Add Schedule Modal -->
         <div id="addScheduleModal" class="modal" data-room-id="">

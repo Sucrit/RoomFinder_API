@@ -73,7 +73,7 @@ export default class RoomScheduleViewModel {
         const response = await RoomScheduleModel.deleteRoomSchedule(id);
 
         if (response.success) {
-            showToast('Room schedule deleted successfully', 'success');
+            showToast(response.message, 'success');
             return { success: true, message: response.message };
         } else {
             showToast(response.message, 'error');
