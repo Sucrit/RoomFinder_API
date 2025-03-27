@@ -205,5 +205,25 @@ class RoomRequestModel {
             echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
         }
     }
+
+    // delete pending request by user id
+    public function deletePendingRequestByUserId($userId, $requestId) {
+        $sql = "DELETE FROM room_request WHERE user_id = ? AND id = ? AND status = 'Pending'";
+    
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param('ii', $userId, $requestId);  
+            if ($stmt->execute()) {
+                if ($stmt->affected_rows > 0) {
+                    echo json_encode(['message' => 'Pending room request cancelled successfully.']);
+                } else {
+                    echo json_encode(['message' => 'No matching pending request found for the specified user and request ID.']);
+                }
+            } else {
+                echo json_encode(['message' => 'Error deleting pending room request: ' . $this->conn->error]);
+            }
+        } else {
+            echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
+        }
+    }
 }
 ?>

@@ -126,11 +126,22 @@ class RoomScheduleModel {
     
     // check if room schedule exists (avoid time conflict)
     public function roomScheduleExist($room_id, $date, $starting_time, $ending_time) {
-        $sql = "SELECT * FROM room_schedule WHERE room_id = ? AND date = ? AND ((starting_time < ? AND ending_time > ?) 
-                OR (starting_time < ? AND ending_time > ?) OR (? BETWEEN starting_time AND ending_time) OR (? BETWEEN starting_time AND ending_time))"; 
-
+        $sql = "SELECT * FROM room_schedule WHERE room_id = ? AND date = ? AND (
+                    (starting_time < ? AND ending_time > ?)  -- New schedule starts before existing and ends after
+                    OR 
+                    (starting_time < ? AND ending_time > ?)  -- New schedule ends after existing and starts before
+                    OR 
+                    (? BETWEEN starting_time AND ending_time) -- New schedule's starting time falls within the existing one
+                    OR 
+                    (? BETWEEN starting_time AND ending_time)  -- New schedule's ending time falls within the existing one
+                    OR 
+                    (starting_time BETWEEN ? AND ?)  -- Existing schedule starts within the new schedule's range
+                    OR 
+                    (ending_time BETWEEN ? AND ?)  -- Existing schedule ends within the new schedule's range
+                )"; 
+    
         if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param('isssssss', $room_id, $date, $starting_time, $ending_time, $starting_time, $ending_time, $starting_time, $ending_time);
+            $stmt->bind_param('isssssssssss', $room_id, $date, $starting_time, $ending_time, $starting_time, $ending_time, $starting_time, $ending_time, $starting_time, $ending_time, $starting_time, $ending_time);
             $stmt->execute();
             $result = $stmt->get_result();
             
@@ -140,5 +151,6 @@ class RoomScheduleModel {
             return false;
         }
     }
+    
 }
 ?>

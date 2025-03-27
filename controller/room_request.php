@@ -227,5 +227,10 @@ class RoomRequestController {
     public function deleteRoomRequest($id) {
         $this->roomRequestModel->deleteRoomRequest($id);
     }
+
+    // cancel pending request of a user id
+    public function cancelPendingRequestofUserId($userId, $requestId) {
+        $this->roomRequestModel->deletePendingRequestByUserId($userId, $requestId);
+    }
 }
 ?>
