@@ -183,7 +183,7 @@ export function InitRoomsSection() {
         return row;
     }
 
-    // format ongoing schedule
+    // time format
     function formatOngoingSchedule(room) {
         if (room.ongoing_schedule && room.ongoing_schedule.starting_time && room.ongoing_schedule.ending_time) {
             const startTime = dateTimeFormat(room.ongoing_schedule.starting_time);

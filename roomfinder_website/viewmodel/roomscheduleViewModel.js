@@ -8,8 +8,6 @@ export default class RoomScheduleViewModel {
     static async getAllRoomSchedules() {
         try {
             const response = await RoomScheduleModel.getRoomSchedules();
-            console.log(response); 
-    
             if (Array.isArray(response) && response.length >= 0) {
                 return { success: true, schedules: response };
             } else {
@@ -40,11 +38,23 @@ export default class RoomScheduleViewModel {
     }
 
 
+    // get room schedule by id 
+    static async getRoomScheduleById(scheduleId) {
+        const response = await RoomScheduleModel.getRoomScheduleById(scheduleId);
+
+        if (response && response.id) {
+            return { success: true, schedule: response };
+        } else {  
+            return { success: false, message: 'Room not found or invalid' };
+        }
+    }
+
+
     // create room schedule
     static async createRoomSchedule(scheduleData) {
         const response = await RoomScheduleModel.createRoomSchedule(scheduleData);
 
-        if (response.success) {
+        if (response.status === 'success') {
             showToast(response.message, 'success');
             return { success: true, message: response.message, status: response.status };
         } else {

@@ -62,7 +62,8 @@ class RoomScheduleModel {
 
     // get room schedule by id
     public function getRoomScheduleById($id) {
-        $sql = "SELECT * FROM room_schedule WHERE id = ?";
+        $sql = "
+        SELECT rs.*, r.room_number, r.room_building FROM room_schedule rs LEFT JOIN room r ON rs.room_id = r.id WHERE rs.id = ?";
 
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('i', $id);
@@ -125,12 +126,6 @@ class RoomScheduleModel {
     
     // check if room schedule exists (avoid time conflict)
     public function roomScheduleExist($room_id, $date, $starting_time, $ending_time) {
-        // check if starting time is greater than ending time (time conflict)
-        if ($starting_time >= $ending_time) {
-            echo json_encode(['message' => 'Starting time must be before ending time']);
-            return true;
-        }
-            
         $sql = "SELECT * FROM room_schedule WHERE room_id = ? AND date = ? AND ((starting_time < ? AND ending_time > ?) 
                 OR (starting_time < ? AND ending_time > ?) OR (? BETWEEN starting_time AND ending_time) OR (? BETWEEN starting_time AND ending_time))"; 
 

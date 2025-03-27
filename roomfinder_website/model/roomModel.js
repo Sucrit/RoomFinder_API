@@ -102,7 +102,7 @@ export default class RoomModel {
 
         
     // update room data route
-    static updateRoom(roomId, updatedData) {
+    static updateRoom(id, updatedData) {
         const authToken = localStorage.getItem('authToken');
         if (!authToken) {
             throw new Error("You are not authorized");
@@ -114,7 +114,7 @@ export default class RoomModel {
             return { success: false, message: 'Only Administrator can perform this action' }; 
         }
 
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/room/${roomId}`, {
+        return fetch(`http://localhost/RoomFinder_API/api/index.php/room/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

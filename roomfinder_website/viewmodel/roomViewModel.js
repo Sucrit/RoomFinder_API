@@ -87,7 +87,7 @@ export default class RoomViewModel {
     }
 
 
-    // Delete room method
+    // delete room method
     static async deleteRoom(roomId) {
         try {
             const response = await RoomModel.deleteRoomById(roomId); 

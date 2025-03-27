@@ -2,7 +2,7 @@ import { authorizationRole } from './2auth.js';
 
 export default class RoomScheduleModel {
 
-    // get room schedules (room schedule section)
+    // get all room schedules (room schedule section)
     static getRoomSchedules() {
         const authToken = localStorage.getItem('authToken');
 
@@ -66,6 +66,38 @@ export default class RoomScheduleModel {
         });
     }
 
+    // get room schedule by id 
+    static getRoomScheduleById(id) {
+        const authToken = localStorage.getItem('authToken');
+
+        if (!authToken) {
+            throw new Error("You are not authorized");
+        }
+
+        return fetch(`http://localhost/RoomFinder_API/api/index.php/room_schedule/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            }
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (!response.ok) {
+                console.error('Error response:', response);
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data;
+        })
+        .catch(error => {
+            console.error('Error fetching ongoing schedules:', error.message);
+            throw error;
+        });
+    }
+
     // create room schedule route
     static async createRoomSchedule(scheduleData) {
         const authToken = localStorage.getItem('authToken'); 
@@ -93,6 +125,7 @@ export default class RoomScheduleModel {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
+        console.log(response);
     
         if (data.status === 'success') {
             return { success: true, message: data.message, status: data.status }; 

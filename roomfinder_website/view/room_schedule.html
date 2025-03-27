@@ -33,21 +33,27 @@
 			</div>
 		</div>
 	</div>
-	<div class="floating-btn" onclick="openAddRoomForm()">+</div>
+	<div class="floating-btn">+</div>
 
-	<!-- Add Room Modal -->
-	<div id="modal" class="modal">
+	<!-- Add Schedule Modal -->
+	<div id="modal" class="modal" data-room-id="">
 		<div class="modals">
 			<div class="modal-header">
 				<h2>Add Schedules</h2>
-				<span class="closemodal">&times;</span>
+				<span class="closemodal"></span>
 			</div>
 			<form
 				action="#"
 				method="POST"
 				class="roomdetails_form"
-				id="modal-content ">
-				<!-- Block -->
+				id="addscheduletoroomform">
+
+				<label>Room Blgd:</label>
+				<select name="roomBldg" id="roomBldg"></select>		
+				
+				<label>Room Number:</label>
+				<select name="roomNumber" id="roomNumber"></select>
+
 				<label>Block:</label>
 				<select name="block">
 					<option value="Block 1">1</option>
@@ -62,27 +68,26 @@
 					<option value="Block 10">10</option></select
 				><br />
 
-				<!-- Date -->
-				<label>Date</label><br />
-				<input type="date" name="date" /><br />
+				<input type="hidden" id="roomscheduleIdField" name="roomscheduleId" value="" />
 
-				<!-- Time -->
+				<label>Date</label><br />
+				<input type="date" name="date" required /><br />
+
 				<label>Time</label>
 				<div class="form-group-horizontal">
 					<div class="time">
-						<label>Starting Time</label>
-						<input type="time" name="timeStart" />
+						<label>Starting Time</label><br />
+						<input type="time" name="timeStart" required />
 					</div>
 
 					<div class="time">
-						<label>Ending Time</label>
-						<input type="time" name="timeEnd" />
+						<label>Ending Time</label><br />
+						<input type="time" name="timeEnd" required />
 					</div>
 				</div>
 				<div class="modal-actions">
-					<!-- Submit buttons -->
-					<button type="submit" class="backbtn">Exit</button>
-					<button type="submit" class="createbtn">Add</button>
+					<button type="button" class="closeModalBtn">Cancel</button>
+					<button type="submit" class="action-btn">Add Schedule</button>
 				</div>
 			</form>
 		</div>

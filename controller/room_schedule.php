@@ -24,7 +24,6 @@ class RoomScheduleController {
         }
     }
 
-
     // get all ongoing schedule
     public function getAllOngoingSchedules() {
         $ongoingSchedules = $this->roomScheduleModel->getAllOngoingSchedules();
@@ -63,8 +62,15 @@ class RoomScheduleController {
         }
     }
 
+
     // create room schedule
     public function createRoomSchedule($room_id, $block, $date, $starting_time, $ending_time) {
+
+        // starting time greater than ending time
+        if ($starting_time >= $ending_time) {
+            echo json_encode(['status' => 'error', 'message' => 'Starting time must be before ending time']);
+            return;
+        }
 
         // check if the room exists
         if ($this->roomModel->roomExists($room_id)) {
@@ -101,6 +107,7 @@ class RoomScheduleController {
             
             if ($scheduleConflict) {
                 echo json_encode(['status' => 'error', 'message' => 'The room is already occupied for your requested time slot']);
+                return;
             } 
             else {
                 $roomschedule = $this->roomScheduleModel->createRoomSchedule($room_id, $block, $date, $starting_time, $adjustedEndingTime);
@@ -121,17 +128,25 @@ class RoomScheduleController {
     public function updateRoomSchedule($id, $input) {
         $schedule = $this->roomScheduleModel->getRoomScheduleById($id);
     
+        // check schedule exist
         if (!$schedule) {
             echo json_encode(['status' => 'error', 'message' => 'Schedule not found']);
             return;
         }
+
         $room_id = isset($input['room_id']) ? $input['room_id'] : $schedule['room_id'];
         $block = isset($input['block']) ? $input['block'] : $schedule['block'];
         $date = isset($input['date']) ? $input['date'] : $schedule['date'];
         $starting_time = isset($input['starting_time']) ? $input['starting_time'] : $schedule['starting_time'];
         $ending_time = isset($input['ending_time']) ? $input['ending_time'] : $schedule['ending_time'];
 
-        // check room schedule conflict before updating
+        // starting time greater than ending time
+        if ($starting_time >= $ending_time) {
+            echo json_encode(['status' => 'error', 'message' => 'Starting time must be before ending time']);
+            return;
+        }
+
+        // check room schedule conflict before update
         $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($room_id, $date, $starting_time, $ending_time, $id);
         if ($scheduleConflict) {
             echo json_encode(['status' => 'error', 'message' => 'The room is already occupied for the requested time slot']);

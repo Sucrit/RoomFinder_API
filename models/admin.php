@@ -31,6 +31,7 @@ class AdminModel {
     // get all admins
     public function getAdmins() {
         $sql = "SELECT * FROM admin";
+        
         $result = $this->conn->query($sql);
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
@@ -38,6 +39,7 @@ class AdminModel {
     // get admin by id
     public function getAdminById($id) {
         $sql = "SELECT * FROM admin WHERE id = ?";
+
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param("i", $id);
             $stmt->execute();
@@ -54,6 +56,7 @@ class AdminModel {
     // check if email exist
     public function getAdminByEmail($email) {
         $sql = "SELECT * FROM admin WHERE email = ?";
+
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param("s", $email);
             $stmt->execute();

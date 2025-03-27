@@ -20,7 +20,7 @@ export default class AdminViewModel {
                     const email = admin.email || 'Unknown Email';
                     const id = admin.id || 'Unknown ID';
 
-                    // save info to local storage
+                    // save info
                     localStorage.setItem('authToken', response.token);
                     console.log('Viewmodel auth token:', response.token);
                     localStorage.setItem('username', username); 
@@ -63,7 +63,6 @@ export default class AdminViewModel {
         }
     }
     
-
     
     // get all authenticated users (auth section)
     static async getAllUsers() {
