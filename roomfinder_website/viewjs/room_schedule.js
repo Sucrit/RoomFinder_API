@@ -93,7 +93,7 @@ export function InitRoomScheduleSection() {
         `;
 
         // button event listeners
-        row.querySelector('.update-btn').addEventListener('click', () => { console.log(`Attempting to update schedule with ID: ${schedule.id}`); handleUpdate(schedule.id)});
+        row.querySelector('.update-btn').addEventListener('click', () =>handleUpdate(schedule.id));
         row.querySelector('.delete-btn').addEventListener('click', () => handleDelete(schedule, row));
 
         return row;
@@ -112,7 +112,6 @@ export function InitRoomScheduleSection() {
                     const response = await RoomScheduleViewModel.deleteRoomSchedule(schedule.id);
                     if (response.success) {
                         showToast(response.message, 'success');
-                        console.log(response.message);
                         row.remove();
                     } else {
                         showToast(response.message, 'error');
@@ -137,8 +136,7 @@ export function InitRoomScheduleSection() {
             // create schedule
             if (actionButton.textContent === 'Create') {
                 const response = await RoomScheduleViewModel.createRoomSchedule(scheduleData);
-                if (response.status === 'success') {
-                    showToast(response.message, 'success');
+                if (response.success) {
                     fetchSchedules();
                     closeAddRoomScheduleModal();
                 } else {
@@ -146,31 +144,28 @@ export function InitRoomScheduleSection() {
                 }
             }
             // update schedule 
-            else if (actionButton.textContent === 'Update') {
+             if (actionButton.textContent === 'Update') {
                 const scheduleId = addModal.getAttribute('data-schedule-id'); 
                 const response = await RoomScheduleViewModel.updateRoomSchedule(scheduleId, scheduleData);
-                if (response.status === 'success') {
-                    showToast(response.message, 'success');
+                if (response.success) {
                     fetchSchedules();
                     closeAddRoomScheduleModal();
-                } else {
-                    showToast('Failed to update room schedule', 'error');
+                } if (response.status === 'error') {
+                    showToast(response.message, 'error'); 
+                    return; 
                 }
             }
         } catch (error) {
             console.error('Error saving room schedule:', error);
-            showToast('An error occurred while saving the schedule', 'error');
         }
     }
 
     // view & update schedule
     async function handleUpdate(scheduleId) {
 
-        console.log(`Viewing schedule with ID: ${scheduleId}`);
         const response = await RoomScheduleViewModel.getRoomScheduleById(scheduleId);
         
         if (response.success) {
-            console.log(response);
             populateScheduleForm(response.schedule);
             await fetchRooms(); 
             addModal.style.display = 'block';
@@ -202,8 +197,6 @@ export function InitRoomScheduleSection() {
         const endingTime = document.querySelector('input[name="timeEnd"]').value;
         const roomId = document.getElementById('modal').getAttribute('data-room-id');
         
-        console.log("submitting room schedule data:", { room_id: roomId, block, date, startingTime, endingTime });
-
         return {
             room_id: roomId, 
             block: block,
@@ -219,7 +212,6 @@ export function InitRoomScheduleSection() {
             const response = await RoomViewModel.getAllRooms();
             if (response.success && response.rooms.length > 0) {
                 rooms = response.rooms;  
-                console.log('Rooms fetched:', rooms);
                 populateRoomDropdowns(rooms); 
 
                 const firstRoom = rooms[0];
@@ -242,9 +234,9 @@ export function InitRoomScheduleSection() {
         const endingTimeInput = addModal.querySelector('input[name="timeEnd"]');
         const roomBuildingSelect = addModal.querySelector('#roomBldg');
         const roomNumberSelect = addModal.querySelector('#roomNumber');
-        console.log('Schedule data:', schedule);
-
-        // Set the values in the form based on the schedule data
+ 
+        addModal.setAttribute('data-schedule-id', schedule.id); 
+        
         blockSelect.value = schedule.block || '';
         dateInput.value = schedule.date || '';
         startingTimeInput.value = formatTime(schedule.starting_time || '');
@@ -252,14 +244,12 @@ export function InitRoomScheduleSection() {
         
         roomBuildingSelect.value = schedule.room_building || '';
         roomNumberSelect.value = schedule.room_number || '';
-        
+
         roomBuildingSelect.dispatchEvent(new Event('change')); 
 
-        addModal.setAttribute('data-room-id', schedule.room_id);
-
         setRoomFieldsReadOnly(true);
-        
     }
+
 
     // hh:mm format
     function formatTime(time) {
@@ -270,13 +260,10 @@ export function InitRoomScheduleSection() {
 
     // populate room dropdowns in add schedule form
     function populateRoomDropdowns(rooms) {
-        console.log('Fetched rooms:', rooms);
         const buildings = [...new Set(rooms.map(room => room.room_building))]; 
         const roomBuildingSelect = addModal.querySelector('#roomBldg');
         const roomNumberSelect = addModal.querySelector('#roomNumber');
         
-
-
         buildings.forEach(building => {
             const option = document.createElement('option');
             option.value = building;
@@ -288,7 +275,7 @@ export function InitRoomScheduleSection() {
         roomBuildingSelect.addEventListener('change', () => {
             const selectedBuilding = roomBuildingSelect.value;
             const roomNumbers = rooms.filter(room => room.room_building === selectedBuilding)
-                                    .map(room => room.room_number);
+            .map(room => room.room_number);
             populateRoomNumbers(roomNumbers);
         });
 
@@ -316,10 +303,6 @@ export function InitRoomScheduleSection() {
         const roomNumberSelect = addModal.querySelector('#roomNumber');
         const selectedBuilding = roomBuildingSelect.value;
         const selectedRoomNumber = roomNumberSelect.value;
-        
-        console.log('Selected Building:', selectedBuilding); 
-        console.log('Selected Room Number:', selectedRoomNumber);  
-        console.log('Rooms:', rooms);
 
         const selectedRoom = rooms.find(room => room.room_building === selectedBuilding && room.room_number === selectedRoomNumber);
 
@@ -327,7 +310,6 @@ export function InitRoomScheduleSection() {
             addModal.setAttribute('data-room-id', selectedRoom.id);
             console.log(`Room ID set to: ${selectedRoom.id}`);
         } else {
-            // If no room found, you can reset or handle the error
             addModal.setAttribute('data-room-id', null);
             console.log('Room ID not found');
         }

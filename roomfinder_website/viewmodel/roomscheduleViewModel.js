@@ -63,20 +63,19 @@ export default class RoomScheduleViewModel {
         }     
     }
 
-
     // update room schedule
     static async updateRoomSchedule(id, scheduleData) {
         const response = await RoomScheduleModel.updateRoomSchedule(id, scheduleData);
 
-        if (response.success) {
+        if (response.status === 'success') {
+            console.log(response.status)
             showToast(response.message, 'success');
             return { success: true, message: response.message };
-        } else {
-            showToast(response.message, 'error');
-            return { success: false, message: response.message };
+        } else if (response.status === 'error'){
+            console.log(response.status)
+            return { success: false, message: response.message, status: response.status };
         }
     }
-    
 
     // delete a room schedule
     static async deleteRoomSchedule(id) {

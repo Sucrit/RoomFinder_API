@@ -219,7 +219,7 @@ class RoomRequestModel {
                     echo json_encode(['message' => 'No matching pending request found for the specified user and request ID.']);
                 }
             } else {
-                echo json_encode(['message' => 'Error deleting pending room request: ' . $this->conn->error]);
+                echo json_encode(['message' => 'Error deleting pending request: ' . $this->conn->error]);
             }
         } else {
             echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
