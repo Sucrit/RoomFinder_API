@@ -270,6 +270,7 @@
     font-size: 14px;
     text-align: right;
     display: inline-block;
+    margin: 0;
 }
 
 .requestforms {
@@ -292,7 +293,9 @@
     transform: scale(1.009); 
 } */
 
-
+#requestHistory {
+    border-collapse: separate;
+}
 
 
 

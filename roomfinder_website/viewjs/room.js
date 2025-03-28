@@ -164,11 +164,15 @@ export function InitRoomsSection() {
 
         const ongoingSchedule = formatOngoingSchedule(room);
 
+        let statusColor = room.status === 'Available' ? 'green' : 'red';
+        
+        var tdStatus = `<td style="color: ${statusColor};">${room.status}</td>`;
+
         row.innerHTML = `
             <td>${room.room_building}</td>
             <td>${room.room_number}</td>
             <td>${ongoingSchedule}</td>
-            <td>${room.status}</td>
+            ${tdStatus}
             <td>
                 <button class="update-btn" data-room-id="${room.id}">Update</button>
                 <button class="remove-btn" data-room-id="${room.id}">Remove</button>
