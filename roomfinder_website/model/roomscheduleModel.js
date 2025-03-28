@@ -150,26 +150,27 @@ export default class RoomScheduleModel {
             return { success: false, message: 'Only Administrator can perform this action' }; 
         }
 
-        const response = await fetch(`http://localhost/RoomFinder_API/api/index.php/room_schedule/${id}`, {
+        return fetch(`http://localhost/RoomFinder_API/api/index.php/room_schedule/${id}`, {
             method: 'PATCH', 
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${authToken}`
             },
             body: JSON.stringify(scheduleData), 
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();  
+        })
+        .then(data => {
+            return data;
+        })
+        .catch(error => {
+            console.error('Error updating room:', error);
+            throw error;
         });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data.status === 'success') {
-            return { success: true, message: data.message };
-        } else {
-            throw new Error('Failed to update room schedule');
-        }
     }
     
     // delete room schedule route

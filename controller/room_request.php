@@ -146,7 +146,7 @@ class RoomRequestController {
 
         // check time conflict
         if ($requestedStartTimestamp < $currentTimestamp || $requestedEndTimestamp < $currentTimestamp) {
-            echo json_encode(['status' => 'error', 'message' => 'The requested time is invalid, Try again']);
+            echo json_encode(['status' => 'error', 'message' => 'The selected time is in the past. Please choose a future time for the schedule']);
             return;
         }
 
@@ -207,15 +207,12 @@ class RoomRequestController {
             // if schedule conflict, reject 
             if ($scheduleConflict) {
                 $this->roomRequestModel->updateRoomRequestStatus($id, 'Rejected');
-                echo json_encode([
-                    'message' => 'The room schedule conflicts with an existing room schedule. The request has been automatically rejected.',
-                    'status' => 'error',
-                ]);
+                echo json_encode(['status' => 'error', 'message' => 'The room schedule conflicts with an existing room schedule. The request has been automatically rejected.']);
                 return;
             }
         }
 
-        // If rejected or no conflict, update status
+        // if rejected or no conflict, update status
         $this->roomRequestModel->updateRoomRequestStatus($id, $status);
 
         if ($status == 'Approved' || $status == 'Rejected') {
@@ -226,6 +223,11 @@ class RoomRequestController {
     // delete room request
     public function deleteRoomRequest($id) {
         $this->roomRequestModel->deleteRoomRequest($id);
+    }
+
+    // cancel pending request of a user id
+    public function cancelPendingRequestofUserId($userId, $requestId) {
+        $this->roomRequestModel->deletePendingRequestByUserId($userId, $requestId);
     }
 }
 ?>

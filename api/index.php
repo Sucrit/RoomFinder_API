@@ -219,7 +219,13 @@ function handleRoomRequest($requestMethod, $uri, $input, $roomRequestController)
             break;
 
         case 'DELETE':
-            if (preg_match('/\/room_request\/(\d+)/', $uri, $matches)) {
+
+            if (preg_match('/\/room_request\/(\d+)\/(\d+)/', $uri, $matches)) {
+                $userId = $matches[1];
+                $requestId = $matches[2];
+                $roomRequestController->cancelPendingRequestofUserId($userId, $requestId);
+            } 
+            else if (preg_match('/\/room_request\/(\d+)/', $uri, $matches)) {
                 $roomRequestController->deleteRoomRequest($matches[1]);
             } 
             else {

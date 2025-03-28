@@ -126,10 +126,10 @@ class RoomController {
 
         // check if no value change
         if ($room_building == $room['room_building'] && $room_number == $room['room_number'] && 
-        $roomType == $room['room_type'] && $capacity == $room['capacity'] && 
-        $status == $room['status'] && $equipment == $room['equipment']) {
-        echo json_encode(['status' => 'error', 'message' => 'You need to change a value before updating a room']);
-        return;
+            $roomType == $room['room_type'] && $capacity == $room['capacity'] && 
+            $status == $room['status'] && $equipment == $room['equipment']) {
+            echo json_encode(['status' => 'error', 'message' => 'You need to change a value before updating a room']);
+            return;
         }
 
         // check if room number & building is = to old value

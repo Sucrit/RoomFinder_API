@@ -70,6 +70,7 @@ export default class RoomViewModel {
                 showToast(response.message, 'success');
                 return { success: true, message: response.message, status: response.status};  
             } else if (response.status === 'error') {
+                console.log(response.status);
                 showToast(response.message, 'error');
                 return { success: false, message: response.message }; 
             } else if (response.success === false) {
