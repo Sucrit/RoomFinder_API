@@ -87,14 +87,19 @@ export function InitRoomScheduleSection() {
             <td>${schedule.date + '<br/>' + startTime + ' - ' + endTime || 'N/A'}</td>
             <td>${schedule.block || 'N/A'}</td>
             <td>
-                <button class="update-btn" data-id="${schedule.room_id}">Update</button>
+                <button class="update-btn" data-id="${schedule.id}">Update</button>
                 <button class="delete-btn" data-id="${schedule.id}">Delete</button>
             </td>
         `;
 
         // button event listeners
-        row.querySelector('.update-btn').addEventListener('click', () => { console.log(`Attempting to update schedule with ID: ${schedule.id}`); handleUpdate(schedule.id)});
-        row.querySelector('.delete-btn').addEventListener('click', () => handleDelete(schedule, row));
+        row.querySelector('.update-btn').addEventListener('click', () => { 
+            console.log(`Attempting to update schedule with ID: ${schedule.id}`); 
+            handleUpdate(schedule.id)
+        });
+        row.querySelector('.delete-btn').addEventListener('click', () => {
+            console.log(`Attempting to delete schedule with ID: ${schedule.id}`); 
+            handleDelete(schedule, row)});
 
         return row;
     }
@@ -166,19 +171,18 @@ export function InitRoomScheduleSection() {
     // view & update schedule
     async function handleUpdate(scheduleId) {
 
-        console.log(`Viewing schedule with ID: ${scheduleId}`);
         const response = await RoomScheduleViewModel.getRoomScheduleById(scheduleId);
         
         if (response.success) {
-            console.log(response);
+            console.log(`Viewing schedule with ID: ${scheduleId}`);
             populateScheduleForm(response.schedule);
-            await fetchRooms(); 
+            // await fetchRooms(); 
             addModal.style.display = 'block';
 
             const actionButton = addModal.querySelector('.action-btn');
             actionButton.textContent = 'Update'; 
         } else {
-            showToast(response.message || 'Error fetching schedule', 'error');
+            showToast(response.message + 'Error fetching schedule', 'error');
         }
     }
     
@@ -250,12 +254,12 @@ export function InitRoomScheduleSection() {
         startingTimeInput.value = formatTime(schedule.starting_time || '');
         endingTimeInput.value = formatTime(schedule.ending_time || '');
         
-        roomBuildingSelect.value = schedule.room_building || '';
+        // roomBuildingSelect.value = schedule.room_building || '';
         roomNumberSelect.value = schedule.room_number || '';
         
         roomBuildingSelect.dispatchEvent(new Event('change')); 
 
-        addModal.setAttribute('data-room-id', schedule.room_id);
+        addModal.setAttribute('data-schedule-id', schedule.room_id);
 
         setRoomFieldsReadOnly(true);
         

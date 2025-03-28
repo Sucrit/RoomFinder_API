@@ -4,11 +4,25 @@ import AdminViewModel from '../viewmodel/adminViewModel.js';
 
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('loginForm');
-    
+    // Function to toggle password visibility
+    const passwordField = document.getElementById('password');
+    const eyeIcon = document.getElementById('eye-icon');
+
+    eyeIcon.addEventListener('click', function () { 
+            // Toggle password visibility
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';  
+                eyeIcon.setAttribute('stroke', '#378e17');  
+            } else {
+                passwordField.type = 'password';  
+                eyeIcon.setAttribute('stroke', 'currentColor');  
+            }
+    });
+
     // event listener
     loginForm.addEventListener('submit', function (e) {
-        e.preventDefault();  
-        
+        e.preventDefault();
+
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
@@ -22,8 +36,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     localStorage.setItem('email', result.email);
                     localStorage.setItem('id', result.id)
 
-                    window.location.href = '/roomfinder_website/index.html'; 
-                } 
+                    window.location.href = '/roomfinder_website/index.html';
+                }
                 else {
                     console.error('Login failed:', result.message);
                     document.getElementById('error-message').textContent = result.message;

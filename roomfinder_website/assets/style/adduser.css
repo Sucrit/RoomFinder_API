@@ -30,6 +30,7 @@
     background-size: 15px;
     padding-right: 30px;  /* Add space for the custom arrow */
     font-weight: bold;
+    width: 100%;
 }
 
 /* AUTHENTICATION */
@@ -77,4 +78,5 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
 }

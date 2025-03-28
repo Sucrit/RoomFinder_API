@@ -28,7 +28,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
-    width: 500px;
+    width: 100%;
 }
 
 .filter {
@@ -84,3 +84,22 @@ table th {
     padding-right: 40px;  /* Add space for the custom arrow */
     width: 100px;
 }
+
+.user-item {
+    border-color: #28773f;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.userlisttable {
+    width: 100%;
+    height: 100;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+}
+
