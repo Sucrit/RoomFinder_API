@@ -10,11 +10,17 @@ import { InitAddUserSection } from '../viewjs/adduser.js';
 import { InitAccountSection } from '../viewjs/account.js';
 import { InitRoomScheduleSection } from '../viewjs/room_schedule.js';
 import { InitOngoingScheduleSection } from '../viewjs/ongoing_schedule.js';
-
 import { showToast } from '../viewjs/toast.js';
 import AdminViewModel from '../viewmodel/adminViewModel.js'; 
-
 // section router
+
+const menu = document.querySelector('#mobile-menu');
+const menuLinks = document.querySelector('.navbar__menu');
+menu.addEventListener('click', function () {
+    menu.classList.toggle('is-active');
+    menuLinks.classList.toggle('active');
+});
+
 window.showSection = function(sectionId) {
 
     // hide all sections

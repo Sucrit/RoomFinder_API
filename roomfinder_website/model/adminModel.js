@@ -1,3 +1,4 @@
+import Const from '../viewjs/const.js';
 import { authorizationRole } from './2auth.js';
 
 export default class AdminModel {
@@ -8,8 +9,7 @@ export default class AdminModel {
             email: email,
             password: password
         };  
-
-        return fetch('http://localhost/RoomFinder_API/api/index.php/admin/login', {
+        return fetch(Const.BASE_URL + 'admin/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -52,7 +52,7 @@ export default class AdminModel {
             password: password,
             teacher_id: teacher_id
         };    
-        return fetch('http://localhost/RoomFinder_API/api/index.php/admin/signup', {
+        return fetch(Const.BASE_URL + 'admin/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ export default class AdminModel {
             throw new Error("You are not authorized");
         }
         
-        return fetch('http://localhost/RoomFinder_API/api/index.php/admin', {
+        return fetch(Const.BASE_URL + 'admin', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ export default class AdminModel {
             new_password: newPassword,
             confirm_password: confirmPassword
         };
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/admin/${id}`, {
+        return fetch(Const.BASE_URL + `admin/${id}`, {
             method: 'PATCH', 
             headers: {
                 'Content-Type': 'application/json',
@@ -157,7 +157,7 @@ export default class AdminModel {
             return { success: false, message: 'Only Administrator can perform this action' }; 
         }
 
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/admin/${id}`, {
+        return fetch(Const.BASE_URL + `admin/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -193,7 +193,7 @@ export default class AdminModel {
             return { success: false, message: 'Only Administrator can perform this action' }; 
         }
         
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/user/${id}`, {
+        return fetch(Const.BASE_URL + `user/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -224,7 +224,7 @@ export default class AdminModel {
             throw new Error("You are not authorized");
         }
 
-        return fetch('http://localhost/RoomFinder_API/api/index.php/admin/logout', {
+        return fetch(Const.BASE_URL + 'admin/logout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

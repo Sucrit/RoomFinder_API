@@ -1,11 +1,13 @@
 import RoomScheduleViewModel from '../viewmodel/roomscheduleViewModel.js';
 import { showToast } from '../viewjs/toast.js';
 import { dateTimeFormat } from '../viewjs/timeformat.js';
+import { changeTitle } from './dashboard.js';
 
 export function InitOngoingScheduleSection() {
     const ongoingScheduleSection = document.getElementById('ongoing_schedule');
     const ongoingScheduleBody = ongoingScheduleSection.querySelector('.table-data');
 
+    changeTitle('Ongoing Schedules');
     async function init() {
         await loadOngoingSchedules();
     }

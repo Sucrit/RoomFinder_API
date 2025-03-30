@@ -17,7 +17,7 @@
         justify-content: space-between;
         width: 90%;
         margin-top: 20px;
-        height: 100vh;
+        height: 1000px;
     }
     
     .nav-item {
@@ -31,7 +31,7 @@
         font-size: 14px;
         font-weight: bold;
         margin: 5px 0;
-        
+        transition: 0.5s ease;
     }
     
     .nav-item.active {
@@ -83,7 +83,6 @@
     background-color: white;
     height:35px;
     width:50%;
-    margin-right: 50px;
     font-size: 15px;
     font-weight: bold;
     align-items: center;
@@ -119,10 +118,18 @@
     margin: 5px 0;
     cursor: pointer;
     position: relative;
+    transition: 0.5s ease;
 }
-.dropdown:hover {
+.dropdown:hover, .nav-links .nav-item:hover {
     background-color: rgba(217, 217, 217, 0.5);
     color: white;
+    transition: 0.5s ease;
+}
+
+.dropdown-name {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
 }
 
 .dropdown-toggle {
@@ -141,7 +148,7 @@
     flex-direction: column;
     background-color:rgba(66, 154, 104, 1);
     color: white;
-    position: absolute;
+    position: relative;
     top: 100%;
     left: 0;
     width: 100%;
@@ -170,13 +177,12 @@
     color: white;
 }
 
-@media (max-width: 600px) {
+@media  screen and (max-width: 600px) {
     .modal-content {
         width: 90%;
         padding: 10px;
     }
 
-    /* On smaller screens, form groups should take full width */
     .form-group {
         flex: 1 1 100%;
         margin-bottom: 15px;
@@ -188,41 +194,66 @@
     }
 }
 
-@media (max-width: 600px) {
-    .navbar__container {
-        display: flex;
-        justify-content: space-between;
-        height: 80px;
-        z-index: 1;
-        width: 100%;
-        max-width: 1300px;
-        padding: 0;
-    }
-
-    .navbar {
-        display: none;
-    }
+@media screen and (max-width: 600px) {
 
     .navbar__menu {
-        display: grid;
+        display: flex;
         grid-template-columns: auto;
         margin: 0;
-        width: 100%;
-        position: absolute;
         top: -1000px;
-        opacity: 0;
-        transition: all 0.5s ease;
+        width: 50%;
+        position: absolute;
+        transition: all 0.5s ease-in-out;
         z-index: -1;
-        background-color: #131313;
+        overflow: auto;
+        width: 100%;
+    }
+
+    .logo-container {
+        padding: 0px;
+        justify-content: space-between;
+    }
+
+    .logo-container img {
+        width: 50px;
+        aspect-ratio: 1/1;
+        display: flex;
+        align-items: center;
+    }
+    .navbar-options {
+        margin: 0;
+        justify-content: flex-start;
+    }
+    .logoutBtn {
+        color: rgba(33, 165, 16, 1);
+        background-color: white;
+        height:35px;
+        width:30%;
+        font-size: 15px;
+        font-weight: bold;
+        align-items: center;
+        display: flex;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .logout-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .navbar__menu {
+
     }
 
     .navbar__menu.active {
-        background: #131313;
-        top: 100%;
+        top: 100px;
         opacity: 1;
         transition: all 0.5s ease;
         z-index: 99;
-        height: 50vh;
+        height: 450px;
         font-size: 1.6rem
     }
 
@@ -253,8 +284,8 @@
     }
 
     #mobile-menu {
-        position: relative;
-        top: 20%;
+        position: absolute;
+        top: 35%;
         right: 5%;
     }
 
@@ -270,10 +301,13 @@
         height: 80px;
         margin: 0;
     }
-
+    
+    .roomsearchTxt {
+        font-size: 14px;
+    }
     #mobile-menu.is-active .bar:nth-child(1) {
         transform: translateY(8px) rotate(45deg);
-        opacity: 0;
+        /* opacity: 0; */
     }
 
     #mobile-menu.is-active .bar:nth-child(2) {
@@ -282,6 +316,6 @@
 
     #mobile-menu.is-active .bar:nth-child(3) {
         transform: translateY(-8px) rotate(-45deg);
-        opacity: 0;
+        /* opacity: 0; */
     }
 }

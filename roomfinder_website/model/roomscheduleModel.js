@@ -1,4 +1,5 @@
 import { authorizationRole } from './2auth.js';
+import Const from '../viewjs/const.js';
 
 export default class RoomScheduleModel {
 
@@ -10,7 +11,7 @@ export default class RoomScheduleModel {
             throw new Error("You are not authorized");
         }
 
-        return fetch('http://localhost/RoomFinder_API/api/index.php/room_schedule', {
+        return fetch(Const.BASE_URL + 'room_schedule', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -20,7 +21,7 @@ export default class RoomScheduleModel {
         .then(response => {
             console.log('Response status:', response.status);  
             if (!response.ok) {
-                console.error('Error response:', response);  
+                console.error('Error response:', response); 
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             return response.json();
@@ -42,7 +43,7 @@ export default class RoomScheduleModel {
             throw new Error("You are not authorized");
         }
 
-        return fetch('http://localhost/RoomFinder_API/api/index.php/room_schedule/ongoing_schedule', {
+        return fetch(Const.BASE_URL + 'room_schedule/ongoing_schedule', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -74,7 +75,7 @@ export default class RoomScheduleModel {
             throw new Error("You are not authorized");
         }
 
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/room_schedule/${id}`, {
+        return fetch(Const.BASE_URL + `room_schedule/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -112,7 +113,7 @@ export default class RoomScheduleModel {
             return { success: false, message: 'Only Administrator can perform this action' }; 
         }
     
-        const response = await fetch('http://localhost/RoomFinder_API/api/index.php/room_schedule', {
+        const response = await fetch(Const.BASE_URL + 'room_schedule', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -150,7 +151,7 @@ export default class RoomScheduleModel {
             return { success: false, message: 'Only Administrator can perform this action' }; 
         }
 
-        const response = await fetch(`http://localhost/RoomFinder_API/api/index.php/room_schedule/${id}`, {
+        const response = await fetch(Const.BASE_URL + `room_schedule/${id}`, {
             method: 'PATCH', 
             headers: {
                 'Content-Type': 'application/json',
@@ -186,7 +187,7 @@ export default class RoomScheduleModel {
             return { success: false, message: 'Only Administrator can perform this action' }; 
         }
 
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/room_schedule/${id}`, {
+        return fetch(Const.BASE_URL + `room_schedule/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

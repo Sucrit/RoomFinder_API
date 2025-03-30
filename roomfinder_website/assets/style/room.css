@@ -42,6 +42,7 @@ table td {
     padding: 6px 12px;
     cursor: pointer;
     border-radius: 4px;
+    margin-top: 0;
 }
 
 .room-list {
@@ -50,4 +51,74 @@ table td {
 
 #addScheduleModal {
     display: none;
+}
+
+/* table media query */
+@media screen and (max-width: 600px) {
+    .room-container {
+        width: 100%;
+    }
+    
+    .room-header {
+        margin: 0px 10px;
+    }
+
+    .table-wrapper {
+        width: auto;
+        padding: 0;
+    }
+
+    .table-wrapper .room-sched {
+        padding: 0;
+    }
+
+    .room-sched thead {
+        font-size: 12px;
+    }
+
+    .room-sched {
+        margin-bottom: 120px;
+    }
+
+    .room-item td {
+        padding: 0px 5px;
+    }
+    .table-data {
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .table-data .room-item {
+        margin: 10px;
+    }
+
+    .room-item td:nth-child(5) {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        gap: 5px;
+    }
+    .update-btn, .remove-btn {
+        margin-top: 10px;
+        font-size: 12px;
+        padding: 5px;
+    }
+    .table-data tr {
+        padding: 10px;
+    }
+    .table-data td {
+        padding: 0px 5px;
+    }
+}
+
+/* modal media query */
+@media screen and (max-width: 600px) {
+    .modal .modals {
+        width: auto;
+        margin: 10px;
+    }
+
+    .modals form {
+        width: auto;
+    }
 }

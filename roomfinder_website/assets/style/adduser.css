@@ -4,7 +4,7 @@
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    width:700px;
+    width: auto;
     margin-top: 3%;
     text-align: center;
 }
@@ -79,4 +79,58 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+}
+
+.adduser-container {
+    display: flex;
+    gap: 20px;
+}
+
+@media screen and (max-width: 600px) {
+    .roleform {
+        width: 100%;
+    }
+
+    .adduser-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .adduser-container img {
+        width: 100%;
+        padding: 30px;
+    }
+
+    #addUserForm {
+        margin: 10px;
+        padding: 0;
+    }
+
+    .roleform {
+        background-color: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        width: 400px;
+        margin-top: 3%;
+        text-align: center;
+    }
+
+    .roleform input {
+        margin: 5px;
+        padding: 10px;
+        width: 80%;
+        border-radius: 5px;
+        border: 1px solid #28773f;
+    }
+
+    .addUserButtons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
 }

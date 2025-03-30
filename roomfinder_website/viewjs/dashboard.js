@@ -3,6 +3,12 @@
 import RoomRequestViewModel from "../viewmodel/roomrequestViewModel.js";
 import { dateTimeFormat } from '../viewjs/timeformat.js';
 
+
+export function changeTitle(titleHeader) {
+    const title = document.querySelector('.shifting_topbar h2');
+    title.textContent = titleHeader;
+}
+
 export async function InitDashboard() {
 
     // showLoading();
@@ -32,17 +38,14 @@ export async function InitDashboard() {
             const availablePercentage = totalRoom ? Math.round((availableCount / totalRoom) * 100) : 0;
             const occupiedPercentage = totalRoom ? Math.round((occupiedCount / totalRoom) * 100) : 0;
             const closedPercentage = totalRoom ? Math.round((closedCount / totalRoom) * 100) : 0;
-
-            const menu = document.querySelector('#mobile-menu');
-            const menuLinks = document.querySelector('.navbar__menu');
-            const menuBars = document.getElementsByClassName('.navbar');
-
-            menu.addEventListener('click', function () {
-                menu.classList.toggle('is-active');
-                menuLinks.classList.toggle('active');
-            });
-
-
+            
+            changeTitle('Dashboard');
+            // const menu = document.querySelector('#mobile-menu');
+            // const menuLinks = document.querySelector('.navbar__menu');
+            // menu.addEventListener('click', function () {
+            //     showNavbar(menu, menuLinks);
+            // });
+            
             // dom dashboard stats
             updateTextContent('totalRequests', totalRequests);
             updateTextContent('pendingRequests', data["pending count"] || 0);
@@ -161,7 +164,7 @@ function updateTable(tableId, data) {
         });
     }
     else {
-        let noDataMessage = '<td colspan="6">No data available</td>';
+        let noDataMessage = '<td colspan="6">No records found<br>&nbsp;</td>';
 
         // create row
         const row = document.createElement('tr');

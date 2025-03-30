@@ -12,7 +12,6 @@ body {
     overflow-y: auto;
     position: relative;
     background-color:rgba(25, 216, 54, 0.2);
-    /* background: linear-gradient(rgba(111, 206, 137, 0.5), rgb(255, 255, 255)), url('../images/upangbg.png') no-repeat center center / cover; */
 }
 
 .main_content {
@@ -62,6 +61,7 @@ a.hover {
     padding: 6px 12px;
     cursor: pointer;
     border-radius: 4px;
+    margin: 0;
 }
 
 /* Add and Edit Room */

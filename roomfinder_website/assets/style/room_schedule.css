@@ -61,3 +61,59 @@
 .table-data td {
     text-align: center;
 }
+
+@media screen and (max-width: 600px) {
+    .room-table-container {
+        width: 100%;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        text-align: center;
+    }
+
+    #room_schedule .schedule-content {
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+    .table-wrapper-schedule {
+        font-size: 12px;
+    }
+
+    .table-wrapper-schedule .room-sched {
+        padding: 5px;
+    }
+
+    .update-btn-sched {
+        color: white;
+        border: none;
+        padding: 3px 5px;
+        cursor: pointer;
+        border-radius: 4px;
+        background-color: #4CAF50;
+    }
+
+    .delete-btn-sched {
+        color: white;
+        border: none;
+        padding: 5px 8px;
+        cursor: pointer;
+        border-radius: 4px;
+        background-color: #d9534f;
+    }
+
+    .room-sched td:nth-child(5) {
+        display: flex;
+        gap: 5px;
+    }
+
+    .room-schedule-item {
+        
+    }
+}
