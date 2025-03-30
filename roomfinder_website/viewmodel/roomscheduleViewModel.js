@@ -56,9 +56,11 @@ export default class RoomScheduleViewModel {
 
         if (response.status === 'success') {
             showToast(response.message, 'success');
+            console.log(response);
             return { success: true, message: response.message, status: response.status };
         } else {
             showToast(response.message, 'error');
+            console.log(response);
             return { success: false, message: response.message, status: response.status };
         }     
     }
@@ -72,7 +74,7 @@ export default class RoomScheduleViewModel {
             showToast(response.message, 'success');
             return { success: true, message: response.message };
         } else if (response.status === 'error'){
-            console.log(response.status)
+            console.log(response.message)
             return { success: false, message: response.message, status: response.status };
         }
     }

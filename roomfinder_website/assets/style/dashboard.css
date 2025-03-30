@@ -131,7 +131,6 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-bottom: 15px;
 }
 
 .roomStats-recent h1 {
@@ -159,7 +158,6 @@
 
 .roomStats-recent th, .roomStats td {
     padding: 10px;
-    border-bottom: 1px solid #ddd;
     text-align: center;
     box-shadow: #4caf50;
 }

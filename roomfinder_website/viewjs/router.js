@@ -140,7 +140,6 @@ window.addEventListener('click', function(event) {
     });
 });
 
-
 // logout button 
 window.handleLogout = async function(event) {
     event.preventDefault();
