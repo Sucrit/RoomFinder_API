@@ -1,5 +1,5 @@
 import { authorizationRole } from './2auth.js';
-
+import Const from '../viewjs/const.js';
 export default class RoomRequestModel {
 
     // get room requests for dashboard route
@@ -10,7 +10,7 @@ export default class RoomRequestModel {
             throw new Error("You are not authorized");
         }
 
-        return fetch('http://localhost/RoomFinder_API/api/index.php/room_request', {
+        return fetch(Const.BASE_URL + 'room_request', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ export default class RoomRequestModel {
             throw new Error("You are not authorized");
         }
 
-        return fetch('http://localhost/RoomFinder_API/api/index.php/room_request/pending_request', {
+        return fetch(Const.BASE_URL + 'room_request/pending_request', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ export default class RoomRequestModel {
             throw new Error("You are not authorized");
         }
 
-        return fetch('http://localhost/RoomFinder_API/api/index.php/room_request/history', {
+        return fetch(Const.BASE_URL + 'room_request/history', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ export default class RoomRequestModel {
             throw new Error("You are not authorized");
         }
 
-        return fetch('http://localhost/RoomFinder_API/api/index.php/room_request/history', {
+        return fetch(Const.BASE_URL + 'room_request/history', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ export default class RoomRequestModel {
 
         const requestData = { status: status };
 
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/room_request/${id}`, {
+        return fetch(Const.BASE_URL + `room_request/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -172,7 +172,7 @@ export default class RoomRequestModel {
         }
 
         try {
-            const response = await fetch(`http://localhost/RoomFinder_API/api/index.php/room_request/${id}`, {
+            const response = await fetch(Const.BASE_URL + `room_request/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

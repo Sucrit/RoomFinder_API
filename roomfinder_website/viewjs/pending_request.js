@@ -1,10 +1,12 @@
 import RoomRequestViewModel from '../viewmodel/roomrequestViewModel.js';
 import { showToast } from '../viewjs/toast.js';
+import { changeTitle } from './dashboard.js';
 
 export function InitPendingRequestSection() {
     const pendingRequestSection = document.getElementById('pending_request');
     const pendingRequestBody = pendingRequestSection.querySelector('tbody');
 
+    changeTitle('Pending Requests');
     async function init() {
         await loadPendingRequests();
     }

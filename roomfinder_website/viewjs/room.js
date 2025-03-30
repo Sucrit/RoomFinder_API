@@ -2,6 +2,7 @@ import RoomViewModel from '../viewmodel/roomViewModel.js';
 import RoomScheduleViewModel from '../viewmodel/roomscheduleViewModel.js';
 import { showToast } from './toast.js';
 import { dateTimeFormat } from '../viewjs/timeformat.js';
+import { changeTitle } from './dashboard.js';
 
 export function InitRoomsSection() {
     const roomListBody = document.getElementById('roomListBody');
@@ -17,6 +18,20 @@ export function InitRoomsSection() {
     const addScheduleBtn = document.getElementById('addScheduletoRoom');
     const cancelAddScheduleBtn = document.getElementById('cancelAddSchedule');
     const addScheduleModal = document.getElementById('addScheduleModal'); 
+
+    // const title = document.querySelector('.shifting_topbar h2');
+    // title.textContent = 'Room Details';
+
+    // const menu = document.querySelector('#mobile-menu');
+    // const menuLinks = document.querySelector('.navbar__menu');
+    
+    // menu.addEventListener('click', function () {
+    //     menu.classList.toggle('is-active');
+    //     menuLinks.classList.toggle('active');
+    // });
+
+    changeTitle('Room Details');
+
 
     let searchText = '';
  

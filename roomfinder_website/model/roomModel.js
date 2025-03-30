@@ -1,5 +1,5 @@
 import { authorizationRole } from './2auth.js';
-
+import Const from '../viewjs/const.js';
 export default class RoomModel {
 
     // get room list route (room page)
@@ -10,7 +10,7 @@ export default class RoomModel {
             throw new Error("You are not authorized");
         }
 
-        return fetch('http://localhost/RoomFinder_API/api/index.php/room', {
+        return fetch(Const.BASE_URL + 'room', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ export default class RoomModel {
             throw new Error("You are not authorized");
         }
 
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/room/${id}`, {
+        return fetch(Const.BASE_URL + `room/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ export default class RoomModel {
             return { success: false, message: 'Only Administrator can perform this action' }; 
         }
 
-        const response = await fetch('http://localhost/RoomFinder_API/api/index.php/room', {
+        const response = await fetch(Const.BASE_URL + 'room', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ export default class RoomModel {
             return { success: false, message: 'Only Administrator can perform this action' }; 
         }
 
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/room/${id}`, {
+        return fetch(Const.BASE_URL + `room/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -151,7 +151,7 @@ export default class RoomModel {
             return { success: false, message: 'Only Administrator can perform this action' }; 
         }
         
-        return fetch(`http://localhost/RoomFinder_API/api/index.php/room/${id}`, {
+        return fetch(Const.BASE_URL + `room/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

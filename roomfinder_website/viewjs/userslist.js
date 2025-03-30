@@ -1,11 +1,12 @@
 import AdminViewModel from '../viewmodel/adminViewModel.js'; 
 import { showToast } from '../viewjs/toast.js';
-
+import { changeTitle } from '../viewjs/dashboard.js';
 export function InitUsersListSection() {
     const userListBody = document.getElementById('userListBody');
     const filter = document.querySelector('.filter');
     const searchBar = document.querySelector('.search-bar');
     const currentUserId = localStorage.getItem('id');
+    changeTitle('Authenticated Users');
 
     let selectedRole = 'all';
     let searchText = '';

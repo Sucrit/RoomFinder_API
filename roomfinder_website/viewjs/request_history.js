@@ -1,10 +1,11 @@
 import RoomRequestViewModel from '../viewmodel/roomrequestViewModel.js';
 import { showToast } from '../viewjs/toast.js';
+import { changeTitle } from './dashboard.js';
 
 export function InitRequestHistorySection() {
     const requestHistorySection = document.getElementById('request_history');
     const requestHistoryBody = requestHistorySection.querySelector('tbody');
-
+    changeTitle('Request History');
     // Initialize the section
     function init() {
         loadRequestHistory();

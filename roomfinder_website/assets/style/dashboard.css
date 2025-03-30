@@ -79,7 +79,7 @@
     align-items: center;
     width: 100%;
     margin-bottom: 15px;
-    
+
 }
 
 .roomStats-ongoingroom h1 {
@@ -105,7 +105,8 @@
     border-collapse: collapse;
 }
 
-.roomStats-ongoingroom th, .roomStats td {
+.roomStats-ongoingroom th,
+.roomStats td {
     padding: 10px;
     text-align: center;
     border-bottom: 1px solid #ddd;
@@ -156,7 +157,8 @@
     border-collapse: collapse;
 }
 
-.roomStats-recent th, .roomStats td {
+.roomStats-recent th,
+.roomStats td {
     padding: 10px;
     text-align: center;
     box-shadow: #4caf50;
@@ -171,7 +173,7 @@
     display: grid;
     grid-gap: 50px;
     flex-wrap: wrap;
-    margin-top: 20px;
+    margin-top: 10px;
     padding: 20px;
     overflow: hidden;
     justify-content: space-evenly;
@@ -192,6 +194,7 @@
     justify-content: center;
     align-items: flex-start;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
     /* transition: transform 0.3s ease-in-out; 
     transform-origin: center; */
 }
@@ -218,7 +221,8 @@
 .stats-box p {
     font-size: 16px;
     margin: 0;
-    color: rgba(176, 181, 188, 1);
+    color: black;
+    font-weight: bold;
 }
 
 .stats-box img {
@@ -258,7 +262,8 @@
     align-items: center;
 }
 
-.seerequesthistory-btn, .seeongoingschedule-btn {
+.seerequesthistory-btn,
+.seeongoingschedule-btn {
     color: white;
     background-color: rgba(66, 154, 104, 1);
     width: 69px;
@@ -295,21 +300,17 @@
     border-collapse: separate;
 }
 
-
-
-
-
 /* Base style for request boxes */
 .requestforms {
-    padding: 20px; /* Adjust padding for some space inside the container */
+    padding: 20px;
     border-radius: 10px;
     color: white;
     position: relative;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Align content at the top */
-    height: 120px; /* Fixed height for the container */
+    justify-content: flex-start;
+    height: 120px;
 }
 
 /* Style for the request box to position elements properly */
@@ -318,18 +319,18 @@
     z-index: 1;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Ensure text stays at the top */
-    margin-top: 10px; /* Adjust top margin to add space at the top */
-    padding-bottom: 10px; /* Space between text and progress bar */
-    overflow: hidden; /* Prevents overflow */
+    justify-content: flex-start;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    overflow: hidden;
 }
 
 /* Wrapper around the progress bar to handle padding */
 .progress-bar-wrapper {
-    width: 60%; /* Defines the width of the progress bar wrapper */
-    padding: 0; /* Add padding here (if needed) */
-    margin: 0 auto; /* Center the wrapper horizontally */
-    box-sizing: border-box; /* Ensures padding does not affect the width */
+    width: 60%;
+    padding: 0;
+    margin: 0 auto;
+    box-sizing: border-box;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -340,10 +341,10 @@
 
 /* Progress bar style */
 .progress-bar {
-    width: 0%; 
-    height: 5px; 
-    background-color: #ddd; 
-    transition: width 1s ease-in-out; 
+    width: 0%;
+    height: 5px;
+    background-color: #ddd;
+    transition: width 1s ease-in-out;
     border-radius: 3px;
 }
 
@@ -376,9 +377,11 @@
 
 
 /* text styling/ positioning */
-.request-box h2, .request-box p, .request-box h3 {
+.request-box h2,
+.request-box p,
+.request-box h3 {
     z-index: 2;
-    margin: 0; 
+    margin: 0;
 }
 
 .request-box h3 {
@@ -386,3 +389,59 @@
     margin-left: 3px;
 }
 
+@media screen and (max-width: 600px) {
+    #grid-container {
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 5px;
+        margin: 0;
+    }
+
+    #mobile-menu .bar {
+        background-color: #fff;
+    }
+
+    .topcontainer {
+        background-color: rgba(66, 154, 104, 1);
+        color: #fff;
+        width: 100%;
+        padding: 0px;
+        height: 100px;
+    }
+
+    .topcontainer h2 {
+        color: #fff;
+    }
+
+    .topcontainer .profile-container {
+        display: none;
+    }
+
+    .topbar_container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    #grid-container {
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 5px;
+        margin: 0;
+    }
+
+    .stats-box {
+        font-size: 12px;
+        justify-content: space-evenly;
+    }
+
+    .statContainer {
+        overflow: hidden;
+    }
+
+    .stats-box p {
+        color: black;
+        font-weight: bold;
+    }
+}

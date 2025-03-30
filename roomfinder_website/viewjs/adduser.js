@@ -1,6 +1,7 @@
 // adduser.js
 import AdminViewModel from '../viewmodel/adminViewModel.js';    
 import { showToast } from './toast.js';
+import { changeTitle } from './dashboard.js';
 
 export function InitAddUserSection() {
 
@@ -9,6 +10,7 @@ export function InitAddUserSection() {
     const roleSelector = document.getElementById('role');
     const teacherIdContainer = document.getElementById('teacher-id-container');
     const teacherIdInput = document.getElementById('teacherID');
+    changeTitle('Add Users');
 
     // hide teacher id input field bif role != teacher
     if (roleSelector.value === 'Teacher') {

@@ -2,12 +2,15 @@
 // account sec dom/M
 import AdminViewModel from "../viewmodel/adminViewModel.js";
 import { showToast } from '../viewjs/toast.js';  
+import { changeTitle } from "./dashboard.js";
 
 export function InitAccountSection() {
     console.log('init account.js')
     const username = localStorage.getItem('username');
     const email = localStorage.getItem('email');
     const adminId = localStorage.getItem('id')
+
+    changeTitle('Account');
 
     if (!username || !email || !adminId) {
         console.error('No data in localstorage.');

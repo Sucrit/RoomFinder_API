@@ -2,6 +2,7 @@ import RoomViewModel from '../viewmodel/roomViewModel.js';
 import RoomScheduleViewModel from '../viewmodel/roomscheduleViewModel.js';
 import { showToast } from '../viewjs/toast.js';
 import { dateTimeFormat } from '../viewjs/timeformat.js';
+import { changeTitle } from './dashboard.js';
 
 export function InitRoomScheduleSection() {
     const scheduleSection = document.getElementById('room_schedule');
@@ -12,6 +13,7 @@ export function InitRoomScheduleSection() {
     const addRoomScheduleForm = document.querySelector('.roomdetails_form');
     const closeModalBtn = addModal.querySelector('.closeModalBtn');
 
+    changeTitle('Room Schedules');
     // const roomNumberSelect = addModal.querySelector('#roomNumber');
     // const roomBuildingSelect = addModal.querySelector('#roomBldg');
 
@@ -91,17 +93,17 @@ export function InitRoomScheduleSection() {
             <td>${schedule.date + '<br/>' + startTime + ' - ' + endTime || 'N/A'}</td>
             <td>${schedule.block || 'N/A'}</td>
             <td>
-                <button class="update-btn" data-id="${schedule.id}">Update</button>
-                <button class="delete-btn" data-id="${schedule.id}">Delete</button>
+                <button class="update-btn-sched" data-id="${schedule.id}">Update</button>
+                <button class="delete-btn-sched" data-id="${schedule.id}">Delete</button>
             </td>
         `;
 
         // button event listeners
-        row.querySelector('.update-btn').addEventListener('click', () => { 
+        row.querySelector('.update-btn-sched').addEventListener('click', () => { 
             console.log(`Attempting to update schedule with ID: ${schedule.id}`); 
             handleUpdate(schedule.id)
         });
-        row.querySelector('.delete-btn').addEventListener('click', () => {
+        row.querySelector('.delete-btn-sched').addEventListener('click', () => {
             console.log(`Attempting to delete schedule with ID: ${schedule.id}`); 
             handleDelete(schedule, row)});
         row.querySelector('.update-btn').addEventListener('click', () =>handleUpdate(schedule.id));

@@ -103,3 +103,17 @@ table th {
     padding: 10px;
 }
 
+@media screen and (max-width: 600px) {
+    .userlisttable {
+        width: 100%;
+    }
+
+    .userlisttable table {
+        font-size: 10px;
+        width: auto;
+    }
+
+    .userlisttable th, .userlisttable td {
+        padding: 8px;
+    }
+}
