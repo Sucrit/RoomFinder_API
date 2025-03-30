@@ -158,19 +158,20 @@ export default class RoomScheduleModel {
                 'Authorization': `Bearer ${authToken}`
             },
             body: JSON.stringify(scheduleData), 
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();  
+        })
+        .then(data => {
+            return data;
+        })
+        .catch(error => {
+            console.error('Error updating room:', error);
+            throw error;
         });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data.status === 'success') {
-            return { success: true, message: data.message };
-        } else {
-            throw new Error('Failed to update room schedule');
-        }
     }
     
     // delete room schedule route

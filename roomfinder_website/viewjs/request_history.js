@@ -87,7 +87,5 @@ export function InitRequestHistorySection() {
             }
         }, 250);
     }
-
-
     init();
 }

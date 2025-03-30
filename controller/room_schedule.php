@@ -75,7 +75,7 @@ class RoomScheduleController {
         // check if the room exists
         if ($this->roomModel->roomExists($room_id)) {
     
-            // get room status
+            // get room 
             $room = $this->roomModel->getRoomById($room_id);
             
             // check closed status
@@ -84,11 +84,10 @@ class RoomScheduleController {
                 return;
             }
 
+            // check time validity
             date_default_timezone_set('Asia/Singapore');
-    
             $currentTimestamp = time();
     
-            // combine date to starting time & ending time
             $requestedStartTimestamp = strtotime("$date $starting_time");
             $requestedEndTimestamp = strtotime("$date $ending_time");
     
@@ -98,7 +97,7 @@ class RoomScheduleController {
     
             // check time conflict
             if ($requestedStartTimestamp < $currentTimestamp || $endingTimeStamp < $currentTimestamp) {
-                echo json_encode(['status' => 'error', 'message' => 'The requested time is invalid, Try again']);
+                echo json_encode(['status' => 'error', 'message' => 'The selected time is in the past. Please choose a future time for the schedule']);
                 return;
             }
     
@@ -134,27 +133,47 @@ class RoomScheduleController {
             return;
         }
 
-        $room_id = isset($input['room_id']) ? $input['room_id'] : $schedule['room_id'];
         $block = isset($input['block']) ? $input['block'] : $schedule['block'];
         $date = isset($input['date']) ? $input['date'] : $schedule['date'];
         $starting_time = isset($input['starting_time']) ? $input['starting_time'] : $schedule['starting_time'];
         $ending_time = isset($input['ending_time']) ? $input['ending_time'] : $schedule['ending_time'];
 
+        // check if no value change
+        if ($block == $schedule['block'] && $date == $schedule['date'] && 
+            $starting_time == $schedule['starting_time'] && $ending_time == $schedule['ending_time']) { 
+            echo json_encode(['status' => 'error', 'message' => 'You need to change a value before updating the schedule']);
+            return;
+        }
+    
         // starting time greater than ending time
         if ($starting_time >= $ending_time) {
             echo json_encode(['status' => 'error', 'message' => 'Starting time must be before ending time']);
             return;
         }
 
+        // check time validity
+        date_default_timezone_set('Asia/Singapore');
+        $currentTimestamp = time();
+
+        $updatedStartTimestamp = strtotime("$date $starting_time");
+        $updatedEndTimestamp = strtotime("$date $ending_time");
+
+        if ($updatedStartTimestamp < $currentTimestamp || $updatedEndTimestamp < $currentTimestamp) {
+            echo json_encode(['status' => 'error', 'message' => 'The selected time is in the past. Please choose a future time for the schedule']);
+            return;
+        }
+        
         // check room schedule conflict before update
-        $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($room_id, $date, $starting_time, $ending_time, $id);
+        $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($schedule['room_id'], $date, $starting_time, $ending_time, $id);
         if ($scheduleConflict) {
             echo json_encode(['status' => 'error', 'message' => 'The room is already occupied for the requested time slot']);
             return;
         }
-        $this->roomScheduleModel->updateRoomSchedule($id, $room_id, $block, $date, $starting_time, $ending_time);
+
+        $this->roomScheduleModel->updateRoomSchedule($id,  $schedule['room_id'], $block, $date, $starting_time, $ending_time);
         echo json_encode(['status' => 'success', 'message' => 'Room updated successfully']);
     }
+
 
     // delete room schedule
     public function deleteRoomSchedule($id) {

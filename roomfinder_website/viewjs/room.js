@@ -41,7 +41,7 @@ export function InitRoomsSection() {
     };
 
     function updateRoomNumberOptions(building) {
-        roomNumberSelect.innerHTML = ""; // Clear previous options
+        roomNumberSelect.innerHTML = ""; 
 
         if (buildingRoomsMap[building]) {
             buildingRoomsMap[building].forEach(roomNumber => {
@@ -55,7 +55,7 @@ export function InitRoomsSection() {
 
     addRoomBldgSelect.addEventListener('change', () => {
         const selectedBuilding = addRoomBldgSelect.value;
-        updateRoomNumberOptions(selectedBuilding); // Update room numbers based on the selected building
+        updateRoomNumberOptions(selectedBuilding);
     });
 
     // Event listener for building selection change
@@ -111,9 +111,7 @@ export function InitRoomsSection() {
         }
     }
 
-
     function closeModal() {
-        console.log('Closing modal...');
         modal.style.display = 'none';
     }
 

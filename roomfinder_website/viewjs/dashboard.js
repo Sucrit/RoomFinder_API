@@ -190,7 +190,6 @@ function InitSeeAllButton() {
     }
 }
 
-
 // initial hide sec in dashboard
 document.addEventListener('DOMContentLoaded', function () {
 

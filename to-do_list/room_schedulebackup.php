@@ -1,8 +1,8 @@
+
 import RoomViewModel from '../viewmodel/roomViewModel.js'; 
 import RoomScheduleViewModel from '../viewmodel/roomscheduleViewModel.js';
 import { showToast } from '../viewjs/toast.js';
 import { dateTimeFormat } from '../viewjs/timeformat.js';
-import { changeTitle } from './dashboard.js';
 
 export function InitRoomScheduleSection() {
     const scheduleSection = document.getElementById('room_schedule');
@@ -13,7 +13,6 @@ export function InitRoomScheduleSection() {
     const addRoomScheduleForm = document.querySelector('.roomdetails_form');
     const closeModalBtn = addModal.querySelector('.closeModalBtn');
 
-    changeTitle('Room Schedules');
     // const roomNumberSelect = addModal.querySelector('#roomNumber');
     // const roomBuildingSelect = addModal.querySelector('#roomBldg');
 
@@ -32,6 +31,7 @@ export function InitRoomScheduleSection() {
     // modal only
     function openAddRoomScheduleModal() {
         addModal.style.display = 'block';
+        fetchRooms();
 
         addModal.setAttribute('data-room-id', selectedRoomId);
         setRoomFieldsReadOnly(false);
@@ -39,10 +39,6 @@ export function InitRoomScheduleSection() {
         // Reset button text to "Create" when opening for a new schedule
         const actionButton = addModal.querySelector('.action-btn');
         actionButton.textContent = 'Create';  
-
-        if (actionButton.textContent === 'Create') {
-            fetchRooms();  // Fetch rooms only for creating a new schedule
-        }
     }
     
     function closeAddRoomScheduleModal() {
@@ -87,24 +83,24 @@ export function InitRoomScheduleSection() {
         const startTime = dateTimeFormat(schedule.starting_time);
         const endTime = dateTimeFormat(schedule.ending_time);
 
-        row.innerHTML = `
+        row.innerHTML = 
             <td>${schedule.room_building || 'N/A'}</td>
             <td>${schedule.room_number || 'N/A'}</td>
             <td>${schedule.date + '<br/>' + startTime + ' - ' + endTime || 'N/A'}</td>
             <td>${schedule.block || 'N/A'}</td>
             <td>
-                <button class="update-btn-sched" data-id="${schedule.id}">Update</button>
-                <button class="delete-btn-sched" data-id="${schedule.id}">Delete</button>
+                <button class="update-btn" data-id="${schedule.id}">Update</button>
+                <button class="delete-btn" data-id="${schedule.id}">Delete</button>
             </td>
-        `;
+        ;
 
         // button event listeners
-        row.querySelector('.update-btn-sched').addEventListener('click', () => { 
-            console.log(`Attempting to update schedule with ID: ${schedule.id}`); 
+        row.querySelector('.update-btn').addEventListener('click', () => { 
+            console.log(Attempting to update schedule with ID: ${schedule.id}); 
             handleUpdate(schedule.id)
         });
-        row.querySelector('.delete-btn-sched').addEventListener('click', () => {
-            console.log(`Attempting to delete schedule with ID: ${schedule.id}`); 
+        row.querySelector('.delete-btn').addEventListener('click', () => {
+            console.log(Attempting to delete schedule with ID: ${schedule.id}); 
             handleDelete(schedule, row)});
         row.querySelector('.update-btn').addEventListener('click', () =>handleUpdate(schedule.id));
         row.querySelector('.delete-btn').addEventListener('click', () => handleDelete(schedule, row));
@@ -114,7 +110,7 @@ export function InitRoomScheduleSection() {
     }
 
     function showNoSchedulesMessage(message) {
-        scheduleBody.innerHTML = `<tr><td colspan="6">${message}</td></tr>`;
+        scheduleBody.innerHTML = <tr><td colspan="6">${message}</td></tr>;
     }
 
     // handle delete schedule
@@ -160,7 +156,6 @@ export function InitRoomScheduleSection() {
             if (actionButton.textContent === 'Create') {
                 const response = await RoomScheduleViewModel.createRoomSchedule(scheduleData);
                 if (response.success) {
-                    console.log(response);
                     fetchSchedules();
                     closeAddRoomScheduleModal();
                 } else {
@@ -191,13 +186,12 @@ export function InitRoomScheduleSection() {
         console.log(response.schedule);
         
         if (response.success) {
-            console.log(`Viewing schedule with ID: ${scheduleId}`);
+            console.log(Viewing schedule with ID: ${scheduleId});
             populateScheduleForm(response.schedule);
             addModal.style.display = 'block';
 
             const actionButton = addModal.querySelector('.action-btn');
             actionButton.textContent = 'Update'; 
-            populateRoomDropdowns(rooms, false);
         } else {
             showToast(response.message + 'Error fetching schedule', 'error');
         }
@@ -227,7 +221,7 @@ export function InitRoomScheduleSection() {
             if (response.success && response.rooms.length > 0) {
                 rooms = response.rooms;  
                 console.log('Fetched rooms:', rooms); 
-                populateRoomDropdowns(rooms, true); 
+                populateRoomDropdowns(rooms); 
             } else {
                 showToast('No rooms available', 'error');
             }
@@ -253,8 +247,6 @@ export function InitRoomScheduleSection() {
         startingTimeInput.value = formatTime(schedule.starting_time || '');
         endingTimeInput.value = formatTime(schedule.ending_time || '');
 
-        populateRoomDropdowns(rooms);
-
         roomBuildingSelect.value = schedule.room_building || '';
         roomNumberSelect.value = schedule.room_number || ''; 
 
@@ -266,65 +258,56 @@ export function InitRoomScheduleSection() {
     function formatTime(time) {
         if (!time) return '';  
         const timeParts = time.split(':'); 
-        return timeParts.length >= 2 ? `${timeParts[0]}:${timeParts[1]}` : time;  
+        return timeParts.length >= 2 ? ${timeParts[0]}:${timeParts[1]} : time;  
     }
+          
+    
 
     // Populate the room building and room number dropdowns
-    function populateRoomDropdowns(rooms, shouldPopulate = true) {
+    function populateRoomDropdowns(rooms) {
+        const buildings = [...new Set(rooms.map(room => room.room_building))];
         const roomBuildingSelect = addModal.querySelector('#roomBldg');
         const roomNumberSelect = addModal.querySelector('#roomNumber');
 
-        // Clear current options first
         roomBuildingSelect.innerHTML = '';
         roomNumberSelect.innerHTML = '';
 
-        if (shouldPopulate) {
-            // building value
-            const defaultBuildingOption = document.createElement('option');
-            defaultBuildingOption.value = '';
-            defaultBuildingOption.textContent = 'Select a building';
-            roomBuildingSelect.appendChild(defaultBuildingOption);
+        // building value
+        const defaultBuildingOption = document.createElement('option');
+        defaultBuildingOption.value = '';
+        defaultBuildingOption.textContent = 'Select a building';
+        roomBuildingSelect.appendChild(defaultBuildingOption);
 
-            // Populate room buildings
-            const buildings = [...new Set(rooms.map(room => room.room_building))];
-            buildings.forEach(building => {
-                const option = document.createElement('option');
-                option.value = building;
-                option.textContent = building;
-                roomBuildingSelect.appendChild(option);
-            });
+        // Populate room buildings
+        buildings.forEach(building => {
+            const option = document.createElement('option');
+            option.value = building;
+            option.textContent = building;
+            roomBuildingSelect.appendChild(option);
+        });
 
-            // room number 
-            const defaultRoomOption = document.createElement('option');
-            defaultRoomOption.value = '';
-            defaultRoomOption.textContent = 'Select a room number';
-            roomNumberSelect.appendChild(defaultRoomOption);
+        // room number 
+        const defaultRoomOption = document.createElement('option');
+        defaultRoomOption.value = '';
+        defaultRoomOption.textContent = 'Select a room number';
+        roomNumberSelect.appendChild(defaultRoomOption);
 
-            // When the room building is changed, populate room numbers
-            roomBuildingSelect.addEventListener('change', () => {
-                const selectedBuilding = roomBuildingSelect.value;
-                const roomNumbers = rooms.filter(room => room.room_building === selectedBuilding)
-                                        .map(room => room.room_number);
-                populateRoomNumbers(roomNumbers);
-            });
+        // When the room building is changed, populate room numbers
+        roomBuildingSelect.addEventListener('change', () => {
+            const selectedBuilding = roomBuildingSelect.value;
+            const roomNumbers = rooms.filter(room => room.room_building === selectedBuilding)
+                                    .map(room => room.room_number);
+            console.log('Room numbers for selected building:', roomNumbers);
+            populateRoomNumbers(roomNumbers);
+        });
+        roomNumberSelect.addEventListener('change', () => {
+            updateRoomId();  
+        });
 
-            roomNumberSelect.addEventListener('change', () => {
-                updateRoomId();  
-            });    
-            // Trigger change to populate room numbers for the first building
-            roomBuildingSelect.dispatchEvent(new Event('change'));
-        }
-        else {
-            // When updating, populate dropdowns with the current room details only
-            const roomBuildingSelect = addModal.querySelector('#roomBldg');
-            const roomNumberSelect = addModal.querySelector('#roomNumber');
 
-            // Set the current room building and room number from the schedule
-            roomBuildingSelect.disabled = true; // Set to readonly
-            roomNumberSelect.disabled = true; // Set to readonly
-        }
+        // event populate room numbers for selected building
+        roomBuildingSelect.dispatchEvent(new Event('change'));
     }
-
 
     // Populate room numbers based on selected building
     function populateRoomNumbers(roomNumbers) {
@@ -362,7 +345,7 @@ export function InitRoomScheduleSection() {
 
         if (selectedRoom) {
             addModal.setAttribute('data-room-id', selectedRoom.id);
-            console.log(`Room ID set to: ${selectedRoom.id}`);
+            console.log(Room ID set to: ${selectedRoom.id});
         } else {
             addModal.setAttribute('data-room-id', null);
             console.log('Room ID not found');

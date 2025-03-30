@@ -129,7 +129,6 @@ export default class RoomModel {
             return response.json();  
         })
         .then(data => {
-            console.log('Parsed response:', data);
             return data;
         })
         .catch(error => {
