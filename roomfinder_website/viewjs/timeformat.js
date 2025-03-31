@@ -11,6 +11,6 @@ export function dateTimeFormat(time) {
     } else if (hour === 0) {
         hour = 12; 
     }
-    const formattedTime = `${hour}:${minutes} ${ampm}`;
+    const formattedTime = `${hour}:${minutes} ${ampm}`; 
     return formattedTime;
 }

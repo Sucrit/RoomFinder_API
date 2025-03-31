@@ -72,23 +72,42 @@ export function InitPendingRequestSection() {
 
     // update status
     async function updateStatus(requestId, status, row) {
-        row.classList.add('ud-button-animation');
-    
-        try {
-            const response = await RoomRequestViewModel.updateRequestStatus(requestId, status);
-            if (response.status === 'success') {
-                row.remove();
-                showToast(response.message, 'success');
-            } else if (response.status === 'error') {
-                row.remove();
-                showToast(response.message , 'error');
+        // Display confirmation toast for approval or rejection
+        const confirmationMessage = status === 'Approved' 
+            ? 'Are you sure you want to approve this request?' 
+            : 'Are you sure you want to reject this request?';
+
+        // Show confirmation toast
+        showToast(confirmationMessage, 'info', {
+            showButtons: true,
+            onConfirm: async () => {
+                row.classList.add('ud-button-animation');
+
+                setTimeout(async () => {
+                    try {
+                        const response = await RoomRequestViewModel.updateRequestStatus(requestId, status);
+
+                        if (response.status === 'success') {
+                            row.remove(); 
+                            if (status === 'Approved') {
+                                showToast('Request approved successfully', 'success');
+                            } else if (status === 'Rejected') {
+                                showToast('Request rejected successfully', 'success');
+                            }
+                        } else if (response.status === 'error') {
+                            showToast(response.message || 'Failed to update request', 'error');
+                        }
+                    } catch (error) {
+                        console.error(`Error changing request status to ${status}:`, error);
+                        showToast(`Failed to ${status.toLowerCase()} request`, 'error');
+                    }
+                }, 500); 
+            },
+            onCancel: () => {
+                showToast('Request update canceled', 'info');
             }
-    
-        } catch (error) {
-            console.error(`Error changing request status to ${status}:`, error);
-            showToast(`Failed to ${status.toLowerCase()} request`, 'error');
-        }
+        });
     }
-    
+
     init();
 }

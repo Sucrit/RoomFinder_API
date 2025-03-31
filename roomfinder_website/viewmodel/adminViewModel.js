@@ -86,7 +86,7 @@ export default class AdminViewModel {
         try {
             const response = await AdminModel.deleteAdmins(adminId); 
             if (response && response.status === 'success') {
-                return { success: true, message: 'Admin deleted successfully' };
+                return { success: true, message: 'User deleted successfully' };
             } else {
                 showToast(response.message);
                 return { success: false, message: response.message };

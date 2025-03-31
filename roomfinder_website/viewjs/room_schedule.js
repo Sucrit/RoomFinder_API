@@ -1,395 +1,289 @@
-import RoomViewModel from '../viewmodel/roomViewModel.js'; 
 import RoomScheduleViewModel from '../viewmodel/roomscheduleViewModel.js';
+import RoomViewModel from '../viewmodel/roomViewModel.js';
 import { showToast } from '../viewjs/toast.js';
 import { dateTimeFormat } from '../viewjs/timeformat.js';
 import { changeTitle } from './dashboard.js';
 
-export function InitRoomScheduleSection() {
+export async function InitRoomScheduleSection() {
     const scheduleSection = document.getElementById('room_schedule');
     const scheduleBody = scheduleSection.querySelector('.table-data');
-    const addModal = document.getElementById('modal');
-    const floatingBtn = document.querySelector('.floating-btn');
-    // const addCloseBtn = document.querySelector('#modal .closemodal');
-    const addRoomScheduleForm = document.querySelector('.roomdetails_form');
-    const closeModalBtn = addModal.querySelector('.closeModalBtn');
+    const floatingBtn = document.querySelector('.create-new-sched-btn'); 
 
     changeTitle('Room Schedules');
-    // const roomNumberSelect = addModal.querySelector('#roomNumber');
-    // const roomBuildingSelect = addModal.querySelector('#roomBldg');
 
-    let selectedRoomId = null;
-    let rooms = [];  
+    // Fetch all room schedules
+    const result = await RoomScheduleViewModel.getAllRoomSchedules();
 
+    if (result.success) {
+        scheduleBody.innerHTML = '';
 
-    // Initialize events
-    function initEventListeners() {
-        floatingBtn.addEventListener('click', openAddRoomScheduleModal);
-        window.addEventListener('click', closeModalOnClickOutside);
-        addRoomScheduleForm.addEventListener('submit', handleAddRoomSchedule);
-        closeModalBtn.addEventListener('click', closeAddRoomScheduleModal);
-    }
+        if (result.schedules.length > 0) {
+            // If there are schedules, display them
+            result.schedules.forEach(schedule => {
+                const row = document.createElement('tr');
 
-    // modal only
-    function openAddRoomScheduleModal() {
-        addModal.style.display = 'block';
+                const formattedStartTime = dateTimeFormat(schedule.starting_time);
+                const formattedEndTime = dateTimeFormat(schedule.ending_time);
 
-        addModal.setAttribute('data-room-id', selectedRoomId);
-        setRoomFieldsReadOnly(false);
-    
-        // Reset button text to "Create" when opening for a new schedule
-        const actionButton = addModal.querySelector('.action-btn');
-        actionButton.textContent = 'Create';  
+                row.innerHTML = `
+                    <td>${schedule.room_building || 'N/A'}</td>
+                    <td>${schedule.room_number || 'N/A'}</td>
+                    <td>${schedule.date ? schedule.date + '<br/>' + formattedStartTime + ' - ' + formattedEndTime : 'N/A'}</td>
+                    <td>${schedule.block || 'N/A'}</td>
+                    <td>
+                        <button class="update-btn-sched" data-schedule-id="${schedule.id}">Update</button>
+                        <button class="delete-btn-sched" data-schedule-id="${schedule.id}">Delete</button>
+                    </td>
+                `;
 
-        if (actionButton.textContent === 'Create') {
-            fetchRooms();  // Fetch rooms only for creating a new schedule
+                scheduleBody.appendChild(row);
+            });
+        } else {
+            // If no schedules are available, show a message row
+            const noScheduleRow = document.createElement('tr');
+            noScheduleRow.innerHTML = `
+                <td colspan="5" style="text-align: center;">No schedule available</td>
+            `;
+            scheduleBody.appendChild(noScheduleRow);
         }
-    }
-    
-    function closeAddRoomScheduleModal() {
-        addModal.style.display = 'none';
-        addRoomScheduleForm .reset();
-    }
-    function closeModalOnClickOutside(event) {
-        if (event.target === addModal) {
-            closeAddRoomScheduleModal();
-        }
+    } else {
+        showToast(result.message, 'error');
     }
 
-    // fetch and render schedule
-    async function fetchSchedules() {
-        scheduleBody.innerHTML = ''; 
-        try {
-            const response = await RoomScheduleViewModel.getAllRoomSchedules();
-            if (response.success && response.schedules.length > 0) {
-                renderSchedules(response.schedules);
-            } else {
-                showNoSchedulesMessage(response.message || 'No room schedules available');
+    // Event listener for "Create New Schedule" button
+    floatingBtn.addEventListener('click', () => {
+        showCreateScheduleModal();
+    });
+
+    // Event listener for "Update" button
+    document.addEventListener('click', async (event) => {
+        if (event.target.classList.contains('update-btn-sched')) {
+            const scheduleId = event.target.getAttribute('data-schedule-id');
+            await showScheduleInModal(scheduleId); 
+        }
+
+        // Event listener for "Close" button in modal
+        if (event.target.classList.contains('closemodal') || event.target.classList.contains('closeModalBtn')) {
+            const modal = document.getElementById('viewUpdateModal');
+            modal.style.display = 'none'; 
+        }
+
+        // Event listener for "Delete" button in schedule table
+        if (event.target.classList.contains('delete-btn-sched')) {
+            const scheduleId = event.target.getAttribute('data-schedule-id');
+            await deleteRoomSchedule(scheduleId, event.target);
+        }
+    });
+
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('closemodal') || event.target.classList.contains('closeModalBtn')) {
+            const modal = document.getElementById('modal'); 
+            modal.style.display = 'none';
+        }
+    });
+
+
+    // Function to handle viewing and updating an existing schedule
+    async function showScheduleInModal(scheduleId) {
+        const result = await RoomScheduleViewModel.getRoomScheduleById(scheduleId);
+        
+        if (result.success) {
+            const schedule = result.schedule;
+
+            const modal = document.getElementById('viewUpdateModal');
+            if (!modal) {
+                console.error('Modal element not found!');
+                return;
             }
-        } catch (error) {
-            console.error('Error loading room schedules:', error);
-            showNoSchedulesMessage('Failed to load room schedules.');
+            modal.style.display = 'flex'; 
+
+            const form = modal.querySelector('form');
+            
+            // Populate the room building and room number based on the existing schedule data
+            form.querySelector('#viewRoomBldg').value = schedule.room_building || ''; 
+            form.querySelector('#viewRoomNumber').value = schedule.room_number || ''; 
+
+            form.querySelector('#viewBlock').value = schedule.block || '';
+            form.querySelector('#viewDate').value = schedule.date || '';
+            form.querySelector('#viewTimeStart').value = formatTimeWithoutSeconds(schedule.starting_time);
+            form.querySelector('#viewTimeEnd').value = formatTimeWithoutSeconds(schedule.ending_time);
+
+            // Modify the submit button to perform update
+            const actionButton = form.querySelector('.action-btn');
+            actionButton.textContent = "Update Schedule";
+
+            // Submit logic for updating the schedule
+            form.onsubmit = async (event) => {
+                event.preventDefault();
+
+                const updatedScheduleData = {
+                    block: form.querySelector('#viewBlock').value,
+                    date: form.querySelector('#viewDate').value,
+                    starting_time: form.querySelector('#viewTimeStart').value,
+                    ending_time: form.querySelector('#viewTimeEnd').value,
+                    room_building: form.querySelector('#viewRoomBldg').value,
+                    room_number: form.querySelector('#viewRoomNumber').value
+                };
+
+                const updateResult = await RoomScheduleViewModel.updateRoomSchedule(schedule.id, updatedScheduleData);
+
+                if (updateResult.success) {
+                    showToast(updateResult.message, 'success');
+                    modal.style.display = 'none'; 
+                    InitRoomScheduleSection(); 
+                } else {
+                    showToast(updateResult.message, 'error');
+                }
+            };
+
+        } else {
+            showToast(result.message, 'error');
         }
     }
 
-    // render rows
-    function renderSchedules(schedules) {
-        schedules.forEach(schedule => {
-            const row = createScheduleRow(schedule);
-            scheduleBody.appendChild(row);
-        });
+    async function showCreateScheduleModal() {
+        const modal = document.getElementById('modal');
+        modal.style.display = 'flex'; 
+    
+        const form = modal.querySelector('form');
+        form.reset();
+        form.querySelector('#roomBldg').disabled = false; 
+        form.querySelector('#roomNumber').disabled = false;
+        form.querySelector('.action-btn').textContent = "Create"; 
+        
+        // Fetch all rooms to populate the room building and room number options
+        const roomResult = await RoomViewModel.getAllRooms();
+        
+        if (roomResult.success) {
+            const roomBldgSelect = form.querySelector('#roomBldg');
+            const roomNumberSelect = form.querySelector('#roomNumber');
+            
+            // Clear previous room options
+            roomBldgSelect.innerHTML = `<option value="">Select Room Building</option>`;
+            roomNumberSelect.innerHTML = `<option value="">Select Room Number</option>`;
+        
+            // Populate room buildings with room ID as value
+            const buildings = [];
+            roomResult.rooms.forEach(room => {
+                if (!buildings.includes(room.room_building)) {
+                    buildings.push(room.room_building);
+                    const roomBldgOption = document.createElement('option');
+                    roomBldgOption.value = room.room_building; 
+                    roomBldgOption.textContent = room.room_building; 
+                    roomBldgSelect.appendChild(roomBldgOption);
+                }
+            });
+    
+            roomBldgSelect.addEventListener('change', function() {
+                const selectedBuilding = roomBldgSelect.value;
+                const filteredRooms = roomResult.rooms.filter(room => room.room_building === selectedBuilding);
+                
+                // Clear the room number dropdown
+                roomNumberSelect.innerHTML = `<option value="">Select Room Number</option>`;
+               
+                filteredRooms.forEach(room => {
+                    const roomNumberOption = document.createElement('option');
+                    roomNumberOption.value = room.id;  
+                    roomNumberOption.textContent = `${room.room_number}`;  
+                    roomNumberSelect.appendChild(roomNumberOption);
+                });
+            });
+        
+            if (form.querySelector('#roomBldg').value) {
+                roomBldgSelect.dispatchEvent(new Event('change')); 
+            }
+        } else {
+            showToast(roomResult.message, 'error');
+        }
+    
+        // Handle the form submission for creating the schedule
+        form.onsubmit = async (event) => {
+            event.preventDefault();  
+    
+            // Collect data from the form
+            const scheduleData = {
+                block: form.querySelector('#block').value,
+                date: form.querySelector('#date').value,
+                starting_time: form.querySelector('#timeStart').value,
+                ending_time: form.querySelector('#timeEnd').value,
+                room_id: form.querySelector('#roomNumber').value 
+            };
+    
+            // Call the createRoomSchedule method from the RoomScheduleViewModel
+            const response = await RoomScheduleViewModel.createRoomSchedule(scheduleData);
+            
+            if (response.success) {
+                showToast(response.message, 'success');
+                modal.style.display = 'none'; 
+                InitRoomScheduleSection();     
+            } else {
+                showToast(response.message, 'error');
+            }
+        };
     }
+    
+    
 
-    // create schedule row
-    function createScheduleRow(schedule) {
-        const row = document.createElement('tr');
-        row.classList.add('room-schedule-item');
-
-        const startTime = dateTimeFormat(schedule.starting_time);
-        const endTime = dateTimeFormat(schedule.ending_time);
-
-        row.innerHTML = `
-            <td>${schedule.room_building || 'N/A'}</td>
-            <td>${schedule.room_number || 'N/A'}</td>
-            <td>${schedule.date + '<br/>' + startTime + ' - ' + endTime || 'N/A'}</td>
-            <td>${schedule.block || 'N/A'}</td>
-            <td>
-                <button class="update-btn-sched" data-id="${schedule.id}">Update</button>
-                <button class="delete-btn-sched" data-id="${schedule.id}">Delete</button>
-            </td>
-        `;
-
-        // button event listeners
-        row.querySelector('.update-btn-sched').addEventListener('click', () => { 
-            console.log(`Attempting to update schedule with ID: ${schedule.id}`); 
-            handleUpdate(schedule.id)
-        });
-        row.querySelector('.delete-btn-sched').addEventListener('click', () => {
-            console.log(`Attempting to delete schedule with ID: ${schedule.id}`); 
-            handleDelete(schedule, row)});
-        row.querySelector('.update-btn').addEventListener('click', () =>handleUpdate(schedule.id));
-        row.querySelector('.delete-btn').addEventListener('click', () => handleDelete(schedule, row));
-
-
-        return row;
-    }
-
-    function showNoSchedulesMessage(message) {
-        scheduleBody.innerHTML = `<tr><td colspan="6">${message}</td></tr>`;
-    }
-
-    // handle delete schedule
-    function handleDelete(schedule, row) {
+    // Function to delete room schedule
+    async function deleteRoomSchedule(scheduleId, buttonElement) {
+        // Show confirmation toast instead of the confirm dialog
         showToast('Are you sure you want to delete this schedule?', 'info', {
             showButtons: true,
             onConfirm: async () => {
                 try {
-                    const response = await RoomScheduleViewModel.deleteRoomSchedule(schedule.id);
-                    if (response.success) {
-                        showToast(response.message, 'success');
+                    const result = await RoomScheduleViewModel.deleteRoomSchedule(scheduleId);
+                    if (result.success) {
+                        // Remove the row from the table if deletion is successful
+                        const row = buttonElement.closest('tr');
                         row.remove();
+                        showToast(result.message, 'success');
                     } else {
-                        showToast(response.message, 'error');
+                        showToast(result.message || 'Failed to delete schedule', 'error');
                     }
                 } catch (error) {
                     console.error('Error deleting schedule:', error);
-                    showToast('Failed to delete room schedule', 'error');
+                    showToast('Error deleting schedule', 'error');
                 }
             },
-            onCancel: () => console.log('Schedule deletion canceled')
+            onCancel: () => {
+                showToast('Schedule deletion canceled', 'info'); 
+            }
         });
     }
 
-    // handle add room schedule
-    async function handleAddRoomSchedule(event) {
-        event.preventDefault();
-
-        const scheduleData = getRoomFormData();
-        const actionButton = addModal.querySelector('.action-btn');
-
-        // check if bldg and number is set
-        const roomBuildingSelect = addModal.querySelector('#roomBldg');
-        const roomNumberSelect = addModal.querySelector('#roomNumber');
-        
-        if (roomBuildingSelect.value === "" || roomNumberSelect.value === "") {
-            showToast('Please select both a building and a room number', 'error');
-            return;  
-        }
-
-        try {
-            // create schedule
-            if (actionButton.textContent === 'Create') {
-                const response = await RoomScheduleViewModel.createRoomSchedule(scheduleData);
-                if (response.success) {
-                    console.log(response);
-                    fetchSchedules();
-                    closeAddRoomScheduleModal();
-                } else {
-                    showToast('Failed to create room schedule', 'error');
-                }
-            }
-            // update schedule 
-             if (actionButton.textContent === 'Update') {
-                const scheduleId = addModal.getAttribute('data-schedule-id'); 
-                const response = await RoomScheduleViewModel.updateRoomSchedule(scheduleId, scheduleData);
-                if (response.success) {
-                    fetchSchedules();
-                    closeAddRoomScheduleModal();
-                } if (response.status === 'error') {
-                    showToast(response.message, 'error'); 
-                    return; 
-                }
-            }
-        } catch (error) {
-            console.error('Error saving room schedule:', error);
-        }
+    // Modal time format helper
+    function formatTimeWithoutSeconds(time) {
+        const [hours, minutes] = time.split(':');
+        return `${hours}:${minutes}`;
     }
 
-    // view & update schedule
-    async function handleUpdate(scheduleId) {
-
-        const response = await RoomScheduleViewModel.getRoomScheduleById(scheduleId);
-        console.log(response.schedule);
-        
-        if (response.success) {
-            console.log(`Viewing schedule with ID: ${scheduleId}`);
-            populateScheduleForm(response.schedule);
-            addModal.style.display = 'block';
-
-            const actionButton = addModal.querySelector('.action-btn');
-            actionButton.textContent = 'Update'; 
-            populateRoomDropdowns(rooms, false);
-        } else {
-            showToast(response.message + 'Error fetching schedule', 'error');
-        }
+    function searchTable() {
+        const input = document.getElementById('searchInput');
+        const filter = input.value.toLowerCase(); 
+        const rows = scheduleBody.querySelectorAll('tr'); 
+    
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            let matchFound = false;
+    
+            cells.forEach(cell => {
+                if (cell.textContent.toLowerCase().includes(filter)) {
+                    matchFound = true; 
+                }
+            });
+    
+            if (matchFound) {
+                row.style.display = ''; 
+            } else {
+                row.style.display = 'none'; 
+            }
+        });
     }
 
-    // room schedule modal form data
-    function getRoomFormData() {
-        const block = document.querySelector('select[name="block"]').value;
-        const date = document.querySelector('input[name="date"]').value;
-        const startingTime = document.querySelector('input[name="timeStart"]').value;
-        const endingTime = document.querySelector('input[name="timeEnd"]').value;
-        const roomId = document.getElementById('modal').getAttribute('data-room-id');
-        
-        return {
-            room_id: roomId, 
-            block: block,
-            date: date,
-            starting_time: startingTime,
-            ending_time: endingTime
-        };
+    
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', searchTable);
     }
     
-    // fetch rooms
-    async function fetchRooms() {
-        try {
-            const response = await RoomViewModel.getAllRooms();
-            if (response.success && response.rooms.length > 0) {
-                rooms = response.rooms;  
-                console.log('Fetched rooms:', rooms); 
-                populateRoomDropdowns(rooms, true); 
-            } else {
-                showToast('No rooms available', 'error');
-            }
-        } catch (error) {
-            console.error('Error fetching rooms:', error);
-            showToast('Error fetching rooms', 'error');
-        }
-    }
-
-    // populate the form fields with the schedule data
-    function populateScheduleForm(schedule) {
-        const blockSelect = addModal.querySelector('select[name="block"]');
-        const dateInput = addModal.querySelector('input[name="date"]');
-        const startingTimeInput = addModal.querySelector('input[name="timeStart"]');
-        const endingTimeInput = addModal.querySelector('input[name="timeEnd"]');
-        const roomBuildingSelect = addModal.querySelector('#roomBldg');
-        const roomNumberSelect = addModal.querySelector('#roomNumber');
-
-        addModal.setAttribute('data-schedule-id', schedule.id); 
-        
-        blockSelect.value = schedule.block || '';
-        dateInput.value = schedule.date || '';
-        startingTimeInput.value = formatTime(schedule.starting_time || '');
-        endingTimeInput.value = formatTime(schedule.ending_time || '');
-
-        populateRoomDropdowns(rooms);
-
-        roomBuildingSelect.value = schedule.room_building || '';
-        roomNumberSelect.value = schedule.room_number || ''; 
-
-        roomBuildingSelect.dispatchEvent(new Event('change')); 
-
-        setRoomFieldsReadOnly(true);
-    }
-    // hh:mm format
-    function formatTime(time) {
-        if (!time) return '';  
-        const timeParts = time.split(':'); 
-        return timeParts.length >= 2 ? `${timeParts[0]}:${timeParts[1]}` : time;  
-    }
-
-    // Populate the room building and room number dropdowns
-    function populateRoomDropdowns(rooms, shouldPopulate = true) {
-        const roomBuildingSelect = addModal.querySelector('#roomBldg');
-        const roomNumberSelect = addModal.querySelector('#roomNumber');
-
-        // Clear current options first
-        roomBuildingSelect.innerHTML = '';
-        roomNumberSelect.innerHTML = '';
-
-        if (shouldPopulate) {
-            // building value
-            const defaultBuildingOption = document.createElement('option');
-            defaultBuildingOption.value = '';
-            defaultBuildingOption.textContent = 'Select a building';
-            roomBuildingSelect.appendChild(defaultBuildingOption);
-
-            // Populate room buildings
-            const buildings = [...new Set(rooms.map(room => room.room_building))];
-            buildings.forEach(building => {
-                const option = document.createElement('option');
-                option.value = building;
-                option.textContent = building;
-                roomBuildingSelect.appendChild(option);
-            });
-
-            // room number 
-            const defaultRoomOption = document.createElement('option');
-            defaultRoomOption.value = '';
-            defaultRoomOption.textContent = 'Select a room number';
-            roomNumberSelect.appendChild(defaultRoomOption);
-
-            // When the room building is changed, populate room numbers
-            roomBuildingSelect.addEventListener('change', () => {
-                const selectedBuilding = roomBuildingSelect.value;
-                const roomNumbers = rooms.filter(room => room.room_building === selectedBuilding)
-                                        .map(room => room.room_number);
-                populateRoomNumbers(roomNumbers);
-            });
-
-            roomNumberSelect.addEventListener('change', () => {
-                updateRoomId();  
-            });    
-            // Trigger change to populate room numbers for the first building
-            roomBuildingSelect.dispatchEvent(new Event('change'));
-        }
-        else {
-            // When updating, populate dropdowns with the current room details only
-            const roomBuildingSelect = addModal.querySelector('#roomBldg');
-            const roomNumberSelect = addModal.querySelector('#roomNumber');
-
-            // Set the current room building and room number from the schedule
-            roomBuildingSelect.disabled = true; // Set to readonly
-            roomNumberSelect.disabled = true; // Set to readonly
-        }
-    }
-
-
-    // Populate room numbers based on selected building
-    function populateRoomNumbers(roomNumbers) {
-        const roomNumberSelect = addModal.querySelector('#roomNumber');
-        roomNumberSelect.innerHTML = ''; 
-
-        // default room number
-        const defaultOption = document.createElement('option');
-        defaultOption.value = '';
-        defaultOption.textContent = 'Select a room number';
-        roomNumberSelect.appendChild(defaultOption);
-
-        // default building
-        roomNumbers.forEach(roomNumber => {
-            const option = document.createElement('option');
-            option.value = roomNumber;
-            option.textContent = roomNumber;
-            roomNumberSelect.appendChild(option);
-        });
-    }
-
-    // Update room id of selected number and building
-    function updateRoomId() {
-        const roomBuildingSelect = addModal.querySelector('#roomBldg');
-        const roomNumberSelect = addModal.querySelector('#roomNumber');
-        const selectedBuilding = roomBuildingSelect.value;
-        const selectedRoomNumber = roomNumberSelect.value;
-
-        if (!selectedBuilding || !selectedRoomNumber) {
-            console.log('no building and a room number');
-            return;
-        }
-
-        const selectedRoom = rooms.find(room => room.room_building === selectedBuilding && room.room_number === selectedRoomNumber);
-
-        if (selectedRoom) {
-            addModal.setAttribute('data-room-id', selectedRoom.id);
-            console.log(`Room ID set to: ${selectedRoom.id}`);
-        } else {
-            addModal.setAttribute('data-room-id', null);
-            console.log('Room ID not found');
-        }
-    }
-
-    // set room bldg and number to read only 
-    function setRoomFieldsReadOnly(isReadOnly) {
-        const roomBuildingSelect = addModal.querySelector('#roomBldg');
-        const roomNumberSelect = addModal.querySelector('#roomNumber');
-        
-        if (isReadOnly) {
-            roomBuildingSelect.disabled = true;
-            roomNumberSelect.disabled = true;
-        } else {
-            roomBuildingSelect.disabled = false;
-            roomNumberSelect.disabled = false;
-        }
-    }
-
-    function init() {
-        if (addModal) {
-            addModal.style.display = 'none';
-        }
-        initEventListeners();
-        fetchSchedules();
-    }
-
-    init();
 }
