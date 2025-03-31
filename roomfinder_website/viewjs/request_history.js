@@ -66,16 +66,17 @@ export function InitRequestHistorySection() {
         return row;
     }
 
-    // Handle the deletion of a request
     function handleDelete(requestId, row) {
+        // Trigger animation before deletion
+        row.classList.add('ud-button-animation'); // Adding the animation class
 
+        // Wait for the animation to complete before actually deleting the row
         setTimeout(async () => {
             try {
                 const result = await RoomRequestViewModel.deleteRoomRequestHistory(requestId);
-
+                
                 console.log(result);
                 if (result.success) {
-                    row.classList.add('ud-button-animation');
                     row.remove(); 
                     showToast('Request has been deleted from the history', 'success');
                 } else {
@@ -85,7 +86,8 @@ export function InitRequestHistorySection() {
                 console.error('Failed to delete request:', error.message);
                 showToast('Failed to delete request', 'error');
             }
-        }, 250);
+        }, 500); 
     }
+
     init();
 }

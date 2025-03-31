@@ -147,6 +147,25 @@ export function InitRoomsSection() {
         openModal(); 
     });
 
+    // filter by room status event
+    const statusFilter = document.getElementById('custom-filter');
+    statusFilter.addEventListener('change', filterRoomsByStatus);
+
+    function filterRoomsByStatus() {
+        const selectedStatus = statusFilter.value.toLowerCase();
+        const rows = document.querySelectorAll('.room-item');
+        
+        rows.forEach(row => {
+            const roomStatus = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+            if (selectedStatus === 'all' || roomStatus.includes(selectedStatus)) {
+                row.style.display = ''; 
+            } else {
+                row.style.display = 'none'; 
+            }
+        });
+    }
+
+
     // Fetch and display rooms
     function fetchRooms() {
         roomListBody.innerHTML = '';
@@ -154,6 +173,7 @@ export function InitRoomsSection() {
             .then(result => {
                 if (result.success && result.rooms.length > 0) {
                     renderRoomRows(result.rooms);
+                    filterRoomsByStatus(); 
                 } else {
                      roomListBody.innerHTML = `<tr><td colspan="5">No rooms available</td></tr>`;
                 }
@@ -369,20 +389,25 @@ export function InitRoomsSection() {
     }
 
     // remove room 
-    async function removeRoom(roomId, row) {
-        try {
-            const response = await RoomViewModel.deleteRoom(roomId);
-            if (response.success) {
-                row.remove();
-                showToast(response.message, 'success');
-            } else {
-                showToast(response.message || 'Failed to remove room', 'error');
+    async function removeRoom(roomId, row) {    
+        row.classList.add('ud-button-animation');
+        
+        setTimeout(async () => {
+            try {
+                const response = await RoomViewModel.deleteRoom(roomId);
+                if (response.success) {
+                    row.remove();
+                    showToast(response.message, 'success');
+                } else {
+                    showToast(response.message || 'Failed to remove room', 'error');
+                }
+            } catch (error) {
+                console.error('Error removing room:', error);
+                showToast('Error removing room', 'error');
             }
-        } catch (error) {
-            console.error('Error removing room:', error);
-            showToast('Error removing room', 'error');
-        }
+        }, 500); 
     }
+
 
     // Search filter
     function filterTable() {
@@ -395,7 +420,6 @@ export function InitRoomsSection() {
         });
     }
 
-    // Initialize everything
     initModal();
     fetchRooms();
     searchBar.addEventListener('input', () => {

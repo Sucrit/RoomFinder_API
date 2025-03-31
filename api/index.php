@@ -389,7 +389,9 @@ function handleAdmin($requestMethod, $uri, $input, $adminController, $userContro
     }
 }
 
-// main request routing (fix pattern execution logic)
+
+
+// main request routing logic
 if (preg_match('/\/admin/', $uri)) {
     if (!preg_match('/\/admin\/login/', $uri) && !preg_match('/\/admin\/logout/', $uri)) {
         AuthMiddleware::verifyToken();

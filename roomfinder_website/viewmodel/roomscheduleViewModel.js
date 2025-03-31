@@ -49,7 +49,6 @@ export default class RoomScheduleViewModel {
         }
     }
 
-
     // create room schedule
     static async createRoomSchedule(scheduleData) {
         const response = await RoomScheduleModel.createRoomSchedule(scheduleData);
@@ -72,7 +71,7 @@ export default class RoomScheduleViewModel {
         if (response.status === 'success') {
             console.log(response.status)
             showToast(response.message, 'success');
-            return { success: true, message: response.message };
+            return { success: true, message: response.message, status: response.status};
         } else if (response.status === 'error'){
             console.log(response.message)
             return { success: false, message: response.message, status: response.status };
@@ -85,10 +84,10 @@ export default class RoomScheduleViewModel {
 
         if (response.success) {
             showToast(response.message, 'success');
-            return { success: true, message: response.message };
+            return { success: true, message: response.message, status: response.status };
         } else {
             showToast(response.message, 'error');
-            return { success: false, message: response.message };
+            return { success: false, message: response.message, status: response.status};
         }
     }
 }

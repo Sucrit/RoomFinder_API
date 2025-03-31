@@ -126,7 +126,7 @@ export default class RoomScheduleModel {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(response);
+        console.log(data);
     
         if (data.status === 'success') {
             return { success: true, message: data.message, status: data.status }; 
@@ -137,75 +137,75 @@ export default class RoomScheduleModel {
         }
     }
 
-    // update room schedule route
+    // update schedule route
     static async updateRoomSchedule(id, scheduleData) {
         const authToken = localStorage.getItem('authToken');
         
         if (!authToken) {
             throw new Error("You are not authorized");
         }
-
-        // check user role
-        const userRole = authorizationRole(); 
-        if (userRole !== 'Administrator') { 
-            return { success: false, message: 'Only Administrator can perform this action' }; 
+    
+        // Check user role
+        const userRole = authorizationRole();
+        if (userRole !== 'Administrator') {
+            return { success: false, message: 'Only Administrator can perform this action' };
         }
-
-        const response = await fetch(Const.BASE_URL + `room_schedule/${id}`, {
-            method: 'PATCH', 
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`
-            },
-            body: JSON.stringify(scheduleData), 
-        })
-        .then(response => {
+    
+        try {
+            const response = await fetch(Const.BASE_URL + `room_schedule/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(scheduleData),
+            });
+    
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            return response.json();  
-        })
-        .then(data => {
-            return data;
-        })
-        .catch(error => {
-            console.error('Error updating room:', error);
-            throw error;
-        });
+    
+            const data = await response.json(); 
+            return data; 
+        } catch (error) {
+            console.error('Error updating room schedule:', error);
+            throw error; // Propagate the error
+        }
     }
     
+    
     // delete room schedule route
-    static deleteRoomSchedule(id) {
+    static async deleteRoomSchedule(id) {
         const authToken = localStorage.getItem('authToken');
-
         if (!authToken) {
-            throw new Error("You are not authorized");
+            return { success: false, message: 'You are not authorized', status: 'error' };
         }
-
-        // check user role
-        const userRole = authorizationRole(); 
-        if (userRole !== 'Administrator') { 
-            return { success: false, message: 'Only Administrator can perform this action' }; 
+    
+        const userRole = authorizationRole();
+        if (userRole !== 'Administrator') {
+            return { success: false, message: 'Only Administrator can perform this action', status: 'error' };
         }
-
-        return fetch(Const.BASE_URL + `room_schedule/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
+    
+        try {
+            const response = await fetch(Const.BASE_URL + `room_schedule/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`,
+                },
+            });
+            const data = await response.json();
+    
+            if (data && data.status === 'success') {
                 return { success: true, message: data.message, status: data.status };
-            } else if (data.status === 'error') {
+            } else if (data && data.status === 'error') {
                 return { success: false, message: data.message, status: data.status };
             }
-        })
-        .catch(error => {
+            return { success: false, message: 'Unexpected response format', status: 'error' };
+    
+        } catch (error) {
             console.error('Error deleting room schedule:', error);
-            return 'Failed to delete room schedule';
-        });
-    }
+            return { success: false, message: 'Failed to delete room schedule', status: 'error' };
+        }
+    }    
 }

@@ -1,6 +1,6 @@
 
 
-// FIX REDUNDANCY IN SQL QUERY!!!
+// FIX REDUNDANT query IN SQL QUERY!!!
 
 // check if room schedule exists (avoid time conflict)
     public function roomScheduleExist($room_id, $date, $starting_time, $ending_time, $exclude_id = null) {
