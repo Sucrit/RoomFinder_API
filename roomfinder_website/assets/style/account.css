@@ -118,3 +118,21 @@ hr {
     font-size: 16px;
     cursor: pointer;
 }
+
+@media screen and (max-width: 600px) {
+    .acct_settingform {
+        width: 90%;
+        margin-left: 5%;
+    }
+
+    .password-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .password-field {
+        width: 100%;
+    }
+
+    
+}

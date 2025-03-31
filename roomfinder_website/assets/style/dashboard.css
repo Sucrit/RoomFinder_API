@@ -42,6 +42,8 @@
     border: 2px solid rgba(6, 52, 111, 1);
 }
 
+
+
 .profile-texts {
     display: flex;
     flex-direction: column;
@@ -389,6 +391,10 @@
     margin-left: 3px;
 }
 
+.profile-container-mobile {
+    display: none;
+}
+
 @media screen and (max-width: 600px) {
     #grid-container {
         grid-template-columns: repeat(4, 1fr);
@@ -412,10 +418,30 @@
         color: #fff;
     }
 
-    .topcontainer .profile-container {
+    .profile-container {
         display: none;
     }
 
+    .profile-container-mobile {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+    }
+
+    /* .profilePic-mobile {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(6, 52, 111, 1);
+    } */
+
+    .profile-img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     .topbar_container {
         display: flex;
         justify-content: space-around;

@@ -41,6 +41,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 else {
                     console.error('Login failed:', result.message);
                     document.getElementById('error-message').textContent = result.message;
+                    setTimeout(() => {
+                        document.getElementById('error-message').textContent = '';
+                    }, 3000);
                 }
             })
             .catch(error => {

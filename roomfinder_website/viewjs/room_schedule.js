@@ -50,6 +50,7 @@ export async function InitRoomScheduleSection() {
         showToast(result.message, 'error');
     }
 
+
     // Event listener for "Create New Schedule" button
     floatingBtn.addEventListener('click', () => {
         showCreateScheduleModal();
@@ -82,13 +83,13 @@ export async function InitRoomScheduleSection() {
         }
     });
 
-
     // Function to handle viewing and updating an existing schedule
     async function showScheduleInModal(scheduleId) {
         const result = await RoomScheduleViewModel.getRoomScheduleById(scheduleId);
         
         if (result.success) {
             const schedule = result.schedule;
+
 
             const modal = document.getElementById('viewUpdateModal');
             if (!modal) {
