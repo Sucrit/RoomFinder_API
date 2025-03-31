@@ -22,7 +22,8 @@ menu.addEventListener('click', function () {
 });
 
 window.showSection = function(sectionId) {
-
+    menu.classList.remove('is-active');
+    menuLinks.classList.remove('active');
     // hide all sections
     document.querySelectorAll('section').forEach(section => {
     });
@@ -46,9 +47,11 @@ window.showSection = function(sectionId) {
                 .then(response => response.text())
                 .then(profileContent => {
                     const profilePlaceholder = document.querySelector('.profile-container');
+                    const profilePlaceholderMobile = document.querySelector('.profile-container-mobile');
 
-                    if (profilePlaceholder) {
+                    if (profilePlaceholder && profilePlaceholderMobile) {
                         profilePlaceholder.innerHTML = profileContent;
+                        profilePlaceholderMobile.innerHTML = profileContent;
 
                         const username = localStorage.getItem('username');
                         const role = localStorage.getItem('role');
@@ -134,6 +137,13 @@ dropdownToggles.forEach(toggle => {
         const dropdown = toggle.parentElement;
         dropdown.classList.toggle('open'); 
     });
+});
+
+window.addEventListener('click', function (event) {
+    if (!menu.contains(event.target) && !menuLinks.contains(event.target)) {
+        menu.classList.remove('is-active');
+        menuLinks.classList.remove('active');
+    }
 });
 
 // close dropdown if clicked outside

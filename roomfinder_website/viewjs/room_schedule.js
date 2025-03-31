@@ -60,6 +60,7 @@ export function InitRoomScheduleSection() {
         scheduleBody.innerHTML = ''; 
         try {
             const response = await RoomScheduleViewModel.getAllRoomSchedules();
+            console.log(response);
             if (response.success && response.schedules.length > 0) {
                 renderSchedules(response.schedules);
             } else {
@@ -106,8 +107,8 @@ export function InitRoomScheduleSection() {
         row.querySelector('.delete-btn-sched').addEventListener('click', () => {
             console.log(`Attempting to delete schedule with ID: ${schedule.id}`); 
             handleDelete(schedule, row)});
-        row.querySelector('.update-btn').addEventListener('click', () =>handleUpdate(schedule.id));
-        row.querySelector('.delete-btn').addEventListener('click', () => handleDelete(schedule, row));
+        row.querySelector('.update-btn-sched').addEventListener('click', () =>handleUpdate(schedule.id));
+        row.querySelector('.delete-btn-sched').addEventListener('click', () => handleDelete(schedule, row));
 
 
         return row;

@@ -41,3 +41,39 @@
 .request-history td:nth-last-child(2) {
     text-align: center;
 }
+
+.table-wrapper {
+    margin: 20px;
+}
+
+@media screen and (max-width: 600px) {
+    #request_history {
+        width: 100vw;
+    }
+    
+    #request-history-table {
+        width: 100%;
+        border-collapse: separate;
+        margin-top: 0px;
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    .table-wrapper {
+        padding: 0px;
+        margin: 0px;
+        overflow-x: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .request-item td:nth-child(9) {
+        padding: 5px;
+    }
+}

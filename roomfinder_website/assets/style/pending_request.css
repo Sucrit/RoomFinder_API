@@ -28,7 +28,7 @@
         justify-content: center;
         align-items: center;
         margin: 0px;
-        padding: 0px;
+        padding: 10px;
     }
     .pending_request-table table{
         margin: 0px;
