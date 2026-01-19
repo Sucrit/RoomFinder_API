@@ -1,48 +1,238 @@
 <?php
 
 require_once '../models/room_request.php';
+require_once '../models/room.php';
+require_once '../models/room_schedule.php';
 
 class RoomRequestController {
     private $roomRequestModel;
+    private $roomModel;
+    private $roomScheduleModel;
 
     public function __construct() {
         $this->roomRequestModel = new RoomRequestModel();
+        $this->roomModel = new RoomModel();
+        $this->roomScheduleModel = new RoomScheduleModel();
     }
+    
     // get all room requests of a specific student
+<<<<<<< HEAD
     public function getRoomRequestsByStudent($studentId) {
         $roomRequests = $this->roomRequestModel->getRoomRequestsByStudent($studentId);
+=======
+    public function getRoomRequestsByStudent($userId) {
+        $roomRequests = $this->roomRequestModel->getRoomRequestsByUser($userId);
+>>>>>>> 0fac87130feed1fe796379324ec4f751ffac9e4e
         if ($roomRequests) {
             echo json_encode($roomRequests);
-        } else {
-            echo json_encode(['message' => 'No room requests found for this student']);
+        } 
+        else {
+            echo json_encode(['status' => 'error', 'message' => 'No room requests found for this student']);
         }
     }
 
-    // get all pending room requests
-    public function getRoomRequests() {
-        $roomRequests = $this->roomRequestModel->getAllRoomRequests();
-        echo json_encode($roomRequests);
+    // get room request history (approved or rejected only)
+    public function getRoomRequestHistory () {
+        $requestHistory = $this->roomRequestModel->getRoomRequestHistory();
+        echo json_encode(['Room Request History' => $requestHistory]);
     }
 
-    // get a pending room request by id
+    // get all pending room request only
+    public function getAllPendingRoomRequest () {
+        $allPendingRequests = $this->roomRequestModel->getAllPendingRoomRequests();
+        echo json_encode(['Pending Requests' => $allPendingRequests]);
+    }
+
+    // get dashboard details (web)
+    public function getRoomRequests() {
+        $currentTime = date('H:i:s');
+        $currentDate = date('Y-m-d');
+        
+        $rooms = $this->roomModel->getAllRoom();
+        
+        if (empty($rooms)) {
+            echo json_encode(['message' => 'No rooms found']);
+            return;
+        }
+    
+        // get ongoing schedule
+        $getOngoingSchedules = $this->roomScheduleModel->getAllOngoingSchedules();
+        
+        foreach ($rooms as &$room) {
+            $room['ongoing_schedule'] = (object) [];
+            $room['schedules'] = [];
+    
+            // check closed room
+            if ($room['status'] == 'Closed') {
+                continue;
+            }
+            $room['status'] = 'Available';  
+    
+            // check ongoing schedule
+            $isOccupied = false;
+            foreach ($getOngoingSchedules as $schedule) {
+                if ($schedule['room_id'] == $room['id']) {
+                    $room['ongoing_schedule'] = $schedule;
+                    $room['status'] = 'Occupied';
+                    $isOccupied = true;
+                    break;
+                }
+            }
+    
+            // check schedules
+            if (!$isOccupied) {
+                $schedules = $this->roomScheduleModel->getSchedulesByRoomId($room['id']);
+                
+                if (!empty($schedules)) {
+                    foreach ($schedules as $schedule) {
+                        $scheduleDate = $schedule['date'];
+                        $startingTime = $schedule['starting_time'];
+                        $endingTime = $schedule['ending_time'];
+    
+                        // set status to occupied if matched to current time
+                        if ($currentDate === $scheduleDate && $currentTime >= $startingTime && $currentTime < $endingTime) {
+                            $room['status'] = 'Occupied';
+                        }
+                    }
+                    $room['schedules'] = $schedules;
+                }
+            }
+    
+            // update status
+            if ($room['status'] == 'Occupied') {
+                $this->roomModel->updateRoomStatus($room['id'], 'Occupied');
+            } else {
+                $this->roomModel->updateRoomStatus($room['id'], 'Available');
+            }
+        }
+    
+        // get count by status
+        $roomstatusCounts = $this->roomModel->getRoomCountByStatus();
+        
+        $requeststatusCounts = $this->roomRequestModel->getRoomRequestsCountByStatus();
+        $getAllRoomRequestsHistory = $this->roomRequestModel->getAllPendingRoomRequests();
+    
+        echo json_encode([
+            'pending count' => (string)$requeststatusCounts['Pending'],
+            'approved count' => (string)$requeststatusCounts['Approved'],
+            'rejected count' => (string)$requeststatusCounts['Rejected'],
+            'available count' => (string)$roomstatusCounts['Available'],
+            'occupied count' => (string)$roomstatusCounts['Occupied'],
+            'closed count' => (string)$roomstatusCounts['Closed'],
+            'Ongoing schedule' => $getOngoingSchedules,
+            'Request history' => $getAllRoomRequestsHistory
+        ]);
+    }
+    
+    
+
+    // get room request by id
     public function getRoomRequest($id) {
         $roomRequest = $this->roomRequestModel->getRoomRequestById($id);
         if ($roomRequest) {
             echo json_encode($roomRequest);
-        } else {
-            echo json_encode(['message' => 'Room request not found']);
+        } 
+        else {
+            echo json_encode(['status' => 'error', 'message' => 'Room request not found']);
         }
     }
 
-    public function createRoomRequest($id, $student_id, $purpose, $starting_time, $ending_time, $receiver) 
-    {
-        $this->roomRequestModel->createRoomRequest($id, $student_id, $purpose, $starting_time, $ending_time, $receiver);
+    // create room request
+    public function createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time) {
 
+        date_default_timezone_set('Asia/Singapore');
+
+        // get current time
+        $currentTimestamp = time();
+
+        // combine date to starting time & ending time
+        $requestedStartTimestamp = strtotime("$date $starting_time");
+        $requestedEndTimestamp = strtotime("$date $ending_time");
+
+        // check time conflict
+        if ($requestedStartTimestamp < $currentTimestamp || $requestedEndTimestamp < $currentTimestamp) {
+            echo json_encode(['status' => 'error', 'message' => 'The selected time is in the past. Please choose a future time for the schedule']);
+            return;
+        }
+
+        // check if the room exists
+        if ($this->roomModel->roomExists($room_id)) {
+    
+            // get status
+            $room = $this->roomModel->getRoomById($room_id);
+            
+            // check if the room is closed
+            if ($room['status'] === 'Closed') {
+                echo json_encode(['status' => 'error', 'message' => 'This room is closed']);
+                return;
+            }
+    
+            // check schedule conflict
+            $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($room_id, $date, $starting_time, $ending_time);
+    
+            if ($scheduleConflict) {
+                echo json_encode(['status' => 'error', 'message' => 'The room is already occupied for your requested time slot']);
+                return;
+            } else {
+                
+                $roomrequest = $this->roomRequestModel->createRoomRequest($room_id, $user_id, $block, $purpose, $date, $starting_time, $ending_time);
+                if ($roomrequest) {
+                    echo json_encode(['status' => 'success', 'message' => 'Request sent successfully']);
+                } else {
+                    echo json_encode(['status' => 'error', 'message' => 'Error creating room request']);
+                }
+            }
+        } else {
+            echo json_encode(['message' => 'Room not found']);
+        }
+    }
+    
+    
+    // update room request status only (Approved, Rejected)
+    public function updateRoomRequestStatus($id, $status) {
+        
+        // check room request exist
+        $roomRequest = $this->roomRequestModel->getRoomRequestById($id);
+
+        if (!$roomRequest) {
+            echo json_encode(['message' => 'Room request not found']);
+            return;
+        }
+
+        // get request schedule data
+        $room_id = $roomRequest['room_id'];
+        $date = $roomRequest['date'];
+        $starting_time = $roomRequest['starting_time'];
+        $ending_time = $roomRequest['ending_time'];
+
+        // if approved check for conflicts
+        if ($status == 'Approved') {
+            $scheduleConflict = $this->roomScheduleModel->roomScheduleExist($room_id, $date, $starting_time, $ending_time);
+
+            // if schedule conflict, reject 
+            if ($scheduleConflict) {
+                $this->roomRequestModel->updateRoomRequestStatus($id, 'Rejected');
+                echo json_encode(['status' => 'error', 'message' => 'The room schedule conflicts with an existing room schedule. The request has been automatically rejected.']);
+                return;
+            }
+        }
+
+        // if rejected or no conflict, update status
+        $this->roomRequestModel->updateRoomRequestStatus($id, $status);
+
+        if ($status == 'Approved' || $status == 'Rejected') {
+            echo json_encode(['status' => 'success', 'message' => 'Room request updated successfully']);
+        }
     }
 
+    // delete room request
     public function deleteRoomRequest($id) {
         $this->roomRequestModel->deleteRoomRequest($id);
     }
-}
 
+    // cancel pending request of a user id
+    public function cancelPendingRequestofUserId($userId, $requestId) {
+        $this->roomRequestModel->deletePendingRequestByUserId($userId, $requestId);
+    }
+}
 ?>

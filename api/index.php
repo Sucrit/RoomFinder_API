@@ -1,11 +1,16 @@
 <?php
-// vendor for loading firebase/php-jwt dependencies
-require_once __DIR__ . '/../vendor/autoload.php';
+// website access controls
+header("Access-Control-Allow-Origin: *");  
+header("Access-Control-Allow-Headers: Content-Type, Authorization");  
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PATCH, DELETE");  
 
-require_once '../controller/admin_login.php';
-require_once '../controller/admin_signup.php';
-require_once '../controller/student_signup.php';
-require_once '../controller/student_login.php';
+// token handler
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../auth/middleware.php';
+
+// controllers
+require_once '../controller/admin.php';
+require_once '../controller/user.php';
 require_once '../controller/room.php';
 require_once '../controller/room_request.php';
 require_once '../controller/room_schedule.php';
@@ -13,6 +18,7 @@ require_once '../controller/room_schedule.php';
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
 $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+$input = json_decode(file_get_contents('php://input'), true);
 
 if (strpos($contentType, 'application/json') === false) {
     echo json_encode(['message' => 'Invalid json content type.']);
@@ -21,7 +27,7 @@ if (strpos($contentType, 'application/json') === false) {
 
 $input = json_decode(file_get_contents('php://input'), true);
 
-// instantiate controllers
+// Instantiate controllers
 $adminLoginController = new AdminLoginController();
 $adminSignupController = new AdminSignupController();
 $studentSignupController = new StudentSignupController();
@@ -30,57 +36,75 @@ $roomController = new RoomController();
 $roomRequestController = new RoomRequestController();
 $roomScheduleController = new RoomScheduleController();
 
-// student method handler
-function handleStudent($requestMethod, $uri, $input, $studentSignupController, $studentLoginController) {
+// user method handler
+function handleUser($requestMethod, $uri, $input, $userController) {
     switch ($requestMethod) {
         case 'GET':
-            if (preg_match('/\/student\/(\d+)/', $uri, $matches)) {
-                $studentSignupController->getStudent($matches[1]);
-            } elseif (preg_match('/\/student/', $uri)) {
-                $studentSignupController->getStudents();
-            } else {
-                echo json_encode(['message' => 'Invalid student request']);
+            if (preg_match('/\/user\/(\d+)/', $uri, $matches)) {
+                // get user by id
+                $userController->getUser($matches[1]);
+            } 
+            else {
+                echo json_encode(['message' => 'Invalid user request']);
             }
             break;
 
         case 'POST':
-            if (preg_match('/\/student\/signup/', $uri)) {
-                // student signup
-                if (isset($input['username'], $input['email'], $input['password'], $input['student_number'])) {
-                    $studentSignupController->createStudent($input['username'], $input['email'], $input['password'], $input['student_number']);
-                } else {
-                    echo json_encode(['message' => 'Missing required fields for signup']);
-                }
-            } elseif (preg_match('/\/student\/login/', $uri)) {
-                //  student login
+            if (preg_match('/\/user\/login/', $uri)) {
+                // teacher login
                 if (isset($input['email'], $input['password'])) {
-                    $studentLoginController->loginStudent($input['email'], $input['password']);
-                } else {
+                    $userController->loginUser($input['email'], $input['password']);
+                } 
+                else {
                     echo json_encode(['message' => 'Missing email or password']);
                 }
-            } else {
-                echo json_encode(['message' => 'Invalid student request']);
+            } 
+            elseif (preg_match('/\/user\/logout/', $uri)) {
+                // teacher logout
+                $Authorization = $_SERVER['HTTP_AUTHORIZATION'] ?? null;
+                if ($Authorization) {
+                    // invalidate token if token is authorized
+                    $userController->logoutUser($Authorization);    
+                } 
+                else {
+                    echo json_encode(['message' => 'Authorization token is missing']);
+                }
+            }    else {
+                echo json_encode(['message' => 'Invalid user request']);
             }
             break;
 
-        case 'PUT':
-            if (preg_match('/\/student\/(\d+)/', $uri, $matches)) {
+        case 'PATCH':
+            if (preg_match('/\/user\/(\d+)/', $uri, $matches)) {
                 $id = $matches[1];
                 if (!empty($input)) {
-                    $studentLoginController->updateStudent($id, $input);
-                } else {
+                    // check if variable old, new, confirm pass (change pass)
+                    if (isset($input['old_password']) && isset($input['new_password']) && isset($input['confirm_password'])) {
+                        $oldPassword = $input['old_password'];
+                        $newPassword = $input['new_password'];
+                        $confirmPassword = $input['confirm_password'];
+                        $userController->changePassword($id, $oldPassword, $newPassword, $confirmPassword);
+                    } 
+                    else {
+                        // use update user profile
+                        $userController->updateUser($id, $input);
+                    }
+                } 
+                else {
                     echo json_encode(['message' => 'No fields to update']);
                 }
-            } else {
-                echo json_encode(['message' => 'Invalid student ID']);
+            } 
+            else {
+                echo json_encode(['message' => 'Invalid user ID']);
             }
             break;
-
+                    
         case 'DELETE':
-            if (preg_match('/\/student\/(\d+)/', $uri, $matches)) {
-                $studentLoginController->deleteStudent($matches[1]);
-            } else {
-                echo json_encode(['message' => 'Invalid student ID']);
+            if (preg_match('/\/user\/(\d+)/', $uri, $matches)) {
+                $userController->deleteUserById($matches[1]);
+            } 
+            else {
+                echo json_encode(['message' => 'Invalid user ID']);
             }
             break;
 
@@ -97,42 +121,52 @@ function handleRoom($requestMethod, $uri, $input, $roomController) {
             if (preg_match('/\/room\/(\d+)/', $uri, $matches)) {
                 $roomController->getRoom($matches[1]);
             } elseif (preg_match('/\/room/', $uri)) {
-                $roomController->getRooms();
-            } else {
-                echo json_encode(['message' => 'Invalid room request', 'status' => '404']);
+                if (isset($_GET['keyword'])) { 
+                    $input['keyword'] = $_GET['keyword'];  
+                    $roomController->searchRooms($input);  
+                }
+                else {
+                    $roomController->getRooms();
+                }
+            }  else {
+                echo json_encode(['message' => 'Invalid room request']);
             }
             break;
 
         case 'POST':
             if (preg_match('/\/room/', $uri)) {
-                if (isset($input['name'], $input['status'], $input['availability'], $input['equipment'], $input['capacity'], $input['room_type'])) {
-                    $roomController->createRoom($input['name'], $input['status'], $input['availability'], $input['equipment'], $input['capacity'], $input['room_type']);
-                } else {
+                if (isset($input['room_building'], $input['room_number'], $input['status'], $input['equipment'], $input['capacity'], $input['room_type'])) {
+                    $roomController->createRoom($input['room_building'], $input['room_number'], $input['status'], $input['equipment'], $input['capacity'], $input['room_type']);
+                } 
+                else {
                     echo json_encode(['message' => 'Missing required fields for room creation', 'status' => '400']);
                 }
-            } else {
-                echo json_encode(['message' => 'Invalid room request', 'status' => '404']);
+            } 
+            else {
+                echo json_encode(['message' => 'Invalid room request']);
             }
             break;
 
-        case 'PUT':
+        case 'PATCH':
             if (preg_match('/\/room\/(\d+)/', $uri, $matches)) {
                 $roomController->updateRoom($matches[1], $input);
-            } else {
+            } 
+            else {
                 echo json_encode(['message' => 'Invalid room ID for update', 'status' => '400']);
             }
             break;
 
         case 'DELETE':
             if (preg_match('/\/room\/(\d+)/', $uri, $matches)) {
-                $roomController->deleteRoom($matches[1]);
-            } else {
+                $roomController->deleteRoomById($matches[1]);
+            } 
+            else {
                 echo json_encode(['message' => 'Invalid room ID for deletion', 'status' => '400']);
             }
             break;
 
         default:
-            echo json_encode(['message' => 'Room method not supported', 'status' => '405']);
+            echo json_encode(['message' => 'Invalid room request']);
             break;
     }
 }
@@ -141,27 +175,64 @@ function handleRoom($requestMethod, $uri, $input, $roomController) {
 function handleRoomRequest($requestMethod, $uri, $input, $roomRequestController) {
     switch ($requestMethod) {
         case 'GET':
-            if (preg_match('/\/room_request\/student\/(\d+)/', $uri, $matches)) {
+            if (preg_match('/\/room_request\/pending_request/', $uri)) {
+                $roomRequestController->getAllPendingRoomRequest();
+            } 
+            elseif (preg_match('/\/room_request\/history/', $uri)) {
+                $roomRequestController->getRoomRequestHistory();
+            } 
+            elseif (preg_match('/\/room_request\/user\/(\d+)/', $uri, $matches)) {
                 $roomRequestController->getRoomRequestsByStudent($matches[1]);
-            } elseif (preg_match('/\/room_request/', $uri)) {
+            } 
+            elseif (preg_match('/\/room_request\/(\d+)/', $uri, $matches)) {
+                $id = $matches[1]; 
+                $roomRequestController->getRoomRequest($id);
+            } 
+            elseif (preg_match('/\/room_request/', $uri)) {
                 $roomRequestController->getRoomRequests();
-            } else {
+            } 
+            else {
                 echo json_encode(['message' => 'Invalid room request']);
             }
             break;
 
         case 'POST':
-            if (isset($input['room_id'], $input['student_id'], $input['purpose'], $input['starting_time'], $input['ending_time'], $input['receiver'])) {
-                $roomRequestController->createRoomRequest($input['room_id'], $input['student_id'], $input['purpose'], $input['starting_time'], $input['ending_time'], $input['receiver']);
-            } else {
+            if (isset($input['room_id'], $input['user_id'], $input['purpose'], $input['date'], $input['starting_time'], $input['ending_time'])) {
+                $block = isset($input['block']) ? $input['block'] : '';
+                $roomRequestController->createRoomRequest($input['room_id'], $input['user_id'], $block, $input['purpose'], $input['date'], $input['starting_time'], $input['ending_time']);
+            } 
+            else {
                 echo json_encode(['message' => 'Missing required fields to create room request']);
             }
             break;
 
-        case 'DELETE':
+        case 'PATCH':
             if (preg_match('/\/room_request\/(\d+)/', $uri, $matches)) {
+                $id = $matches[1]; 
+                
+                if (isset($input['status']) && in_array($input['status'], ['Approved', 'Rejected'])) {
+                    $roomRequestController->updateRoomRequestStatus($id, $input['status']);
+                } 
+                else {
+                    echo json_encode(['message' => 'Only approved or rejected status update is allowed']);
+                }
+            } 
+            else {
+                echo json_encode(['message' => 'Invalid room request ID or missing status']);
+            }
+            break;
+
+        case 'DELETE':
+
+            if (preg_match('/\/room_request\/(\d+)\/(\d+)/', $uri, $matches)) {
+                $userId = $matches[1];
+                $requestId = $matches[2];
+                $roomRequestController->cancelPendingRequestofUserId($userId, $requestId);
+            } 
+            else if (preg_match('/\/room_request\/(\d+)/', $uri, $matches)) {
                 $roomRequestController->deleteRoomRequest($matches[1]);
-            } else {
+            } 
+            else {
                 echo json_encode(['message' => 'Invalid room request ID']);
             }
             break;
@@ -215,78 +286,173 @@ function handleRoomSchedule($requestMethod, $uri, $input, $roomScheduleControlle
     }
 }
 
-// admin method handler
-function handleAdmin($requestMethod, $uri, $input, $adminLoginController, $adminSignupController) {
+// room schedule method handler
+function handleRoomSchedule($requestMethod, $uri, $input, $roomScheduleController) {
+    switch ($requestMethod) {
+        case 'GET':
+            if (preg_match('/\/room_schedule\/ongoing_schedule/', $uri)) {
+                $roomScheduleController->getAllOngoingSchedules();
+            } 
+            elseif (preg_match('/\/room_schedule\/room\/(\d+)/', $uri, $matches)) {
+                $roomScheduleController->getRoomSchedulesOfRoom($matches[1]);
+            } 
+            elseif (preg_match('/\/room_schedule\/(\d+)/', $uri, $matches)) {
+                $roomScheduleController->getRoomSchedule($matches[1]);
+            } 
+            elseif (preg_match('/\/room_schedule/', $uri)) {
+                $roomScheduleController->getAllRoomSchedule();
+            } 
+            else {
+                echo json_encode(['message' => 'Invalid room schedule request']);
+            }
+            break;
+
+        case 'POST':
+            if (isset($input['room_id'], $input['block'], $input['date'], $input['starting_time'], $input['ending_time'])) {
+                $roomScheduleController->createRoomSchedule($input['room_id'], $input['block'], $input['date'], $input['starting_time'], $input['ending_time']);
+            } 
+            else {
+                echo json_encode(['message' => 'Missing required fields to create room schedule']);
+            }
+            break;
+
+        case 'PATCH':
+            if (preg_match('/\/room_schedule\/(\d+)/', $uri, $matches)) {
+                $roomScheduleController->updateRoomSchedule($matches[1], $input);
+            } 
+            else {
+                echo json_encode(['message' => 'Invalid room schedule ID for update']);
+            }
+            break;
+
+        case 'DELETE':
+            if (preg_match('/\/room_schedule\/(\d+)/', $uri, $matches)) {
+                $roomScheduleController->deleteRoomSchedule($matches[1]);
+            } 
+            else {
+                echo json_encode(['message' => 'Invalid room schedule ID for deletion']);
+            }
+            break;
+
+        default:
+            echo json_encode(['message' => 'Room schedule method not supported']);
+            break;
+    }
+}
+
+// admin request method handler
+function handleAdmin($requestMethod, $uri, $input, $adminController, $userController) {
     switch ($requestMethod) {
         case 'GET':
             if (preg_match('/\/admin\/(\d+)/', $uri, $matches)) {
-                $adminLoginController->getAdmin($matches[1]);
-            } elseif (preg_match('/\/admin/', $uri)) {
-                $adminSignupController->getAdmins();
-            } else {
+                $adminController->getAdmin($matches[1]);
+            } 
+            elseif (preg_match('/\/admin/', $uri)) {
+                $adminController->getAllUsersAndAdmin();
+            } 
+            else {
                 echo json_encode(['message' => 'Invalid admin request']);
             }
             break;
 
         case 'POST':
             if (preg_match('/\/admin\/signup/', $uri)) {
-                // admin signup
-                if (isset($input['username'], $input['email'], $input['password'])) {
-                    $adminSignupController->createAdmin($input['username'], $input['email'], $input['password']);
-                } else {
+                // create administrators, staff, and teachers
+                if (isset($input['username'], $input['email'], $input['password'], $input['role'])) {
+                    $role = $input['role']; 
+                    if ($role === 'Teacher') {
+                        if (isset($input['teacher_id'])) {
+                            $userController->createUser($input['teacher_id'], $input['username'], $input['email'], $input['password'], $input['role']);
+                        } 
+                        else {
+                            echo json_encode(['message' =>'Teacher ID is missing']);
+                        }
+                    } 
+                    elseif ($role === 'Administrator' || $role === 'Staff') {
+                        // add to the admin table if the role is admin or staff
+                        $adminController->createAdmin($input['username'], $input['email'], $input['password'], $input['role']);
+                    } 
+                    else {
+                        echo json_encode(['message' => 'Invalid role specified']);
+                    }
+                } 
+                else {
                     echo json_encode(['message' => 'Missing required fields']);
                 }
-            } elseif (preg_match('/\/admin\/login/', $uri)) {
+            } 
+            elseif (preg_match('/\/admin\/login/', $uri)) {
                 // admin login
                 if (isset($input['email'], $input['password'])) {
-                    $adminLoginController->loginAdmin($input['email'], $input['password']);
-                } else {
+                    $adminController->loginAdmin($input['email'], $input['password']);
+                } 
+                else {
                     echo json_encode(['message' => 'Missing email or password']);
                 }
-            } else {
-                echo json_encode(['message' => 'Invalid admin request']);
+            } 
+            elseif (preg_match('/\/admin\/logout/', $uri)) {
+                // admin or staff logout
+                $Authorization = $_SERVER['HTTP_AUTHORIZATION'] ?? null;
+                if ($Authorization) {
+                    // invalidate token if token is authorized
+                    $adminController->logoutAdmin($Authorization);
+                } 
             }
             break;
 
-        case 'PUT':
+        case 'PATCH':
             if (preg_match('/\/admin\/(\d+)/', $uri, $matches)) {
                 $id = $matches[1];
                 if (!empty($input)) {
-                    $adminLoginController->updateAdmin($id, $input);
-                } else {
-                    echo json_encode(['message' => 'No fields to update']);
+                // check if variable old, new, confirm pass is present
+                if (isset($input['old_password']) && isset($input['new_password']) && isset($input['confirm_password'])) {
+                    $oldPassword = $input['old_password'];
+                    $newPassword = $input['new_password'];
+                    $confirmPassword = $input['confirm_password'];
+                    $adminController->changePassword($id, $oldPassword, $newPassword, $confirmPassword);
+                } 
+                else {
+                    // update other input values via updateAdmin
+                    $adminController->updateAdmin($id, $input);
                 }
             } else {
-                echo json_encode(['message' => 'Invalid admin ID']);
+                echo json_encode(['message' => 'No fields to update']);
             }
-            break;
+        } else {
+            echo json_encode(['message' => 'Invalid user ID']);
+        }
+        break;
 
         case 'DELETE':
             if (preg_match('/\/admin\/(\d+)/', $uri, $matches)) {
-                $adminLoginController->deleteAdmin($matches[1]);
-            } else {
+                $adminController->deleteAdminById($matches[1]);
+            } 
+            else {
                 echo json_encode(['message' => 'Invalid admin ID']);
             }
             break;
-
         default:
             echo json_encode(['message' => 'Method not supported']);
             break;
     }
 }
 
-// main request routing
-if (preg_match('/\/student/', $uri)) {
-    handleStudent($requestMethod, $uri, $input, $studentSignupController, $studentLoginController);
-} elseif (preg_match('/\/room_request/', $uri)) {
+
+
+// main request routing logic
+if (preg_match('/\/admin/', $uri)) {
+    if (!preg_match('/\/admin\/login/', $uri) && !preg_match('/\/admin\/logout/', $uri)) {
+        AuthMiddleware::verifyToken();
+    }
+    handleAdmin($requestMethod, $uri, $input, $adminController, $userController);
+} 
+
+elseif (preg_match('/\/room_request/', $uri)) {
+    AuthMiddleware::verifyToken(); 
     handleRoomRequest($requestMethod, $uri, $input, $roomRequestController);
-}elseif (preg_match('/\/room_schedule/', $uri)) {
-    handleRoomSchedule($requestMethod, $uri, $input, $roomScheduleController);
 } elseif (preg_match('/\/room/', $uri)) {
     handleRoom($requestMethod, $uri, $input, $roomController);
-} elseif (preg_match('/\/admin/', $uri)) {
-    handleAdmin($requestMethod, $uri, $input, $adminLoginController, $adminSignupController);
-} else {
+} 
+else {
     echo json_encode(['message' => 'Invalid request']);
 }
 ?>
