@@ -17,9 +17,6 @@ class RoomModel {
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
-<<<<<<< HEAD
-    // get room by ID
-=======
     public function getRoomCountByStatus() {
         $sql = "
             SELECT status, COUNT(*) AS count
@@ -45,7 +42,6 @@ class RoomModel {
     }
 
     // get room by id
->>>>>>> 0fac87130feed1fe796379324ec4f751ffac9e4e
     public function getRoomById($id) {
         $sql = "SELECT * FROM room WHERE id = ?";
 

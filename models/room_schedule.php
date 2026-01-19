@@ -6,17 +6,6 @@ class RoomScheduleModel {
     private $conn;
 
     public function __construct() {
-<<<<<<< HEAD
-        $this->conn = (new Database())->connect();
-        if (!$this->conn) {
-            die('Database connection failed: ' . mysqli_connect_error());
-        }
-    }
-
-    // Get a specific room schedule by ID
-    public function getRoomScheduleById($id) {
-        $sql = "SELECT * FROM room_schedule WHERE id = ?";
-=======
         $this->conn = Database::getInstance();
     }
 
@@ -76,7 +65,6 @@ class RoomScheduleModel {
         $sql = "
         SELECT rs.*, r.room_number, r.room_building FROM room_schedule rs LEFT JOIN room r ON rs.room_id = r.id WHERE rs.id = ?";
 
->>>>>>> 0fac87130feed1fe796379324ec4f751ffac9e4e
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('i', $id);
             $stmt->execute();

@@ -9,35 +9,11 @@ class RoomRequestModel {
         $this->conn = Database::getInstance();
     }
 
-<<<<<<< HEAD
-    // get pending request list of a specific student
-    public function getRoomRequestsByStudent($studentId) {
-        $sql = "SELECT * FROM room_request WHERE student_id = ?";
-        if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param('i', $studentId); 
-            $stmt->execute();
-            $result = $stmt->get_result();
-            if ($result->num_rows > 0) {
-                return $result->fetch_all(MYSQLI_ASSOC);
-            } else {
-                return null;  
-            }
-        } else {
-            echo json_encode(['message' => 'Error executing query: ' . $this->conn->error]);
-            return null;
-        }
-    }
-    
-    // get all pending room requests
-    public function getAllRoomRequests() {
-        $sql = "SELECT * FROM room_request";
-=======
     // get room request history (approved or rejected only) (order from latest to oldest, descending based on created_at)
     public function getRoomRequestHistory() {
         $sql = "SELECT rr.*, u.username, r.room_building, r.room_number FROM room_request rr JOIN user u ON rr.user_id = u.id
         JOIN room r ON rr.room_id = r.id WHERE rr.status = 'approved' OR rr.status = 'rejected' ORDER BY rr.created_at DESC";
 
->>>>>>> 0fac87130feed1fe796379324ec4f751ffac9e4e
         $result = $this->conn->query($sql);
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
