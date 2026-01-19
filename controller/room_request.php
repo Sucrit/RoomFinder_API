@@ -16,8 +16,13 @@ class RoomRequestController {
     }
     
     // get all room requests of a specific student
+<<<<<<< HEAD
+    public function getRoomRequestsByStudent($studentId) {
+        $roomRequests = $this->roomRequestModel->getRoomRequestsByStudent($studentId);
+=======
     public function getRoomRequestsByStudent($userId) {
         $roomRequests = $this->roomRequestModel->getRoomRequestsByUser($userId);
+>>>>>>> 0fac87130feed1fe796379324ec4f751ffac9e4e
         if ($roomRequests) {
             echo json_encode($roomRequests);
         } 

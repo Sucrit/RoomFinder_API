@@ -13,6 +13,8 @@ class JwtHelper {
         // expiration
         $expirationTime = $issuedAt + 86400;
         // payload body  
+        $issuedAt = time();
+        $expirationTime = $issuedAt + 3600;  // jwt validity
         $payload = array(
             "iat" => $issuedAt,  
             "exp" => $expirationTime,  
@@ -28,6 +30,10 @@ class JwtHelper {
 
 
     // decode token 
+        // return the encoded jwt token
+        return JWT::encode($payload, self::$secretKey, 'HS256');
+    }
+
     public static function decode($jwt) {
 
         // remove "Bearer " from token string

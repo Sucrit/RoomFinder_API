@@ -1,6 +1,17 @@
 <?php
 
 require_once '../models/room_schedule.php';
+<<<<<<< HEAD
+
+class RoomScheduleController {
+    private $roomScheduleModel;
+
+    public function __construct() {
+        $this->roomScheduleModel = new RoomScheduleModel();
+    }
+
+    // Get a room schedule by ID
+=======
 require_once '../models/room.php';
 
 class RoomScheduleController {
@@ -36,10 +47,35 @@ class RoomScheduleController {
     }
     
     // get a room schedule by ID
+>>>>>>> 0fac87130feed1fe796379324ec4f751ffac9e4e
     public function getRoomSchedule($id) {
         $roomSchedule = $this->roomScheduleModel->getRoomScheduleById($id);
         if ($roomSchedule) {
             echo json_encode($roomSchedule);
+<<<<<<< HEAD
+        } else {
+            echo json_encode(['message' => 'Room schedule not found']);
+        }
+    }
+
+    // Get all room schedules
+    public function getRoomSchedules() {
+        $roomSchedules = $this->roomScheduleModel->getAllRoomSchedules();
+        echo json_encode($roomSchedules);
+    }
+
+    // Create a room schedule
+    public function createRoomSchedule($room_id, $starting_time, $ending_time) {
+        $this->roomScheduleModel->createRoomSchedule($room_id, $starting_time, $ending_time);
+    }
+
+    // Update a room schedule
+    public function updateRoomSchedule($id, $room_id, $starting_time, $ending_time) {
+        $this->roomScheduleModel->updateRoomSchedule($id, $room_id, $starting_time, $ending_time);
+    }
+
+    // Delete a room schedule
+=======
         } 
         else {
             echo json_encode(['status' => 'error', 'message' => 'Room schedule not found']);
@@ -176,8 +212,13 @@ class RoomScheduleController {
 
 
     // delete room schedule
+>>>>>>> 0fac87130feed1fe796379324ec4f751ffac9e4e
     public function deleteRoomSchedule($id) {
         $this->roomScheduleModel->deleteRoomSchedule($id);
     }
 }
+<<<<<<< HEAD
 ?>
+=======
+?>
+>>>>>>> 0fac87130feed1fe796379324ec4f751ffac9e4e

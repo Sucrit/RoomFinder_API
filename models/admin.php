@@ -10,8 +10,8 @@ class AdminModel {
         $this->conn = Database::getInstance();
     }
 
-    // create admin, staff  
-    public function createAdmin($username, $email, $password, $role) {
+    // Create new admin (sign up)
+    public function createAdmin($username, $email, $password) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $sql = "INSERT INTO admin (username, email, password, role) VALUES (?, ?, ?, ?)";
 
@@ -28,7 +28,7 @@ class AdminModel {
         }
     }
 
-    // get all admins
+    // Get all admins
     public function getAdmins() {
         $sql = "SELECT * FROM admin";
         
@@ -36,7 +36,7 @@ class AdminModel {
         return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
-    // get admin by id
+    // Get admin by ID
     public function getAdminById($id) {
         $sql = "SELECT * FROM admin WHERE id = ?";
 
@@ -53,7 +53,35 @@ class AdminModel {
         }
     }
 
-    // check if email exist
+    // Update admin information
+    public function updateAdmin($id, $username, $email, $password) {
+        $sql = "UPDATE admin SET username = ?, email = ?, password = ? WHERE id = ?";
+
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("sssi", $username, $email, $password, $id);
+            $stmt->execute();
+            $stmt->close();
+            return "Admin updated successfully!";
+        } else {
+            return "Error: " . $this->conn->error;
+        }
+    }
+
+    // Delete an admin
+    public function deleteAdmin($id) {
+        $sql = "DELETE FROM admin WHERE id = ?";
+
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $stmt->close();
+            return "Admin deleted successfully!";
+        } else {
+            return "Error: " . $this->conn->error;
+        }
+    }
+
+    // Login admin based on email
     public function getAdminByEmail($email) {
         $sql = "SELECT * FROM admin WHERE email = ?";
 

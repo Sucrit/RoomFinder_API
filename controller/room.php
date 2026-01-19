@@ -12,8 +12,13 @@ class RoomController {
         $this->roomScheduleModel = new RoomScheduleModel(); 
     }
 
+<<<<<<< HEAD
+     // get room by ID
+     public function getRoom($id) {
+=======
     //  get room by id
     public function getRoom($id) {
+>>>>>>> 0fac87130feed1fe796379324ec4f751ffac9e4e
         $room = $this->roomModel->getRoomById($id);
         
         if (empty($room)) {
@@ -26,7 +31,11 @@ class RoomController {
         }
     }
 
+<<<<<<< HEAD
+    // get all rooms
+=======
     // get all rooms and schedules 
+>>>>>>> 0fac87130feed1fe796379324ec4f751ffac9e4e
     public function getRooms() {
         $currentTime = date('H:i:s');  
         $currentDate = date('Y-m-d');   

@@ -70,13 +70,34 @@ class RoomScheduleModel {
             $stmt->execute();
             $result = $stmt->get_result();
             return $result->num_rows > 0 ? $result->fetch_assoc() : null;
+<<<<<<< HEAD
+        } else {
+=======
         } 
         else {
+>>>>>>> 0fac87130feed1fe796379324ec4f751ffac9e4e
             echo json_encode(['message' => 'Error executing query: ' . $this->conn->error]);
             return null;
         }
     }
 
+<<<<<<< HEAD
+    // Get all room schedules
+    public function getAllRoomSchedules() {
+        $sql = "SELECT * FROM room_schedule";
+        $result = $this->conn->query($sql);
+        return $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
+    }
+
+    // Create a new room schedule
+    public function createRoomSchedule($room_id, $starting_time, $ending_time) {
+        $sql = "INSERT INTO room_schedule (room_id, starting_time, ending_time) VALUES (?, ?, ?)";
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param('iss', $room_id, $starting_time, $ending_time);
+            if ($stmt->execute()) {
+                echo json_encode(['message' => 'Room schedule created successfully']);
+            } else {
+=======
     // create room schedule of a room
     public function createRoomSchedule($room_id, $block, $date, $starting_time, $ending_time) {
         $sql = "INSERT INTO room_schedule (room_id, block, date, starting_time, ending_time) VALUES (?, ?, ?, ?, ?)";
@@ -100,6 +121,7 @@ class RoomScheduleModel {
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('ssssi', $block, $date, $starting_time, $ending_time, $id);
             if (!$stmt->execute()) {
+>>>>>>> 0fac87130feed1fe796379324ec4f751ffac9e4e
                 echo json_encode(['message' => 'Error: ' . $this->conn->error]);
             }
         } else {
@@ -107,12 +129,43 @@ class RoomScheduleModel {
         }
     }
 
+<<<<<<< HEAD
+    // Update a room schedule
+    public function updateRoomSchedule($id, $room_id, $starting_time, $ending_time) {
+        $sql = "UPDATE room_schedule SET room_id = ?, starting_time = ?, ending_time = ? WHERE id = ?";
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param('issi', $room_id, $starting_time, $ending_time, $id);
+            if ($stmt->execute()) {
+                echo json_encode(['message' => 'Room schedule updated successfully']);
+            } else {
+                echo json_encode(['message' => 'Error: ' . $this->conn->error]);
+            }
+        } else {
+            echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
+        }
+    }
+
+    // Delete a room schedule
+=======
     // delete room schedule
+>>>>>>> 0fac87130feed1fe796379324ec4f751ffac9e4e
     public function deleteRoomSchedule($id) {
         $sql = "DELETE FROM room_schedule WHERE id = ?";
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->bind_param('i', $id);
             if ($stmt->execute()) {
+<<<<<<< HEAD
+                echo json_encode(['message' => 'Room schedule deleted successfully']);
+            } else {
+                echo json_encode(['message' => 'Error: ' . $this->conn->error]);
+            }
+        } else {
+            echo json_encode(['message' => 'Error preparing SQL: ' . $this->conn->error]);
+        }
+    }
+}
+?>
+=======
                 if ($stmt->affected_rows > 0) {
                     echo json_encode(['status' => 'success', 'message' => 'Room schedule deleted successfully']);
                 } else {
@@ -176,3 +229,4 @@ class RoomScheduleModel {
     
 }
 ?>
+>>>>>>> 0fac87130feed1fe796379324ec4f751ffac9e4e
